@@ -8,8 +8,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Controller extends HttpServlet {
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
- 
+        String actionName = getActionName(request);
+    }
+
+    private String getActionName(HttpServletRequest request) {
+        return request.getMethod()+request.getPathInfo();
     }
 }
