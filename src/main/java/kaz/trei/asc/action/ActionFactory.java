@@ -11,7 +11,6 @@ public class ActionFactory {
         actions.put("GET/main", new ShowMain());
     }
     public Action create(String actionName) {
-
-        return null;
+        return actions.get(actionName);
     }
 }
