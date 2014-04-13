@@ -16,10 +16,8 @@ public class Controller extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String actionName = getActionName(request);
-        System.out.println(actionName);
         Action action = actionFactory.create(actionName);
         ActionResult result = action.execute(request, response);
-        System.out.println(result.getMethod()+"   "+result.getPath());
         switch (result.getMethod()){
             case FORWARD:
                 request.getRequestDispatcher(result.getPath()).forward(request,response);
@@ -32,7 +30,7 @@ public class Controller extends HttpServlet {
         }
     }
 
-    private String getActionName(HttpServletRequest request) {
+    String getActionName(HttpServletRequest request) {
         return request.getMethod() + request.getPathInfo();
     }
 }
