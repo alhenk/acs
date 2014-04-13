@@ -1,0 +1,58 @@
+# FOR JAVA
+*.class
+
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+#FOR Eclipse
+.classpath
+.project
+*.pydevproject
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# sbteclipse plugin 
+.target
+target
+
+# TeXlipse plugin
+.texlipse
+
+*.log
+build
+.build
+.save
+*~
+feedback.txt
+sample_*.txt
+.idea/
+*.iml
+*.ipr
+
