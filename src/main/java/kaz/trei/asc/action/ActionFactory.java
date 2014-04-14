@@ -16,7 +16,7 @@ public class ActionFactory {
     }
     public Action create(String actionName) {
         Action action = actions.get(actionName);
-        //if(action == null) return new ShowErrorPage();
+        if(action == null) return new ShowErrorPage();
         LOGGER.debug("created action = " + action.getClass().getName());
         return action;
     }
