@@ -8,7 +8,7 @@ public class ActionFactory {
 
     public ActionFactory(){
         actions = new HashMap<String, Action>();
-        actions.put("GET/main", new ShowMain());
+        actions.put("GET/main", new ShowMainPage());
     }
     public Action create(String actionName) {
         return actions.get(actionName);
