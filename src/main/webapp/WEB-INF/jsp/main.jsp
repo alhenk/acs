@@ -4,5 +4,7 @@
 <mtag:pagetemplate title="main">
     <jsp:body>
         <p>B&nbsp;O&nbsp;D&nbsp;Y</p>
+        <%--error page test--%>
+        <p>${5%0}</p>
     </jsp:body>
 </mtag:pagetemplate>
