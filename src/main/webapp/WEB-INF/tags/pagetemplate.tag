@@ -3,6 +3,7 @@
 <%@attribute name="title" required="true" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+
 <html>
 <head>
     <title>${title}</title>
