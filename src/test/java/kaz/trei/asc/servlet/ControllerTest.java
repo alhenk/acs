@@ -27,5 +27,9 @@ public class ControllerTest extends TestCase {
         when(request.getMethod()).thenReturn("GET");
         when(request.getPathInfo()).thenReturn("/main");
         assertEquals(controller.getActionName(request), "GET/main");
+
+        when(request.getMethod()).thenReturn("");
+        when(request.getPathInfo()).thenReturn("");
+        assertEquals(controller.getActionName(request), "GET/main");
     }
 }

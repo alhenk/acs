@@ -31,6 +31,8 @@ public class Controller extends HttpServlet {
     }
 
     String getActionName(HttpServletRequest request) {
-        return request.getMethod() + request.getPathInfo();
+        String actionName = request.getMethod() + request.getPathInfo();
+        if(actionName == null || actionName.isEmpty()) actionName = "GET/main";
+        return actionName;
     }
 }
