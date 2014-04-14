@@ -1,15 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>main</title>
-</head>
-<body>
-<h1>Main</h1>
-<h2>HEADER</h2>
-<hr>
-<h2>BODY</h2>
-<br/>
-<hr>
-<h2>FOOTER</h2>
-</body>
-</html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" errorPage="errorPage.jsp" %>
+<%@taglib prefix="mtag" tagdir="/WEB-INF/tags"%>
+
+<mtag:pagetemplate title="main">
+    <jsp:body>
+        <p>B&nbsp;O&nbsp;D&nbsp;Y</p>
+        <%--error page test--%>
+        <p>${5%0}</p>
+    </jsp:body>
+</mtag:pagetemplate>
