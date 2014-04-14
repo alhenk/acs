@@ -1,15 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>main</title>
-</head>
-<body>
-<h1>Main</h1>
-<h2>HEADER</h2>
-<hr>
-<h2>BODY</h2>
-<br/>
-<hr>
-<h2>FOOTER</h2>
-</body>
-</html>
+<%@taglib prefix="mtag" tagdir="/WEB-INF/tags"%>
+
+<mtag:pagetemplate title="main">
+    <jsp:body>
+        <p>B&nbsp;O&nbsp;D&nbsp;Y</p>
+    </jsp:body>
+</mtag:pagetemplate>
