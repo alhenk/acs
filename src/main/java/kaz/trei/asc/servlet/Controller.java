@@ -17,9 +17,9 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Entered service() Method = " + request.getMethod() + " PathURI = " + request.getRequestURI());
         String actionName = getActionName(request);
         Action action = actionFactory.create(actionName);
-        LOGGER.debug("Action Name = "+actionName);
         ActionResult result = action.execute(request, response);
         switch (result.getMethod()){
             case FORWARD:
@@ -36,6 +36,7 @@ public class Controller extends HttpServlet {
     String getActionName(HttpServletRequest request) {
         String actionName = request.getMethod() + request.getPathInfo();
         if(actionName == null || actionName.isEmpty()) actionName = "GET/main";
+        LOGGER.debug("Entered getActionName()  action = " + actionName);
         return actionName;
     }
 }
