@@ -6,3 +6,4 @@ JAVALAB PROJECT
 - servlet : simple configuration for servlets
 - front : simple front controller
 - test : junit plus mockito test for servlets
+- jstl : jstl API and user tag
