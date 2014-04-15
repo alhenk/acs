@@ -3,6 +3,12 @@
 <%@attribute name="title" required="true" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<c:set var="locale" value="${not empty param.locale ? param.locale :
+                             not empty locale ? locale : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${locale}"/>
 
 
 <html>
