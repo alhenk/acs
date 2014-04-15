@@ -7,4 +7,3 @@
             &#x420;&#x443;&#x441;&#x441;&#x43a;&#x438;&#x439;</option>
     </select>
 </form>
-<p>Locale = ${locale}</p>

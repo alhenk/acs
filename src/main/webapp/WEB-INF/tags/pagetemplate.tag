@@ -23,12 +23,9 @@
 </head>
 <body>
     <mtag:header/>
-    <p>Locale = ${locale}</p>
     <hr>
-    <h2>body</h2>
     <jsp:doBody/>
     <hr>
-    <h2>footer</h2>
     <mtag:footer/>
 </body>
 </html>
