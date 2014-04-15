@@ -9,6 +9,7 @@
                              not empty locale ? locale : pageContext.request.locale}"
        scope="session"/>
 <fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="messages" var="msg" scope="session"/>
 
 
 <html>
