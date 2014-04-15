@@ -15,7 +15,7 @@
                     <td align="left"><input type="password" name="password"></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td align="right">
                         <button type="submit">
                             <fmt:message bundle="${msg}" key="login.submit"/>
                         </button>
