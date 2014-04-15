@@ -7,3 +7,4 @@ JAVALAB PROJECT
 - front : simple front controller
 - test : junit plus mockito test for servlets
 - jstl : jstl API and user tag
+- locale: localization, SetLanguage action
