@@ -22,8 +22,7 @@
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${ctx}/"/>
 </head>
 <body>
-    <h1>${fn:toUpperCase(title)}</h1>
-    <h2>header</h2>
+    <mtag:header/>
     <p>Locale = ${locale}</p>
     <hr>
     <h2>body</h2>
