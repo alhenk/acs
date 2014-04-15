@@ -12,6 +12,7 @@ public class ActionFactory {
     public ActionFactory(){
         actions = new HashMap<String, Action>();
         actions.put("GET/main", new ShowMainPage());
+        actions.put("POST/set-language", new SetLanguage());
         LOGGER.debug("Instantiated ActionFactory");
     }
     public Action create(String actionName) {
