@@ -23,9 +23,11 @@ public class Controller extends HttpServlet {
         ActionResult result = action.execute(request, response);
         switch (result.getMethod()){
             case FORWARD:
+                LOGGER.debug("FORWARD -> "+result.getPath());
                 request.getRequestDispatcher(result.getPath()).forward(request,response);
                 break;
             case REDIRECT:
+                LOGGER.debug("REDIRECT -> "+result.getPath());
                 response.sendRedirect(result.getPath());
                 break;
             default:
