@@ -8,3 +8,4 @@ JAVALAB PROJECT
 - test : junit plus mockito test for servlets
 - jstl : jstl API and user tag
 - locale: localization, SetLanguage action
+- user: sign in action, user object attribute
