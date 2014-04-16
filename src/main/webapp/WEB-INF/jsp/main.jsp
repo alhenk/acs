@@ -4,6 +4,7 @@
 
 <mtag:pagetemplate title="main">
     <jsp:body>
+        <h2><fmt:message bundle="${msg}" key="login.please-login"/> </h2>
         <form action="do/register" method="post">
             <table>
                 <tr>

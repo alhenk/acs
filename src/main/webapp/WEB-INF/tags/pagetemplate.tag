@@ -22,7 +22,7 @@
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${ctx}/"/>
 </head>
 <body>
-    <mtag:header/>
+    <mtag:header title="${title}"/>
     <hr>
     <jsp:doBody/>
     <hr>
