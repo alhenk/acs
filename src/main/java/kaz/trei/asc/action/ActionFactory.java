@@ -13,6 +13,7 @@ public class ActionFactory {
         actions = new HashMap<String, Action>();
         actions.put("GET/main", new ShowMainPage());
         actions.put("POST/set-language", new SetLanguage());
+        actions.put("POST/signin", new Signin());
         LOGGER.debug("Instantiated ActionFactory");
     }
     public Action create(String actionName) {
