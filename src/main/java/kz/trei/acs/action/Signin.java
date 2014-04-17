@@ -23,7 +23,7 @@ public class Signin implements Action{
             session.setAttribute("user", user);
             return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
         } catch (Exception e) {
-            return new ActionResult(ActionType.FORWARD,"/WEB-INF/jsp/errorPage.jsp");
+            return new ActionResult(ActionType.FORWARD,"errorPage");
         }
     }
 }

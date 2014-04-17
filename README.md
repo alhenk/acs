@@ -11,3 +11,4 @@ JAVALAB PROJECT
 - user: sign in action, user object attribute
 
 Branch develop
+- db: h2 dependency, simple table existence check
