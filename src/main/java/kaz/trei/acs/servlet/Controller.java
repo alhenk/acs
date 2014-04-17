@@ -1,8 +1,8 @@
-package kaz.trei.asc.servlet;
+package kaz.trei.acs.servlet;
 
-import kaz.trei.asc.action.Action;
-import kaz.trei.asc.action.ActionFactory;
-import kaz.trei.asc.action.ActionResult;
+import kaz.trei.acs.action.Action;
+import kaz.trei.acs.action.ActionFactory;
+import kaz.trei.acs.action.ActionResult;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

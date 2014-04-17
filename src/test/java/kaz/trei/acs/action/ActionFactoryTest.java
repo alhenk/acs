@@ -1,4 +1,4 @@
-package kaz.trei.asc.action;
+package kaz.trei.acs.action;
 
 import junit.framework.TestCase;
 import org.junit.Before;

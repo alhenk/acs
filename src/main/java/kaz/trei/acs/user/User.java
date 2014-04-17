@@ -1,7 +1,5 @@
-package kaz.trei.asc.user;
+package kaz.trei.acs.user;
 
-
-import java.io.Serializable;
 
 public class User {
     private static final long serialVersionUID = -8916590958085449790L;
