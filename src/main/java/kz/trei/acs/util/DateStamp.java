@@ -1,4 +1,4 @@
-package kaz.trei.acs.util;
+package kz.trei.acs.util;
 
 import java.io.Serializable;
 import java.text.ParseException;

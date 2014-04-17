@@ -1,8 +1,8 @@
-package kaz.trei.acs.action;
+package kz.trei.acs.action;
 
 
-import kaz.trei.acs.dao.UserDao;
-import kaz.trei.acs.user.User;
+import kz.trei.acs.dao.UserDao;
+import kz.trei.acs.user.User;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

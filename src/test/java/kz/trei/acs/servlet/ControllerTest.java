@@ -1,4 +1,4 @@
-package kaz.trei.acs.servlet;
+package kz.trei.acs.servlet;
 
 import junit.framework.TestCase;
 import org.junit.Before;

@@ -1,6 +1,6 @@
-package kaz.trei.acs.dao;
+package kz.trei.acs.dao;
 
-import kaz.trei.acs.user.User;
+import kz.trei.acs.user.User;
 
 public class UserDao {
 
