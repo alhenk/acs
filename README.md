@@ -9,3 +9,5 @@ JAVALAB PROJECT
 - jstl : jstl API and user tag
 - locale: localization, SetLanguage action
 - user: sign in action, user object attribute
+
+Branch develop

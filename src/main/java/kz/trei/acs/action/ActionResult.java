@@ -1,4 +1,4 @@
-package kaz.trei.acs.action;
+package kz.trei.acs.action;
 
 public class ActionResult {
     private ActionType method;
