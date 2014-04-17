@@ -1,4 +1,4 @@
-package kaz.trei.acs.action;
+package kz.trei.acs.action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

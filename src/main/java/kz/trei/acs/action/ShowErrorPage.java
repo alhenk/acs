@@ -1,11 +1,11 @@
-package kaz.trei.acs.action;
+package kz.trei.acs.action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowMainPage implements Action {
+public class ShowErrorPage implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        return new ActionResult(ActionType.FORWARD,"/WEB-INF/jsp/main.jsp");
+        return new ActionResult(ActionType.FORWARD, "/WEB-INF/jsp/errorPage.jsp");
     }
 }

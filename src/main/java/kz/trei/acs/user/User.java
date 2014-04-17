@@ -1,4 +1,4 @@
-package kaz.trei.acs.user;
+package kz.trei.acs.user;
 
 
 public class User {
