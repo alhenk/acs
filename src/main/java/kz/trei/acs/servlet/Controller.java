@@ -20,7 +20,6 @@ public class Controller extends HttpServlet {
     }
     private ActionFactory actionFactory=new ActionFactory();
 
-
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.debug("Entered service() Method = " + request.getMethod() + " PathURI = " + request.getRequestURI());
