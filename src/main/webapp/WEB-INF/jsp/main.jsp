@@ -14,6 +14,7 @@
                 <p> <fmt:message bundle="${msg}" key="main.welcome"/>
                     ${sessionScope.user.username}
                 </p>
+                <a href="do/signout"><fmt:message bundle="${msg}" key="common.signout"/> </a>
             </c:otherwise>
         </c:choose>
     </jsp:body>
