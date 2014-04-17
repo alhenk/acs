@@ -7,10 +7,13 @@
   <display-name>Archetype Created Web Application</display-name>
     <servlet>
         <servlet-name>Controller</servlet-name>
-        <servlet-class>kaz.trei.acs.servlet.Controller</servlet-class>
+        <servlet-class>kz.trei.acs.servlet.Controller</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/do/*</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>kz.trei.acs.action.DBInit</listener-class>
+    </listener>
 </web-app>
