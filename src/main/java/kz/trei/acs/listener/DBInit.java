@@ -18,7 +18,7 @@ public class DBInit implements ServletContextListener {
     private static final Logger LOGGER = Logger.getLogger(DBInit.class);
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        boolean tableExist=DbManager.isTableExist("USERS");
+        boolean tableExist=DbManager.isTableExist("ACSUSERS");
         LOGGER.debug("Table exist = " + tableExist);
         if(!tableExist){
             DbManager.createUserTable();
