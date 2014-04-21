@@ -6,7 +6,23 @@ public class User {
     private int id;
     private String username;
     private String password;
+    private RoleType role;
     private String tableId;
+
+    public User(){
+        this.id = 1;
+        this.username = "admin";
+        this.password = "123";
+        this.tableId = "KK0000001";
+        this.role = RoleType.UNREGISTERED;
+    }
+
+    public User(String username, String password, String tableId) {
+        this.username = username;
+        this.password = password;
+        this.tableId = tableId;
+        this.role = RoleType.UNREGISTERED;
+    }
 
     public int getId() {
         return id;
@@ -16,19 +32,9 @@ public class User {
         this.id = id;
     }
 
-    public User(){
-        this.id = 1;
+    public RoleType getRole() {return role;}
 
-        this.username = "admin";
-        this.password = "123";
-        this.tableId = "KK0000001";
-    }
-
-    public User(String username, String password, String tableId) {
-        this.username = username;
-        this.password = password;
-        this.tableId = tableId;
-    }
+    public void setRole(RoleType role) {this.role = role;}
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -74,8 +80,10 @@ public class User {
 
     @Override
     public int hashCode() {
-        int result = username.hashCode();
+        int result = id;
+        result = 31 * result + username.hashCode();
         result = 31 * result + password.hashCode();
+        result = 31 * result + role.hashCode();
         result = 31 * result + tableId.hashCode();
         return result;
     }
