@@ -11,58 +11,53 @@ public class DbManager {
     public static boolean isTableExist(String tablename){
         Connection conn = null;
         ResultSet tables = null;
+        DatabaseMetaData dbm;
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
         try {
-            Class.forName("org.h2.Driver");
-            conn = DriverManager.getConnection("jdbc:h2:~/acs");
-            DatabaseMetaData dbm = conn.getMetaData();
+            conn = connectionPool.getConnection();
+            dbm = conn.getMetaData();
             tables = dbm.getTables(null, null,tablename.toUpperCase(), null);
             if (tables.next()) return true;
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (ConnectionPoolException e) {
             e.printStackTrace();
-        }finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+        } finally {
+            connectionPool.returnConnection(conn);
         }
         return false;
     }
     public static void createUserTable(){
         Statement stat = null;
         Connection conn = null;
-
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
         try {
-            Class.forName("org.h2.Driver");
-            conn = DriverManager.getConnection("jdbc:h2:~/acs");
+            conn = connectionPool.getConnection();
             stat =conn.createStatement();
             stat.execute("CREATE TABLE  Users (id INT, userName varchar(20), password varchar(32), userID varchar(32), userRole varchar(20) )");
             stat.execute("INSERT INTO Users VALUES (1,'admin', '123', '1234567890', 'ADMINISTRATOR')");
             stat.execute("INSERT INTO Users VALUES (2,'Alhen', '123', '0000000001', 'SUPERVISOR')");
+            stat.execute("INSERT INTO Users VALUES (3,'Bob', '123', '0000000002', 'EMPLOYEE')");
             ResultSet rs;
             rs = stat.executeQuery("SELECT * FROM Users");
-
             while(rs.next()){
                 LOGGER.debug(rs.getString("id")+"\t");
                 LOGGER.debug(rs.getString("userName"));
             }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            if (conn != null) {
+        } catch (ConnectionPoolException e) {
+            e.printStackTrace();
+        } finally {
+            if (stat != null) {
                 try {
-                    conn.close();
+                    stat.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
+            connectionPool.returnConnection(conn);
         }
     }
 }
