@@ -28,6 +28,13 @@ public class SetLanguage implements Action  {
         request.getSession().setAttribute("locale", locale);
         LOGGER.debug("language = " +language +"; country = " + country);
         LOGGER.debug("locale = " +locale);
+        String referer = request.getHeader("referer");
+        LOGGER.debug("pathInfo -> " + request.getPathInfo());
+        LOGGER.debug("request URL -> " + request.getRequestURL());
+        LOGGER.debug("request URI -> " + request.getRequestURI());
+        LOGGER.debug("contextPath -> " + request.getContextPath() );
+        LOGGER.debug("Header referer -> " + request.getHeader("referer") );
+
         return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
     }
 }
