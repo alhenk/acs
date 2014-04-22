@@ -41,7 +41,7 @@ public class DbManager {
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id INT, userName varchar(20), password varchar(32), userID varchar(32), userRole varchar(20) )");
+            stat.execute("CREATE TABLE " + users + " (id INT, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
             stat.execute("INSERT INTO " + users + " VALUES (1,'admin', '123', '1234567890', 'ADMINISTRATOR')");
             stat.execute("INSERT INTO " + users +" VALUES (2,'Alhen', '123', '0000000001', 'SUPERVISOR')");
             stat.execute("INSERT INTO " + users +" VALUES (3,'Bob', '123', '0000000002', 'EMPLOYEE')");
@@ -49,7 +49,7 @@ public class DbManager {
             rs = stat.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
-                LOGGER.debug(rs.getString("userName"));
+                LOGGER.debug(rs.getString("username"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());

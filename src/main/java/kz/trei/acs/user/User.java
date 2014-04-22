@@ -23,6 +23,12 @@ public class User {
         this.tableId = tableId;
         this.role = RoleType.UNREGISTERED;
     }
+    public User(String username, String password, String tableId, RoleType role) {
+        this.username = username;
+        this.password = password;
+        this.tableId = tableId;
+        this.role = role;
+    }
 
     public int getId() {
         return id;
