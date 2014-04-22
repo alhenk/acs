@@ -20,13 +20,13 @@ public class DbManager {
         try {
             conn = connectionPool.getConnection();
             dbm = conn.getMetaData();
-            tables = dbm.getTables(null, null, tablename, null);
+            tables = dbm.getTables(null, null, tablename.toUpperCase(), null);
             if (tables.next()) return true;
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("get table "+tablename+" exception: " + e.getMessage());
         } catch (ConnectionPoolException e) {
-            e.printStackTrace();
+            LOGGER.error("get connection exception: " + e.getMessage());
         } finally {
             connectionPool.returnConnection(conn);
         }
@@ -52,15 +52,16 @@ public class DbManager {
                 LOGGER.debug(rs.getString("userName"));
             }
         } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
             e.printStackTrace();
         } catch (ConnectionPoolException e) {
-            e.printStackTrace();
+            LOGGER.error("get connection exception: " + e.getMessage());
         } finally {
             if (stat != null) {
                 try {
                     stat.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    LOGGER.error("SQL statement close exception: " + e.getMessage());
                 }
             }
             connectionPool.returnConnection(conn);

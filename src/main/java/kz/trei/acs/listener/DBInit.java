@@ -2,6 +2,7 @@ package kz.trei.acs.listener;
 
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.DbManager;
+import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
@@ -11,16 +12,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by alhen on 4/17/14.
- */
 public class DBInit implements ServletContextListener {
+    static {
+        PropertyManager.load("configure.properties");
+    }
     private static final Logger LOGGER = Logger.getLogger(DBInit.class);
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        boolean tableExist=DbManager.isTableExist("ACSUSERS");
-        LOGGER.debug("Table exist = " + tableExist);
-        if(!tableExist){
+        String users = PropertyManager.getValue("db.user.table");
+        boolean userTableExist=DbManager.isTableExist(users);
+        LOGGER.debug("Table exist = " + userTableExist);
+        if(!userTableExist){
             DbManager.createUserTable();
         }
     }

@@ -22,7 +22,10 @@ public class ConnectionPool {
     private final Queue<Connection> resources = new LinkedList<Connection>();
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
     private static ConnectionPool instance;
-
+    private static String dbDriver = PropertyManager.getValue("db.driver");
+    private static String dbUrl = PropertyManager.getValue("db.url");
+    private static String dbUser = PropertyManager.getValue("db.user");
+    private static String dbPassword = PropertyManager.getValue("db.password");
 
     public static ConnectionPool getInstance() {
         if (instance == null) {
@@ -38,14 +41,14 @@ public class ConnectionPool {
 
     private void init() {
         try {
-            Class.forName("org.h2.Driver");
+            Class.forName(dbDriver);
             for(int i=0;i<POOL_SIZE;i++){
-                resources.add(DriverManager.getConnection("jdbc:h2:~/acs"));
+                resources.add(DriverManager.getConnection(dbUrl,dbUser,dbPassword));
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            LOGGER.error("get connection exception: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("DB driver exception: " + e.getMessage());
         }
     }
 
@@ -56,7 +59,7 @@ public class ConnectionPool {
                 return connection;
             }
         } catch (InterruptedException e) {
-            LOGGER.error(e);
+            LOGGER.error("get connection exception: "+e.getMessage());
         }
         throw new ConnectionPoolException("Path wait time out");
     }
@@ -71,7 +74,7 @@ public class ConnectionPool {
             try {
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOGGER.error("connection close exception: " + e.getMessage());
             }
         }
     }
