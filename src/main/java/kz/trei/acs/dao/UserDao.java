@@ -31,8 +31,6 @@ public class UserDao {
         LOGGER.debug("Before Query ");
         rs = stat.executeQuery("SELECT * FROM " + userTable +
                 " WHERE username = '" + username + "' AND password = '" + password + "'");
-//        rs = stat.executeQuery("SELECT * FROM " + users + " WHERE USERNAME = "+ username +" AND password = "+password);
-//        rs = stat.executeQuery("SELECT * FROM " + users);
         LOGGER.debug("Execute Query " + rs);
         if (rs.next()) {
             RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
