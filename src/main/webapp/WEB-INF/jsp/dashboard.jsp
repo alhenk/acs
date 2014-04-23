@@ -11,12 +11,13 @@
         <c:choose>
             <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
                 <p>ADMINISTRATOR</p>
-                <%@ include file="signupForm.jsp"%>
-                <c:if test="${not empty sessionScope.error}">
-                    <p  style="color:red;">
-                        <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
-                    </p>
-                </c:if>
+                <a href="do/create-account">Create account</a>
+                <%--<%@ include file="signupForm.jsp"%>--%>
+                <%--<c:if test="${not empty sessionScope.error}">--%>
+                    <%--<p  style="color:red;">--%>
+                        <%--<fmt:message bundle="${msg}" key="${sessionScope.error}"/>--%>
+                    <%--</p>--%>
+                <%--</c:if>--%>
             </c:when>
             <c:otherwise>
                 <p>USER</p>

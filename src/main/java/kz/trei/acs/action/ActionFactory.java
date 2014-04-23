@@ -9,7 +9,7 @@ public class ActionFactory {
     private static final Logger LOGGER = Logger.getLogger(ActionFactory.class);
     private Map<String, Action> actions;
 
-    public ActionFactory(){
+    public ActionFactory() {
         actions = new HashMap<String, Action>();
         actions.put("GET/main", new ShowMainPage());
         actions.put("POST/set-language", new SetLanguage());
@@ -17,12 +17,14 @@ public class ActionFactory {
         actions.put("POST/signup", new Signup());
         actions.put("GET/signout", new Signout());
         actions.put("GET/dashboard", new ShowDashboard());
+        actions.put("GET/create-account", new ShowCreateAccountPage());
 
         LOGGER.debug("Instantiated ActionFactory");
     }
+
     public Action create(String actionName) {
         Action action = actions.get(actionName);
-        if(action == null) return new ShowErrorPage();
+        if (action == null) return new ShowErrorPage();
         LOGGER.debug("created action = " + action.getClass().getName());
         return action;
     }
