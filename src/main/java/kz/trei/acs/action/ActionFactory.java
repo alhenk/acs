@@ -14,8 +14,10 @@ public class ActionFactory {
         actions.put("GET/main", new ShowMainPage());
         actions.put("POST/set-language", new SetLanguage());
         actions.put("POST/signin", new Signin());
+        actions.put("POST/signup", new Signup());
         actions.put("GET/signout", new Signout());
         actions.put("GET/dashboard", new ShowDashboard());
+
         LOGGER.debug("Instantiated ActionFactory");
     }
     public Action create(String actionName) {
