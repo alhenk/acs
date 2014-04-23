@@ -5,12 +5,11 @@ import kz.trei.acs.db.DbManager;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Enumeration;
 
 public class DBInit implements ServletContextListener {
     static {
@@ -31,5 +30,17 @@ public class DBInit implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         connectionPool.closeConnections();
+        // This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks wrto this class
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            try {
+                DriverManager.deregisterDriver(driver);
+                LOGGER.info(String.format("deregistering jdbc driver: %s", driver));
+            } catch (SQLException e) {
+                LOGGER.info(String.format("Error deregistering driver %s", driver), e);
+            }
+
+        }
     }
 }

@@ -43,7 +43,8 @@ public class ConnectionPool {
         try {
             Class.forName(dbDriver);
             for(int i=0;i<POOL_SIZE;i++){
-                resources.add(DriverManager.getConnection(dbUrl,dbUser,dbPassword));
+//                resources.add(DriverManager.getConnection(dbUrl,dbUser,dbPassword));
+                resources.add(DriverManager.getConnection(dbUrl));
             }
         } catch (SQLException e){
             LOGGER.error("get connection exception: " + e.getMessage());

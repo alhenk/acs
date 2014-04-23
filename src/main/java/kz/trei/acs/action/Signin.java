@@ -2,6 +2,7 @@ package kz.trei.acs.action;
 
 
 import kz.trei.acs.dao.UserDao;
+import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
@@ -33,6 +34,6 @@ public class Signin implements Action{
         }
         session.removeAttribute("error");
         session.setAttribute("user", user);
-        return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
+        return new ActionResult(ActionType.REDIRECT,"dashboard");
     }
 }

@@ -15,6 +15,7 @@ public class ActionFactory {
         actions.put("POST/set-language", new SetLanguage());
         actions.put("POST/signin", new Signin());
         actions.put("GET/signout", new Signout());
+        actions.put("GET/dashboard", new ShowDashboard());
         LOGGER.debug("Instantiated ActionFactory");
     }
     public Action create(String actionName) {
