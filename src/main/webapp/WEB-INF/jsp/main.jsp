@@ -10,7 +10,7 @@
             <c:when test="${empty sessionScope['user']}">
                 <%@include file="signinForm.jsp" %>
                 <c:if test="${not empty sessionScope.error}">
-                    <p  style="color:red;">
+                    <p style="color:red;">
                         <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
                     </p>
                 </c:if>

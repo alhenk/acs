@@ -3,15 +3,15 @@
     <table>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.username"/>:</td>
-            <td align="left"><input type="text" name="username"></td>
+            <td align="left"><input type="text" name="username" value="${sessionScope["username"]}"></td>
         </tr>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.password"/> :</td>
-            <td align="left"><input type="password" name="password"></td>
+            <td align="left"><input type="password" name="password" ></td>
         </tr>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.table-id"/> :</td>
-            <td align="left"><input type="text" name="table-id"></td>
+            <td align="left"><input type="text" name="table-id" value="${sessionScope["table-id"]}"></td>
         </tr>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.user-role"/> :</td>

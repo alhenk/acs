@@ -19,11 +19,18 @@ public class Signup implements Action{
         String password = request.getParameter("password");
         String userRole = request.getParameter("user-role");
         String tableID = request.getParameter("table-id");
+        session.setAttribute("username", username);
+        session.setAttribute("user-role", userRole);
+        session.setAttribute("table-id", tableID);
 
         UserDao userDAO = new UserDao();
         if(isFormComplete(request)){
             User user = new User(username, password, tableID, RoleType.EMPLOYEE);
             userDAO.create(user);
+            session.removeAttribute("username");
+            session.removeAttribute("user-role");
+            session.removeAttribute("table-id");
+            session.removeAttribute("error");
             return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
         }
         session.setAttribute("error", "form.incomplete");
