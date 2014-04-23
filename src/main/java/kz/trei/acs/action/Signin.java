@@ -23,12 +23,12 @@ public class Signin implements Action{
         try {
             user = userDAO.find(username,password);
         } catch (Exception e) {
-            session.setAttribute("error", "main.wrong.password");
+            session.setAttribute("error", "form.wrong.password");
             return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
 //            return new ActionResult(ActionType.FORWARD,"errorPage");
         }
         if (user == null){
-            session.setAttribute("error", "main.wrong.password");
+            session.setAttribute("error", "form.wrong.password");
             //session.setAttribute("error", PropertyManager.getValue("main.wrong.password"));
             return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
         }

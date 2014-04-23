@@ -8,7 +8,7 @@
     <jsp:body>
         <c:choose>
             <c:when test="${empty sessionScope['user']}">
-                <%@include file="loginForm.jsp" %>
+                <%@include file="signinForm.jsp" %>
                 <c:if test="${not empty sessionScope.error}">
                     <p  style="color:red;">
                         <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
@@ -16,7 +16,7 @@
                 </c:if>
             </c:when>
             <c:otherwise>
-                <p><fmt:message bundle="${msg}" key="main.welcome"/>
+                <p><fmt:message bundle="${msg}" key="common.welcome"/>
                         ${sessionScope.user.username}
                 </p>
                 <a href="do/dashboard"><fmt:message bundle="${msg}" key="common.dashboard"/></a>

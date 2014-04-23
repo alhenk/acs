@@ -41,10 +41,10 @@ public class DbManager {
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id INT, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
-            stat.execute("INSERT INTO " + users + " VALUES (1,'admin', '123', '1234567890', 'ADMINISTRATOR')");
-            stat.execute("INSERT INTO " + users +" VALUES (2,'Alhen', '123', '0000000001', 'SUPERVISOR')");
-            stat.execute("INSERT INTO " + users +" VALUES (3,'Bob', '123', '0000000002', 'EMPLOYEE')");
+            stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
+            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', '1234567890', 'ADMINISTRATOR')");
+            stat.execute("INSERT INTO " + users +"(username, password, tableID, userRole) VALUES ('Alhen', '123', '0000000001', 'SUPERVISOR')");
+            stat.execute("INSERT INTO " + users +"(username, password, tableID, userRole) VALUES ('Bob', '123', '0000000002', 'EMPLOYEE')");
             ResultSet rs;
             rs = stat.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
