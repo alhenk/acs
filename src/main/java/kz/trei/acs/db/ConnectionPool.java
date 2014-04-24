@@ -16,16 +16,16 @@ public class ConnectionPool {
         PropertyManager.load("configure.properties");
     }
     private final static int POOL_SIZE = Integer.valueOf(PropertyManager
-            .getValue("db.connection.poolSize"));
-    private final static long WAIT_MAX = Long.valueOf(PropertyManager.getValue("db.connection.wait.millis.max"));
+            .getValue("connection.poolSize"));
+    private final static long WAIT_MAX = Long.valueOf(PropertyManager.getValue("connection.wait.millis.max"));
     private final Semaphore semaphore = new Semaphore(POOL_SIZE, true);
     private final Queue<Connection> resources = new LinkedList<Connection>();
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
     private static ConnectionPool instance;
-    private static String dbDriver = PropertyManager.getValue("db.driver");
-    private static String dbUrl = PropertyManager.getValue("db.url");
-    private static String dbUser = PropertyManager.getValue("db.user");
-    private static String dbPassword = PropertyManager.getValue("db.password");
+    private static String dbDriver = PropertyManager.getValue("db.h2.driver");
+    private static String dbUrl = PropertyManager.getValue("db.h2.url");
+    private static String dbUser = PropertyManager.getValue("db.h2.user");
+    private static String dbPassword = PropertyManager.getValue("db.h2.password");
 
     public static ConnectionPool getInstance() {
         if (instance == null) {
@@ -43,7 +43,7 @@ public class ConnectionPool {
         try {
             Class.forName(dbDriver);
             for(int i=0;i<POOL_SIZE;i++){
-//                resources.add(DriverManager.getConnection(dbUrl,dbUser,dbPassword));
+                //resources.add(DriverManager.getConnection(dbUrl,dbUser,dbPassword));
                 resources.add(DriverManager.getConnection(dbUrl));
             }
         } catch (SQLException e){

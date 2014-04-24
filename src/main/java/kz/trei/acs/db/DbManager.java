@@ -37,7 +37,7 @@ public class DbManager {
         Statement stat = null;
         Connection conn = null;
         ConnectionPool connectionPool = ConnectionPool.getInstance();
-        String users = PropertyManager.getValue("db.user.table");
+        String users = PropertyManager.getValue("user.table");
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();

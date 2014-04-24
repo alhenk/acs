@@ -17,7 +17,7 @@ public class UserDao {
 
     public User find(String username, String password) throws Exception {
         LOGGER.debug("Entered User DAO");
-        String userTable = PropertyManager.getValue("db.user.table");
+        String userTable = PropertyManager.getValue("user.table");
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection conn = connectionPool.getConnection();
         LOGGER.debug("Got connection " + conn);
