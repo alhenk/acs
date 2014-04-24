@@ -3,14 +3,14 @@ package kz.trei.acs.user;
 
 public class User {
     private static final long serialVersionUID = -8916590958085449790L;
-    private int id;
+    private long id;
     private String username;
     private String password;
     private RoleType role;
     private String tableId;
 
     public User(){
-        this.id = 1;
+        this.id = 1L;
         this.username = "admin";
         this.password = "123";
         this.tableId = "KK0000001";
@@ -30,7 +30,7 @@ public class User {
         this.role = role;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -86,7 +86,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = (int) (id ^ (id >>> 32));
         result = 31 * result + username.hashCode();
         result = 31 * result + password.hashCode();
         result = 31 * result + role.hashCode();
