@@ -1,5 +1,5 @@
 <h2><fmt:message bundle="${msg}" key="form.please-login"/> </h2>
-<form action="do/signin" method="post">
+<form action="do/sign-in" method="post">
     <table>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.username"/>:</td>

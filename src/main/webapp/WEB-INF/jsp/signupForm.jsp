@@ -1,5 +1,5 @@
-<h2><fmt:message bundle="${msg}" key="admin.create.user"/> </h2>
-<form action="do/signup" method="post">
+<h2><fmt:message bundle="${msg}" key="admin.create.account"/> </h2>
+<form action="do/sign-up" method="post">
     <table>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.username"/>:</td>

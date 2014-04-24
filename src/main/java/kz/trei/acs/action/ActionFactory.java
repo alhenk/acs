@@ -13,16 +13,16 @@ public class ActionFactory {
         actions = new HashMap<String, Action>();
         actions.put("GET/main", new ShowMainPage());
         actions.put("POST/set-language", new SetLanguage());
-        actions.put("POST/signin", new Signin());
-        actions.put("POST/signup", new Signup());
-        actions.put("GET/signout", new Signout());
+        actions.put("POST/sign-in", new Signin());
+        actions.put("POST/sign-up", new Signup());
+        actions.put("GET/sign-out", new Signout());
         actions.put("GET/dashboard", new ShowDashboard());
-        actions.put("GET/create-account", new ShowCreateAccountPage());
+        actions.put("GET/getAction-account", new ShowCreateAccountPage());
 
         LOGGER.debug("Instantiated ActionFactory");
     }
 
-    public Action create(String actionName) {
+    public Action getAction(String actionName) {
         Action action = actions.get(actionName);
         if (action == null) return new ShowErrorPage();
         LOGGER.debug("created action = " + action.getClass().getName());

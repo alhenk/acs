@@ -3,14 +3,11 @@ package kz.trei.acs.action;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Created by alhen on 4/23/14.
- */
+
 public class Signup implements Action{
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -22,6 +19,7 @@ public class Signup implements Action{
         session.setAttribute("username", username);
         session.setAttribute("user-role", userRole);
         session.setAttribute("table-id", tableID);
+        session.removeAttribute("status");
 
         UserDao userDAO = new UserDao();
         if(isFormComplete(request)){
@@ -31,6 +29,7 @@ public class Signup implements Action{
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
             session.removeAttribute("error");
+            session.setAttribute("status","status.create.account.success");
             return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
         }
         session.setAttribute("error", "form.incomplete");
@@ -48,6 +47,4 @@ public class Signup implements Action{
         if(tableID==null || tableID.isEmpty()) return false;
         return true;
     }
-
-
 }

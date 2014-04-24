@@ -5,12 +5,16 @@
 
 <mtag:pagetemplate title="dashboard">
     <jsp:body>
-                <p>CREATE ACCOUNT</p>
-                <%@ include file="signupForm.jsp"%>
-                <c:if test="${not empty sessionScope.error}">
-                    <p  style="color:red;">
-                        <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
-                    </p>
-                </c:if>
+        <%@ include file="signupForm.jsp"%>
+            <c:if test="${not empty sessionScope.error}">
+                <p  style="color:red;">
+                    <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
+                </p>
+            </c:if>
+        <c:if test="${not empty sessionScope.status}">
+            <p>
+                <fmt:message bundle="${msg}" key="${sessionScope.status}"/>
+            </p>
+        </c:if>
     </jsp:body>
 </mtag:pagetemplate>

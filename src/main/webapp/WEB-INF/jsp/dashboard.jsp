@@ -7,17 +7,11 @@
 
 <mtag:pagetemplate title="dashboard">
     <jsp:body>
-        <%--<h2><fmt:message bundle="${msg}" key="common.dashboard"/></h2>--%>
         <c:choose>
             <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
-                <p>ADMINISTRATOR</p>
-                <a href="do/create-account">Create account</a>
-                <%--<%@ include file="signupForm.jsp"%>--%>
-                <%--<c:if test="${not empty sessionScope.error}">--%>
-                    <%--<p  style="color:red;">--%>
-                        <%--<fmt:message bundle="${msg}" key="${sessionScope.error}"/>--%>
-                    <%--</p>--%>
-                <%--</c:if>--%>
+                <p><fmt:message bundle="${msg}" key="common.administrator"/></p>
+                <a href="do/create-account"><fmt:message bundle="${msg}" key="admin.create.account"/></a><br/>
+                <a href="do/edit-account"><fmt:message bundle="${msg}" key="admin.edit.account"/></a>
             </c:when>
             <c:otherwise>
                 <p>USER</p>

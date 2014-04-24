@@ -9,6 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ShowCreateAccountPage implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        return new ActionResult(ActionType.FORWARD,"create-account");
+        return new ActionResult(ActionType.FORWARD,"getAction-account");
     }
 }

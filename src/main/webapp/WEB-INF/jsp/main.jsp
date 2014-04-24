@@ -22,7 +22,7 @@
                 <a href="do/dashboard"><fmt:message bundle="${msg}" key="common.dashboard"/></a>
                 <br/>
 
-                <a href="do/signout"><fmt:message bundle="${msg}" key="common.signout"/> </a>
+                <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/> </a>
             </c:otherwise>
         </c:choose>
     </jsp:body>

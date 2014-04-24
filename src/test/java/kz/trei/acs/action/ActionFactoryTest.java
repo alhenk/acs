@@ -18,7 +18,7 @@ public class ActionFactoryTest extends TestCase {
     public void testCreate() throws Exception {
         String actionName = "GET/main";
 
-        action = actionFactory.create(actionName);
+        action = actionFactory.getAction(actionName);
         expectedAction = new ShowMainPage();
         assertEquals(action.getClass().getName(),
                 expectedAction.getClass().getName());
