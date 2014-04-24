@@ -12,3 +12,4 @@ JAVALAB PROJECT
 
 Branch develop
 - db: h2 dependency, simple table existence check
+- 
