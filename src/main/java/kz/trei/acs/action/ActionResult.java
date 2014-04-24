@@ -2,15 +2,15 @@ package kz.trei.acs.action;
 
 public class ActionResult {
     private ActionType method;
-    private String path;
+    private String view;
 
     public ActionResult() {
         method = ActionType.REDIRECT;
-        path = "/";
+        view = "/";
     }
-    public ActionResult(ActionType method, String path){
+    public ActionResult(ActionType method, String view){
         this.method = method;
-        this.path = path;
+        this.view = view;
     }
 
     public ActionType getMethod() {
@@ -21,11 +21,11 @@ public class ActionResult {
         this.method = method;
     }
 
-    public String getPath() {
-        return path;
+    public String getView() {
+        return view;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setView(String view) {
+        this.view = view;
     }
 }

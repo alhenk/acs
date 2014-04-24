@@ -17,7 +17,7 @@ public class ActionFactory {
         actions.put("POST/sign-up", new Signup());
         actions.put("GET/sign-out", new Signout());
         actions.put("GET/dashboard", new ShowDashboard());
-        actions.put("GET/getAction-account", new ShowCreateAccountPage());
+        actions.put("GET/create-account", new ShowCreateAccountPage());
 
         LOGGER.debug("Instantiated ActionFactory");
     }

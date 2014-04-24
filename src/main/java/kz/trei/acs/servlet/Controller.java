@@ -29,13 +29,13 @@ public class Controller extends HttpServlet {
         ActionResult result = action.execute(request, response);
         switch (result.getMethod()){
             case FORWARD:
-                LOGGER.debug("FORWARD -> "+result.getPath());
-                String path = PropertyManager.getValue("jsp.view.path")+result.getPath()+".jsp";
+                LOGGER.debug("FORWARD -> "+result.getView());
+                String path = PropertyManager.getValue("jsp.view.path")+result.getView()+".jsp";
                 request.getRequestDispatcher(path).forward(request,response);
                 break;
             case REDIRECT:
-                LOGGER.debug("REDIRECT -> "+result.getPath());
-                response.sendRedirect(result.getPath());
+                LOGGER.debug("REDIRECT -> "+result.getView());
+                response.sendRedirect(result.getView());
                 break;
             default:
                 response.sendRedirect("/");
