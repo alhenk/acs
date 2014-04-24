@@ -10,8 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class Controller extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(Controller.class);
@@ -23,18 +23,19 @@ public class Controller extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.debug("Entered service() Method = " + request.getMethod() + " PathURI = " + request.getRequestURI());
+        HttpSession session = request.getSession();
         String actionName = getActionName(request);
-        Action action = actionFactory.create(actionName);
+        Action action = actionFactory.getAction(actionName);
         ActionResult result = action.execute(request, response);
         switch (result.getMethod()){
             case FORWARD:
-                LOGGER.debug("FORWARD -> "+result.getPath());
-                String path = PropertyManager.getValue("jsp.view.path")+result.getPath()+".jsp";
+                LOGGER.debug("FORWARD -> "+result.getView());
+                String path = PropertyManager.getValue("jsp.view.path")+result.getView()+".jsp";
                 request.getRequestDispatcher(path).forward(request,response);
                 break;
             case REDIRECT:
-                LOGGER.debug("REDIRECT -> "+result.getPath());
-                response.sendRedirect(result.getPath());
+                LOGGER.debug("REDIRECT -> "+result.getView());
+                response.sendRedirect(result.getView());
                 break;
             default:
                 response.sendRedirect("/");
