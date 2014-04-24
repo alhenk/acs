@@ -2,6 +2,7 @@ package kz.trei.acs.db;
 
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,22 +11,23 @@ import java.util.Queue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-
 public class ConnectionPool {
     static {
         PropertyManager.load("configure.properties");
     }
+
     private final static int POOL_SIZE = Integer.valueOf(PropertyManager
             .getValue("connection.poolSize"));
     private final static long WAIT_MAX = Long.valueOf(PropertyManager.getValue("connection.wait.millis.max"));
-    private final Semaphore semaphore = new Semaphore(POOL_SIZE, true);
-    private final Queue<Connection> resources = new LinkedList<Connection>();
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
     private static ConnectionPool instance;
-    private static String dbDriver = PropertyManager.getValue("db.h2.driver");
-    private static String dbUrl = PropertyManager.getValue("db.h2.url");
-    private static String dbUser = PropertyManager.getValue("db.h2.user");
-    private static String dbPassword = PropertyManager.getValue("db.h2.password");
+    private static String dbName = PropertyManager.getValue("db.name");
+    private static String dbDriver = PropertyManager.getValue(dbName + ".driver");
+    private static String dbUrl = PropertyManager.getValue(dbName + ".url");
+    private static String dbUser = PropertyManager.getValue(dbName + ".user");
+    private static String dbPassword = PropertyManager.getValue(dbName + ".password");
+    private final Semaphore semaphore = new Semaphore(POOL_SIZE, true);
+    private final Queue<Connection> resources = new LinkedList<Connection>();
 
     public static ConnectionPool getInstance() {
         if (instance == null) {
@@ -42,11 +44,11 @@ public class ConnectionPool {
     private void init() {
         try {
             Class.forName(dbDriver);
-            for(int i=0;i<POOL_SIZE;i++){
+            for (int i = 0; i < POOL_SIZE; i++) {
                 //resources.add(DriverManager.getConnection(dbUrl,dbUser,dbPassword));
                 resources.add(DriverManager.getConnection(dbUrl));
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             LOGGER.error("DB driver exception: " + e.getMessage());
@@ -60,7 +62,7 @@ public class ConnectionPool {
                 return connection;
             }
         } catch (InterruptedException e) {
-            LOGGER.error("get connection exception: "+e.getMessage());
+            LOGGER.error("get connection exception: " + e.getMessage());
         }
         throw new ConnectionPoolException("Path wait time out");
     }
@@ -70,8 +72,8 @@ public class ConnectionPool {
         semaphore.release();
     }
 
-    public void closeConnections(){
-        for(Connection connection : resources){
+    public void closeConnections() {
+        for (Connection connection : resources) {
             try {
                 connection.close();
             } catch (SQLException e) {

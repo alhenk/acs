@@ -53,7 +53,7 @@ public class UserDao {
         Statement stat = null;
         Connection conn = null;
         ConnectionPool connectionPool = ConnectionPool.getInstance();
-        String users = PropertyManager.getValue("db.user.table");
+        String users = PropertyManager.getValue("user.table");
         String username = user.getUsername();
         String password = user.getPassword();
         RoleType userRole = user.getRole();

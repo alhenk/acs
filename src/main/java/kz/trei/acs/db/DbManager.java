@@ -5,12 +5,15 @@ import org.apache.log4j.Logger;
 
 import java.sql.*;
 
-
-public class DbManager {
+public final class DbManager {
     static {
         PropertyManager.load("configure.properties");
     }
+
     private static final Logger LOGGER = Logger.getLogger(DbManager.class);
+
+    private DbManager() {
+    }
 
     public static boolean isTableExist(String tablename) {
         Connection conn = null;
@@ -24,7 +27,7 @@ public class DbManager {
             if (tables.next()) return true;
             return false;
         } catch (SQLException e) {
-            LOGGER.error("get table "+tablename+" exception: " + e.getMessage());
+            LOGGER.error("get table " + tablename + " exception: " + e.getMessage());
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
         } finally {
@@ -36,6 +39,7 @@ public class DbManager {
     public static void createUserTable() {
         Statement stat = null;
         Connection conn = null;
+        ResultSet rs = null;
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         String users = PropertyManager.getValue("user.table");
         try {
@@ -43,9 +47,9 @@ public class DbManager {
             stat = conn.createStatement();
             stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', '1234567890', 'ADMINISTRATOR')");
-            stat.execute("INSERT INTO " + users +"(username, password, tableID, userRole) VALUES ('Alhen', '123', '0000000001', 'SUPERVISOR')");
-            stat.execute("INSERT INTO " + users +"(username, password, tableID, userRole) VALUES ('Bob', '123', '0000000002', 'EMPLOYEE')");
-            ResultSet rs;
+            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', '0000000001', 'SUPERVISOR')");
+            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', '0000000002', 'EMPLOYEE')");
+
             rs = stat.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
@@ -57,14 +61,28 @@ public class DbManager {
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
         } finally {
-            if (stat != null) {
-                try {
-                    stat.close();
-                } catch (SQLException e) {
-                    LOGGER.error("SQL statement close exception: " + e.getMessage());
-                }
-            }
+            close(stat, rs);
             connectionPool.returnConnection(conn);
+        }
+    }
+
+    private static void close(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                LOGGER.error("SQL statement close exception: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void close(Statement statement, ResultSet resultSet) {
+        if (resultSet != null) {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                LOGGER.error("Result Set close exception: " + e.getMessage());
+            }
         }
     }
 }

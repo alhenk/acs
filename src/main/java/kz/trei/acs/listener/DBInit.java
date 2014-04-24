@@ -5,23 +5,26 @@ import kz.trei.acs.db.DbManager;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.sql.*;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Enumeration;
 
 public class DBInit implements ServletContextListener {
     static {
         PropertyManager.load("configure.properties");
     }
+
     private static final Logger LOGGER = Logger.getLogger(DBInit.class);
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         String users = PropertyManager.getValue("user.table");
-        boolean userTableExist=DbManager.isTableExist(users);
+        boolean userTableExist = DbManager.isTableExist(users);
         LOGGER.debug("Table exist = " + userTableExist);
-        if(!userTableExist){
+        if (!userTableExist) {
             DbManager.createUserTable();
         }
     }
