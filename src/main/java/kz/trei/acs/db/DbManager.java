@@ -59,7 +59,7 @@ public final class DbManager {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             e.printStackTrace();
         } catch (ConnectionPoolException e) {
-            LOGGER.error("get connection exception: " + e.getMessage());
+            LOGGER.error("Get connection exception: " + e.getMessage());
         } finally {
             close(stat, rs);
             connectionPool.returnConnection(conn);

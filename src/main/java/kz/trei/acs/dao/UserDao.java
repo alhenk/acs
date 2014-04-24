@@ -15,6 +15,7 @@ import java.sql.Statement;
 public class UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDao.class);
 
+
     public User find(String username, String password) throws Exception {
         LOGGER.debug("Entered User DAO");
         String userTable = PropertyManager.getValue("user.table");
