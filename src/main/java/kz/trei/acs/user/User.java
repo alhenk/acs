@@ -1,7 +1,9 @@
 package kz.trei.acs.user;
 
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     private static final long serialVersionUID = -8916590958085449790L;
     private long id;
     private String username;
