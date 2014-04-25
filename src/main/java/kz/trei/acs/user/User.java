@@ -20,12 +20,20 @@ public class User implements Serializable{
     }
 
     public User(String username, String password, String tableId) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.tableId = tableId;
         this.role = RoleType.UNREGISTERED;
     }
     public User(String username, String password, String tableId, RoleType role) {
+        this.username = username;
+        this.password = password;
+        this.tableId = tableId;
+        this.role = role;
+    }
+
+    public User(Long id, String username, String password, String tableId, RoleType role) {
         this.username = username;
         this.password = password;
         this.tableId = tableId;
