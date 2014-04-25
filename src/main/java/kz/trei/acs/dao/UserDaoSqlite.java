@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by alhen on 4/25/14.
@@ -115,5 +117,27 @@ public class UserDaoSqlite implements UserDao {
             DbUtil.close(stat, rs);
             connectionPool.returnConnection(conn);
         }
+    }
+
+    @Override
+    public List<User> list() throws Exception{
+        List<User> users = new LinkedList<User>();
+        String userTable = PropertyManager.getValue("user.table");
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        Connection conn = connectionPool.getConnection();
+        Statement stat = conn.createStatement();
+        ResultSet rs;
+        rs = stat.executeQuery("SELECT * FROM " + userTable);
+        User user;
+        while (rs.next()){
+            long id = Long.valueOf(rs.getString("id"));
+            String username = rs.getString("username");
+            String password = rs.getString("password");
+            String tableId = rs.getString("tableId");
+            RoleType role = RoleType.valueOf(rs.getString("userRole"));
+            user = new User(id, username, password, tableId, role);
+            users.add(user);
+        }
+        return users;
     }
 }

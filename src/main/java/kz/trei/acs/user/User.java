@@ -34,6 +34,7 @@ public class User implements Serializable{
     }
 
     public User(Long id, String username, String password, String tableId, RoleType role) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.tableId = tableId;

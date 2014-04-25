@@ -34,6 +34,6 @@ public class Signin implements Action {
         }
         session.removeAttribute("error");
         session.setAttribute("user", user);
-        return new ActionResult(ActionType.REDIRECT, "dashboard");
+        return new ActionResult(ActionType.REDIRECT, "main");
     }
 }

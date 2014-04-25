@@ -11,7 +11,8 @@
             <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
                 <p><fmt:message bundle="${msg}" key="common.administrator"/></p>
                 <a href="do/create-account"><fmt:message bundle="${msg}" key="admin.create.account"/></a><br/>
-                <a href="do/edit-account"><fmt:message bundle="${msg}" key="admin.edit.account"/></a>
+                <a href="do/edit-account"><fmt:message bundle="${msg}" key="admin.edit.account"/></a><br/>
+                <a href="do/user-list">USER LIST</a>
             </c:when>
             <c:otherwise>
                 <p>USER</p>
