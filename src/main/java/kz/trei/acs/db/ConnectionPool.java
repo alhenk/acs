@@ -22,10 +22,10 @@ public class ConnectionPool {
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
     private static ConnectionPool instance;
     private static String dbName = PropertyManager.getValue("db.name");
-    private static String dbDriver = PropertyManager.getValue(dbName + ".driver");
-    private static String dbUrl = PropertyManager.getValue(dbName + ".url");
-    private static String dbUser = PropertyManager.getValue(dbName + ".user");
-    private static String dbPassword = PropertyManager.getValue(dbName + ".password");
+    private static String dbDriver = PropertyManager.getValue("db."+dbName + ".driver");
+    private static String dbUrl = PropertyManager.getValue("db."+dbName + ".url");
+    private static String dbUser = PropertyManager.getValue("db."+dbName + ".user");
+    private static String dbPassword = PropertyManager.getValue("db."+dbName + ".password");
     private final Semaphore semaphore = new Semaphore(POOL_SIZE, true);
     private final Queue<Connection> resources = new LinkedList<Connection>();
 
@@ -55,6 +55,9 @@ public class ConnectionPool {
         }
     }
 
+    public String getDbName(){
+        return dbName;
+    }
     public Connection getConnection() throws ConnectionPoolException {
         try {
             if (semaphore.tryAcquire(WAIT_MAX, TimeUnit.MILLISECONDS)) {
