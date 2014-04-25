@@ -17,7 +17,7 @@ import java.sql.Statement;
  * Created by alhen on 4/25/14.
  */
 public class UserDaoSqlite implements UserDao {
-    private static final Logger LOGGER = Logger.getLogger(UserDaoH2.class);
+    private static final Logger LOGGER = Logger.getLogger(UserDaoSqlite.class);
 
     @Override
     public User find(String username, String password) throws Exception {
