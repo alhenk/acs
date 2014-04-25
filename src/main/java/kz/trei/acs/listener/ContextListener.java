@@ -1,7 +1,9 @@
 package kz.trei.acs.listener;
 
+import kz.trei.acs.dao.DaoFactory;
+import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.db.ConnectionPool;
-import kz.trei.acs.db.DbManager;
+import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
@@ -12,20 +14,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
-public class DBInit implements ServletContextListener {
+public class ContextListener implements ServletContextListener {
     static {
         PropertyManager.load("configure.properties");
     }
 
-    private static final Logger LOGGER = Logger.getLogger(DBInit.class);
+    private static final Logger LOGGER = Logger.getLogger(ContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+        DaoFactory daoFactory = DaoFactory.getFactory();
+        UserDao userDao = daoFactory.getUserDao();
         String users = PropertyManager.getValue("user.table");
-        boolean userTableExist = DbManager.isTableExist(users);
+        boolean userTableExist = DbUtil.isTableExist(users);
         LOGGER.debug("Table exist = " + userTableExist);
         if (!userTableExist) {
-            DbManager.createUserTable();
+            userDao.createUserTable();
         }
     }
 
@@ -43,7 +47,6 @@ public class DBInit implements ServletContextListener {
             } catch (SQLException e) {
                 LOGGER.info(String.format("Error deregistering driver %s", driver), e);
             }
-
         }
     }
 }

@@ -1,6 +1,8 @@
 package kz.trei.acs.action;
 
+import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
+import kz.trei.acs.dao.UserDaoH2;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +23,11 @@ public class Signup implements Action{
         session.setAttribute("table-id", tableID);
         session.removeAttribute("status");
 
-        UserDao userDAO = new UserDao();
+        DaoFactory daoFactory = DaoFactory.getFactory();
+        UserDao userDao = daoFactory.getUserDao();
         if(isFormComplete(request)){
             User user = new User(username, password, tableID, RoleType.EMPLOYEE);
-            userDAO.create(user);
+            userDao.create(user);
             session.removeAttribute("username");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
