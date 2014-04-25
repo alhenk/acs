@@ -60,6 +60,12 @@
             <version>1.3.175</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wisdom-framework</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.7.2_1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>acs</finalName>
