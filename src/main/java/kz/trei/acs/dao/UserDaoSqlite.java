@@ -96,7 +96,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
+            stat.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableID CHAR(32), userRole CHAR(20) )");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', '1234567890', 'ADMINISTRATOR')");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', '0000000001', 'SUPERVISOR')");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', '0000000002', 'EMPLOYEE')");
