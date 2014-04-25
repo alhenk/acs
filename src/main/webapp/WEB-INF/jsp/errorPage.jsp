@@ -4,6 +4,6 @@
 <mtag:pagetemplate title="error">
     <jsp:body>
         <%--<p>E&nbsp;R&nbsp;R&nbsp;O&nbsp;R</p>--%>
-        <fmt:message bundle="${msg}" key="error.error"/>
+        <fmt:message bundle="${msg}" key="common.error"/>
     </jsp:body>
 </mtag:pagetemplate>

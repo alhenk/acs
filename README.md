@@ -12,3 +12,5 @@ JAVALAB PROJECT
 
 Branch develop
 - dao: db h2, sqlite
+- db: h2 dependency, simple table existence check
+
