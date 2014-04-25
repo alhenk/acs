@@ -11,3 +11,4 @@ JAVALAB PROJECT
 - user: sign in action, user object attribute
 
 Branch develop
+- dao: db h2, sqlite
