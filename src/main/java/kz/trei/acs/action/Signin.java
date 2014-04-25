@@ -1,7 +1,9 @@
 package kz.trei.acs.action;
 
 
+import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
+import kz.trei.acs.dao.UserDaoH2;
 import kz.trei.acs.user.User;
 import org.apache.log4j.Logger;
 
@@ -18,9 +20,10 @@ public class Signin implements Action {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         User user = null;
-        UserDao userDAO = new UserDao();
+        DaoFactory daoFactory = DaoFactory.getFactory();
+        UserDao userDao = daoFactory.getUserDao();
         try {
-            user = userDAO.find(username, password);
+            user = userDao.find(username, password);
         } catch (Exception e) {
             session.setAttribute("error", "form.wrong.password");
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
