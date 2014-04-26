@@ -30,7 +30,6 @@ public class Signup implements Action{
             session.removeAttribute("username");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
-            session.removeAttribute("error");
             session.setAttribute("status","status.create.account.success");
             return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
         }

@@ -9,12 +9,16 @@
             <c:if test="${not empty sessionScope.error}">
                 <p  style="color:red;">
                     <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
+                    <c:remove var="error" scope="session"/>
                 </p>
             </c:if>
         <c:if test="${not empty sessionScope.status}">
             <p>
                 <fmt:message bundle="${msg}" key="${sessionScope.status}"/>
+                <c:remove var="status" scope="session"/>
             </p>
         </c:if>
+        <br/>
+        <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
     </jsp:body>
 </mtag:pagetemplate>

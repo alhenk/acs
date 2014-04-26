@@ -12,6 +12,7 @@
                 <c:if test="${not empty sessionScope.error}">
                     <p style="color:red;">
                         <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
+                        <c:remove var="error" scope="session"/>
                     </p>
                 </c:if>
             </c:when>

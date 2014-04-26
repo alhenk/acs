@@ -32,7 +32,6 @@ public class Signin implements Action {
             session.setAttribute("error", "form.wrong.password");
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
         }
-        session.removeAttribute("error");
         session.setAttribute("user", user);
         return new ActionResult(ActionType.REDIRECT, "main");
     }
