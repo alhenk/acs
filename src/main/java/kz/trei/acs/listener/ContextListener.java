@@ -3,6 +3,7 @@ package kz.trei.acs.listener;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.db.ConnectionPool;
+import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
@@ -35,7 +36,12 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        ConnectionPool connectionPool=null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+        }
         connectionPool.closeConnections();
         // This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks wrto this class
         Enumeration<Driver> drivers = DriverManager.getDrivers();

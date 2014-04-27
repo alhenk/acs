@@ -29,7 +29,7 @@ public class ConnectionPool {
     private final Semaphore semaphore = new Semaphore(POOL_SIZE, true);
     private final Queue<Connection> resources = new LinkedList<Connection>();
 
-    public static ConnectionPool getInstance() {
+    public static ConnectionPool getInstance() throws ConnectionPoolException {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
                 if (instance == null) {
@@ -41,7 +41,7 @@ public class ConnectionPool {
         return instance;
     }
 
-    private void init() {
+    private void init() throws ConnectionPoolException {
         try {
             Class.forName(dbDriver);
             for (int i = 0; i < POOL_SIZE; i++) {
@@ -49,23 +49,28 @@ public class ConnectionPool {
                 resources.add(DriverManager.getConnection(dbUrl));
             }
         } catch (SQLException e) {
-            LOGGER.error("get connection exception: " + e.getMessage());
+            LOGGER.error("Get DB connection exception: " + e.getMessage());
+            throw new ConnectionPoolException("Get DB connection exception");
         } catch (ClassNotFoundException e) {
-            LOGGER.error("DB driver exception: " + e.getMessage());
+            LOGGER.error("DB driver class loader exception: " + e.getMessage());
+            throw new ConnectionPoolException("DB driver class loader exception");
         }
     }
 
     public String getDbName(){
         return dbName;
     }
+
     public Connection getConnection() throws ConnectionPoolException {
         try {
             if (semaphore.tryAcquire(WAIT_MAX, TimeUnit.MILLISECONDS)) {
                 Connection connection = resources.poll();
+                LOGGER.debug("get connection total = "+resources.size());
                 return connection;
             }
         } catch (InterruptedException e) {
-            LOGGER.error("get connection exception: " + e.getMessage());
+            LOGGER.error("Get DB connection exception: " + e.getMessage());
+            throw new ConnectionPoolException("Get DB connection exception");
         }
         throw new ConnectionPoolException("Path wait time out");
     }
@@ -73,6 +78,7 @@ public class ConnectionPool {
     public void returnConnection(Connection connection) {
         resources.add(connection);
         semaphore.release();
+        LOGGER.debug("return connection total = "+resources.size());
     }
 
     public void closeConnections() {
@@ -80,7 +86,7 @@ public class ConnectionPool {
             try {
                 connection.close();
             } catch (SQLException e) {
-                LOGGER.error("connection close exception: " + e.getMessage());
+                LOGGER.error("Close all connections exception: " + e.getMessage());
             }
         }
     }

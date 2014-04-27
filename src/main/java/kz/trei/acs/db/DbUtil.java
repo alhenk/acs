@@ -19,7 +19,12 @@ public final class DbUtil {
         Connection conn = null;
         ResultSet tables;
         DatabaseMetaData dbm;
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        ConnectionPool connectionPool=null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+        }
         try {
             conn = connectionPool.getConnection();
             dbm = conn.getMetaData();

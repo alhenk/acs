@@ -9,6 +9,7 @@ import java.util.List;
  */
 public interface UserDao {
     public User find(String username, String password) throws Exception;
+    public User find(long id) throws Exception;
     public void create(User user);
     public void createUserTable();
     public List<User> list()throws Exception;

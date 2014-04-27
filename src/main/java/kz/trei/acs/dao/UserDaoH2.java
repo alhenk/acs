@@ -54,10 +54,20 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
+    public User find(long id) throws Exception {
+        return null;
+    }
+
+    @Override
     public void create(User user) {
         Statement stat = null;
         Connection conn = null;
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        ConnectionPool connectionPool=null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+        }
         String users = PropertyManager.getValue("user.table");
         String username = user.getUsername();
         String password = user.getPassword();
@@ -90,7 +100,12 @@ public class UserDaoH2 implements UserDao {
         Statement stat = null;
         Connection conn = null;
         ResultSet rs = null;
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
+        ConnectionPool connectionPool=null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+        }
         String users = PropertyManager.getValue("user.table");
         try {
             conn = connectionPool.getConnection();
