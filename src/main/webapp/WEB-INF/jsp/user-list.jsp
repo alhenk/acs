@@ -11,7 +11,7 @@
                 <td>${user.username}</td>
                 <%--for debug purpose--%>
                 <td>${user.password}</td>
-                <td>${user.tableId}</td>
+                <td>${user.tableId.tableId}</td>
                 <td>${user.role}</td>
             </tr>
     </c:forEach>

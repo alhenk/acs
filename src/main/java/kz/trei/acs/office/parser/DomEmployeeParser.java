@@ -62,8 +62,8 @@ public class DomEmployeeParser implements EmployeeParser {
 				employee = new Employee.Builder();
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) node;
-					employee.setTableId(Table1C.createID(eElement
-							.getAttribute("id")));
+					employee.setTableId(Table1C.createId(eElement
+                            .getAttribute("id")));
 					employee.setFirstName(eElement
 							.getElementsByTagName("tns:firstName").item(0)
 							.getTextContent());

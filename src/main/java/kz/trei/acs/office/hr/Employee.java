@@ -100,7 +100,7 @@ public class Employee extends Person {
 	}
 
 	public String getTableIdValue() {
-		return tableId.getId();
+		return tableId.getTableId();
 	}
 
 	public void setTableId(Table1C tableId) {
@@ -108,7 +108,7 @@ public class Employee extends Person {
 	}
 
 	public void setTableId(String tableId) {
-		this.tableId = Table1C.createID(tableId);
+		this.tableId = Table1C.createId(tableId);
 	}
 
 	public void setTag(RfidTag tag) {
@@ -208,7 +208,7 @@ public class Employee extends Person {
 				+ ", uid = "
 				+ ((rfidTag != null && rfidTag.getRfidUid() != null) ? rfidTag
 						.getRfidUid().getRfidUID() : "null") + ", tableID = "
-				+ ((this.tableId != null) ? this.tableId.getId() : "null")
+				+ ((this.tableId != null) ? this.tableId.getTableId() : "null")
 				+ "]";
 	}
 

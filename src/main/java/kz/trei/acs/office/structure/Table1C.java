@@ -39,7 +39,7 @@ public final class Table1C {
     /**
      * regex id verification
      */
-    private static boolean checkID(String id) {
+    private static boolean isValid(String id) {
         String tableIDregex = PropertyManager
                 .getValue("structure.tableIDRegex");
         Pattern tableIDPattern = Pattern.compile(tableIDregex,
@@ -51,7 +51,7 @@ public final class Table1C {
     /**
      * Static fabric method with random ID
      */
-    public static Table1C createRandomID() {
+    public static Table1C createRandomId() {
         StringBuilder id = new StringBuilder();
         long number = 1L + (long) (Math.random() * 9999L);
         id.append(PropertyManager.getValue("structure.tablePrefix"));
@@ -63,8 +63,8 @@ public final class Table1C {
      *
      * @throws IllegalArgumentException
      */
-    public static Table1C createID(String id) {
-        if (checkID(id)) {
+    public static Table1C createId(String id) {
+        if (isValid(id)) {
             return new Table1C(id);
         } else {
             throw new IllegalArgumentException();
@@ -75,7 +75,7 @@ public final class Table1C {
      * Getter
      */
 
-    public String getId() {
+    public String getTableId() {
         return tableId;
     }
 

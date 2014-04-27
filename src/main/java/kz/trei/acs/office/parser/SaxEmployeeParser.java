@@ -86,10 +86,10 @@ public class SaxEmployeeParser implements EmployeeParser {
 				employee = new Employee.Builder();
 				String value = attributes.getValue("id");
 				if (value == null) {
-					employee.setTableId(Table1C.createRandomID());
+					employee.setTableId(Table1C.createRandomId());
 				} else {
 					try {
-						employee.setTableId(Table1C.createID(value));
+						employee.setTableId(Table1C.createId(value));
 					} catch (IllegalArgumentException e) {
 						LOGGER.error(e);
 					}
@@ -128,8 +128,8 @@ public class SaxEmployeeParser implements EmployeeParser {
 				employee.addRoom(RoomType.valueOf(elementValue
 						.toString().trim()));
 			} else if (qName.equalsIgnoreCase("tns:TABLEID")) {
-				employee.setTableId(Table1C.createID(elementValue.toString()
-						.trim()));
+				employee.setTableId(Table1C.createId(elementValue.toString()
+                        .trim()));
 			} else if (qName.equalsIgnoreCase("tns:RFIDTAG")) {
 				employee.setTag(tag.build());
 			} else if (qName.equalsIgnoreCase("tns:TAGTYPE")) {

@@ -1,5 +1,6 @@
 package kz.trei.acs.listener;
 
+import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.db.ConnectionPool;
@@ -30,7 +31,11 @@ public class ContextListener implements ServletContextListener {
         boolean userTableExist = DbUtil.isTableExist(users);
         LOGGER.debug("Table exist = " + userTableExist);
         if (!userTableExist) {
-            userDao.createUserTable();
+            try {
+                userDao.createUserTable();
+            } catch (DaoException e) {
+                LOGGER.error("Create user table exception " + e.getMessage());
+            }
         }
     }
 

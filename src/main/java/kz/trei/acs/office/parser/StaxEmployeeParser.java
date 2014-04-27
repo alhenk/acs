@@ -107,10 +107,10 @@ public class StaxEmployeeParser implements EmployeeParser {
 						String value = xmlReader.getAttributeValue(null,
 								"tableId");
 						if (value == null) {
-							employee.setTableId(Table1C.createRandomID());
+							employee.setTableId(Table1C.createRandomId());
 						} else {
 							try {
-								employee.setTableId(Table1C.createID(value));
+								employee.setTableId(Table1C.createId(value));
 							} catch (IllegalArgumentException e) {
 								LOGGER.error(e);
 							}
@@ -148,7 +148,7 @@ public class StaxEmployeeParser implements EmployeeParser {
 					} else if (elementName.equalsIgnoreCase("ROOM")) {
 						employee.addRoom(RoomType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("TABLEID")) {
-						employee.setTableId(Table1C.createID(elementText));
+						employee.setTableId(Table1C.createId(elementText));
 					} else if (elementName.equalsIgnoreCase("RFIDTAG")) {
 						employee.setTag(tag.build());
 					} else if (elementName.equalsIgnoreCase("TAGTYPE")) {

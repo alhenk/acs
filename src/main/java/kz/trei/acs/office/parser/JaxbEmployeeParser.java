@@ -81,7 +81,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 	}
 
 	public static Staff createTestStaff() {
-		Person person = new Employee(Table1C.createID("КК00000007"));
+		Person person = new Employee(Table1C.createId("КК00000007"));
 		Staff staff = new Staff();
 		person.setBirthday(DateStamp.create("1967-06-10"));
 		person.setFirstName("Alexandr");
@@ -101,7 +101,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 
 		((Employee) person).setTag(rfidTag);
 		staff.addEmployee(person);
-		person = new Employee(Table1C.createID("КК00000012"));
+		person = new Employee(Table1C.createId("КК00000012"));
 		person.setBirthday(DateStamp.create("1991-05-21"));
 		person.setFirstName("Oleg");
 		person.setPatronym("I.");
