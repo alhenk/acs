@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tns:staff xmlns:tns="http://www.trei.kz/attendance/tns">
+    <tns:employees>
+        <tns:employee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="tns:employee" id="КК00000007">
+            <tns:firstName>Alexandr</tns:firstName>
+            <tns:patronym>G.</tns:patronym>
+            <tns:lastName>Koryagin</tns:lastName>
+            <tns:birthday>1967-06-10</tns:birthday>
+            <tns:positions>
+                <tns:position>CHIEF_METROLOGIST</tns:position>
+                <tns:position>DEPARTMENT_HEAD</tns:position>
+            </tns:positions>
+            <tns:department>RESEARCH_AND_DEVELOPMENT</tns:department>
+            <tns:rooms>
+                <tns:room>ROOM204</tns:room>
+                <tns:room>ROOM107</tns:room>
+            </tns:rooms>
+            <tns:rfidTag uid="E0040100594737350000">
+                <tagtype>CARD</tagtype>
+                <protocol>ISO14443A</protocol>
+                <issue>
+                    <issueDate>2014-03-28</issueDate>
+                    <expirationDate>2015-03-28</expirationDate>
+                </issue>
+            </tns:rfidTag>
+        </tns:employee>
+        <tns:employee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="tns:employee" id="КК00000012">
+            <tns:firstName>Oleg</tns:firstName>
+            <tns:patronym>I.</tns:patronym>
+            <tns:lastName>Krugov</tns:lastName>
+            <tns:birthday>1991-05-21</tns:birthday>
+            <tns:positions>
+                <tns:position>SECURITY_GUARD</tns:position>
+            </tns:positions>
+            <tns:department>ADMINISTRATIVE_SERVICE_UTILITY</tns:department>
+            <tns:rooms>
+                <tns:room>ROOM101</tns:room>
+            </tns:rooms>
+            <tns:rfidTag uid="3A08265B">
+                <tagtype>KEYFOB</tagtype>
+                <protocol>ISO15693</protocol>
+                <issue>
+                    <issueDate>2014-03-28</issueDate>
+                    <expirationDate>2015-03-28</expirationDate>
+                </issue>
+            </tns:rfidTag>
+        </tns:employee>
+    </tns:employees>
+</tns:staff>

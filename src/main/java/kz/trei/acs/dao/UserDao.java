@@ -11,6 +11,6 @@ public interface UserDao {
     public User find(String username, String password) throws DaoException;
     public User find(long id) throws DaoException;
     public void create(User user) throws DaoException;
-    public void createUserTable() throws DaoException;
+    public void createTable() throws DaoException;
     public List<User> list()throws DaoException;
 }

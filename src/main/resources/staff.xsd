@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" targetNamespace="http://www.trei.kz/attendance/tns"
+	xmlns:tns="http://www.trei.kz/attendance/tns">
+
+	<xs:element name="staff">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="employees">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:person" maxOccurs="unbounded"></xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="person" abstract="true" type="tns:personType"></xs:element>
+
+	<xs:complexType name="personType">
+		<xs:sequence>
+			<xs:element name="firstName" type="tns:personalName"></xs:element>
+			<xs:element name="patronym" type="tns:personalName"
+				minOccurs="0"></xs:element>
+			<xs:element name="lastName" type="tns:personalName"></xs:element>
+			<xs:element name="birthday" type="xs:date"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="tns:employeeId" use="required"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="employeeType">
+		<xs:complexContent>
+			<xs:extension base="tns:personType">
+				<xs:sequence>
+					<xs:element name="positions" type="tns:positions">
+					</xs:element>
+					<xs:element name="department" type="tns:department"
+						minOccurs="0"></xs:element>
+					<xs:element name="rooms" type="tns:rooms"></xs:element>
+					<xs:element name="rfidTag" type="tns:rfidTag" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="rooms">
+		<xs:sequence>
+			<xs:element name="room" type="tns:room" minOccurs="0"
+				maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="room">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ROOM101" />
+			<xs:enumeration value="ROOM102" />
+			<xs:enumeration value="ROOM103" />
+			<xs:enumeration value="ROOM104" />
+			<xs:enumeration value="ROOM105" />
+			<xs:enumeration value="ROOM106" />
+			<xs:enumeration value="ROOM107" />
+			<xs:enumeration value="ROOM108" />
+			<xs:enumeration value="ROOM109" />
+			<xs:enumeration value="ROOM201" />
+			<xs:enumeration value="ROOM202" />
+			<xs:enumeration value="ROOM203" />
+			<xs:enumeration value="ROOM204" />
+			<xs:enumeration value="ROOM205" />
+			<xs:enumeration value="ROOM206" />
+			<xs:enumeration value="ROOM207" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="positions">
+		<xs:sequence>
+			<xs:element name="position" type="tns:position" maxOccurs="2"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="employee" substitutionGroup="tns:person"
+		type="tns:employeeType"></xs:element>
+
+	<xs:complexType name="rfidTag">
+		<xs:sequence>
+			<xs:element name="tagtype" type="tns:cardtype"></xs:element>
+			<xs:element name="protocol" type="tns:rfprotocol"></xs:element>
+			<xs:element name="issue" type="tns:issue"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="uid" type="tns:uid" use="required"></xs:attribute>
+	</xs:complexType>
+
+	<xs:simpleType name="rfprotocol">
+		<xs:restriction base="xs:string">
+			<!-- ISO14443A,ISO14443B, ISO15693 -->
+			<xs:enumeration value="ISO14443A" />
+			<xs:enumeration value="ISO14443B" />
+			<xs:enumeration value="ISO15693" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="issue">
+		<xs:sequence>
+			<xs:element name="issueDate" type="xs:date"></xs:element>
+			<xs:element name="expirationDate" type="xs:date"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="cardtype">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CARD" />
+			<xs:enumeration value="KEYFOB" />
+			<xs:enumeration value="STICKER" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="department">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACCOUNTANCY" />
+			<xs:enumeration value="RESEARCH_AND_DEVELOPMENT" />
+			<xs:enumeration value="COMMERCIAL" />
+			<xs:enumeration value="WAREHOUSE" />
+			<xs:enumeration value="ASSEMBLY" />
+			<xs:enumeration value="PRODUCTION" />
+			<xs:enumeration value="ENGINEERING" />
+			<xs:enumeration value="METROLOGICAL_SERVICE" />
+			<xs:enumeration value="VERIFICATION_LABORATORY" />
+			<xs:enumeration value="ADMINISTRATIVE_SERVICE_UTILITY" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="position">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GENERAL_DIRECTOR" />
+			<xs:enumeration value="COMMERCIAL_DIRECTOR" />
+			<xs:enumeration value="DEPARTMENT_HEAD" />
+			<xs:enumeration value="SECRETARY_ADVISER" />
+			<xs:enumeration value="TECHNICAL_DIRECTOR" />
+			<xs:enumeration value="SYSTEM_ADMINISTRATOR" />
+			<xs:enumeration value="CHIEF_ACCOUNTANT" />
+			<xs:enumeration value="DEPUTY_CHIEF_ACCOUNTANT" />
+			<xs:enumeration value="ACCOUNTANT_MATERIALISTS" />
+			<xs:enumeration value="HR_ADMINISTRATION" />
+			<xs:enumeration value="WAREHOUSE_MANAGER" />
+			<xs:enumeration value="EQUIPMENT_ENGINEER" />
+			<xs:enumeration value="ADMINISTRATIVE_SERVICE_UTILITY_MANAGER" />
+			<xs:enumeration value="DRIVER" />
+			<xs:enumeration value="SECURITY_GUARD" />
+			<xs:enumeration value="JANITOR" />
+			<xs:enumeration value="ENGINEER" />
+			<xs:enumeration value="SOFTWARE_ENGINEER" />
+			<xs:enumeration value="SENIOR_SOFTWARE_ENGINEER" />
+			<xs:enumeration value="LEAD_SOFTWARE_ENGINEER" />
+			<xs:enumeration value="COMMISSIONING_ENGINEER" />
+			<xs:enumeration value="APCS_ENGINEER" />
+			<xs:enumeration value="LEAD_APCS_ENGINEER" />
+			<xs:enumeration value="LEAD_DESIGNER" />
+			<xs:enumeration value="DESIGN_ENGINEER" />
+			<xs:enumeration value="ELECTRONICS_ENGINEER" />
+			<xs:enumeration value="SENIOR_ELECTRONICS_ENGINEER" />
+			<xs:enumeration value="CHIEF_METROLOGIST" />
+			<xs:enumeration value="ENGINEER_METROLOGIST" />
+			<xs:enumeration value="CONSTRUCTION_ELECTRICIAN" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="uid">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9A-Fa-f]{20}|[0-9A-Fa-f]{8}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="personalName">
+		<xs:restriction base="xs:ID">
+			<xs:pattern value="[\p{IsCyrillic}\p{IsBasicLatin}]+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="employeeId">
+		<xs:restriction base="xs:ID">
+			<xs:pattern value="[\p{IsCyrillic}]{2}[0-9]{8}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="tableId">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[\p{IsCyrillic}]{2}[0-9]{8}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

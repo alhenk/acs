@@ -110,7 +110,7 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
-    public void createUserTable() throws DaoException {
+    public void createTable() throws DaoException {
         Statement stat = null;
         Connection conn = null;
         ResultSet rs = null;

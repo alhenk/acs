@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema elementFormDefault="qualified" version="1.0" targetNamespace="http://www.trei.kz/attendance/tns" xmlns:tns="http://www.trei.kz/attendance/tns" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import schemaLocation="staff_jaxb_auto2.xsd"/>
+
+  <xs:element name="employee" type="tns:employee"/>
+
+  <xs:element name="staff" type="tns:staff"/>
+
+  <xs:complexType name="staff">
+    <xs:sequence>
+      <xs:element name="employees" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="employee" type="tns:person" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="person" abstract="true">
+    <xs:sequence>
+      <xs:element name="firstName" type="xs:string" minOccurs="0"/>
+      <xs:element name="patronym" type="xs:string" minOccurs="0"/>
+      <xs:element name="lastName" type="xs:string" minOccurs="0"/>
+      <xs:element name="birthday" type="dateStamp" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="employee">
+    <xs:complexContent>
+      <xs:extension base="tns:person">
+        <xs:sequence>
+          <xs:element name="positions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="position" type="position" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="department" type="department"/>
+          <xs:element name="rooms" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="room" type="roomType" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="rfidTag" type="rfidTag"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
+

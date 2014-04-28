@@ -32,7 +32,7 @@ public class ContextListener implements ServletContextListener {
         LOGGER.debug("Table exist = " + userTableExist);
         if (!userTableExist) {
             try {
-                userDao.createUserTable();
+                userDao.createTable();
             } catch (DaoException e) {
                 LOGGER.error("Create user table exception " + e.getMessage());
             }
