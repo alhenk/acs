@@ -7,22 +7,22 @@
     
   <display-name>Archetype Created Web Application</display-name>
     <servlet>
-        <servlet-name>Controller</servlet-name>
+        <servlet-name>controller</servlet-name>
         <servlet-class>kz.trei.acs.servlet.Controller</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Controller</servlet-name>
+        <servlet-name>controller</servlet-name>
         <url-pattern>/do/*</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>kz.trei.acs.listener.ContextListener</listener-class>
     </listener>
     <filter>
-        <filter-name>LoginFilter</filter-name>
-        <filter-class>kz.trei.acs.filter.SecureFilter</filter-class>
+        <filter-name>security-filter</filter-name>
+        <filter-class>kz.trei.acs.filter.SecurityFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>LoginFilter</filter-name>
+        <filter-name>security-filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

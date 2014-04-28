@@ -25,8 +25,8 @@ public class UserDaoSqlite implements UserDao {
     public User find(String username, String password) throws DaoException {
         String userTable = PropertyManager.getValue("user.table");
         Statement stat = null;
-        Connection conn = null;
         ResultSet rs;
+        Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
             connectionPool = ConnectionPool.getInstance();
@@ -112,8 +112,8 @@ public class UserDaoSqlite implements UserDao {
     @Override
     public void createTable() throws DaoException {
         Statement stat = null;
-        Connection conn = null;
         ResultSet rs = null;
+        Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
             connectionPool = ConnectionPool.getInstance();

@@ -25,8 +25,8 @@ public class UserDaoH2 implements UserDao {
     public User find(String username, String password) throws DaoException {
         String userTable = PropertyManager.getValue("user.table");
         Statement stat = null;
-        Connection conn = null;
         ResultSet rs;
+        Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
             connectionPool = ConnectionPool.getInstance();
@@ -39,8 +39,6 @@ public class UserDaoH2 implements UserDao {
             LOGGER.debug("Got connection " + conn);
             stat = conn.createStatement();
             if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-                stat.close();
-                connectionPool.returnConnection(conn);
                 LOGGER.debug("There are no attributes username/password");
                 throw new DaoException("There are no attributes username/password");
             }
@@ -65,7 +63,7 @@ public class UserDaoH2 implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
-        }finally {
+        } finally {
             DbUtil.close(stat);
             connectionPool.returnConnection(conn);
         }
@@ -114,8 +112,8 @@ public class UserDaoH2 implements UserDao {
     @Override
     public void createTable() throws DaoException {
         Statement stat = null;
-        Connection conn = null;
         ResultSet rs = null;
+        Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
             connectionPool = ConnectionPool.getInstance();
@@ -152,8 +150,8 @@ public class UserDaoH2 implements UserDao {
     @Override
     public List<User> list() throws DaoException {
         Statement stat = null;
-        Connection conn = null;
         ResultSet rs = null;
+        Connection conn = null;
         ConnectionPool connectionPool = null;
         User user;
         List<User> users = new LinkedList<User>();

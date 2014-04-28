@@ -11,10 +11,6 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Enumeration;
 
 public class ContextListener implements ServletContextListener {
     static {
@@ -38,7 +34,7 @@ public class ContextListener implements ServletContextListener {
             }
         }
     }
-    
+
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ConnectionPool connectionPool = null;
