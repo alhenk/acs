@@ -38,7 +38,7 @@ public class ContextListener implements ServletContextListener {
             }
         }
     }
-
+    
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ConnectionPool connectionPool = null;
@@ -49,18 +49,5 @@ public class ContextListener implements ServletContextListener {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
         }
         connectionPool.closeConnections();
-        // This manually deregisters JDBC driver,
-        // which prevents Tomcat 7 from complaining
-        // about memory leaks wrto this class
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            try {
-                DriverManager.deregisterDriver(driver);
-                LOGGER.info(String.format("deregistering jdbc driver: %s", driver));
-            } catch (SQLException e) {
-                LOGGER.info(String.format("Error deregistering driver %s", driver), e);
-            }
-        }
     }
 }

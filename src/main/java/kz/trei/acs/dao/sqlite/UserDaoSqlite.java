@@ -39,8 +39,6 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.debug("Got connection " + conn);
             stat = conn.createStatement();
             if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-                stat.close();
-                connectionPool.returnConnection(conn);
                 LOGGER.debug("There are no attributes username/password");
                 throw new DaoException("There are no attributes username/password");
             }
@@ -151,8 +149,8 @@ public class UserDaoSqlite implements UserDao {
     @Override
     public List<User> list() throws DaoException {
         Statement stat = null;
-        Connection conn = null;
         ResultSet rs = null;
+        Connection conn = null;
         ConnectionPool connectionPool = null;
         User user;
         List<User> users = new LinkedList<User>();

@@ -22,10 +22,10 @@ public class ConnectionPool {
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
     private static ConnectionPool instance;
     private static String dbName = PropertyManager.getValue("db.name");
-    private static String dbDriver = PropertyManager.getValue("db."+dbName + ".driver");
-    private static String dbUrl = PropertyManager.getValue("db."+dbName + ".url");
-    private static String dbUser = PropertyManager.getValue("db."+dbName + ".user");
-    private static String dbPassword = PropertyManager.getValue("db."+dbName + ".password");
+    private static String dbDriver = PropertyManager.getValue("db." + dbName + ".driver");
+    private static String dbUrl = PropertyManager.getValue("db." + dbName + ".url");
+    private static String dbUser = PropertyManager.getValue("db." + dbName + ".user");
+    private static String dbPassword = PropertyManager.getValue("db." + dbName + ".password");
     private final Semaphore semaphore = new Semaphore(POOL_SIZE, true);
     private final Queue<Connection> resources = new LinkedList<Connection>();
 
@@ -57,7 +57,7 @@ public class ConnectionPool {
         }
     }
 
-    public String getDbName(){
+    public String getDbName() {
         return dbName;
     }
 
@@ -65,7 +65,7 @@ public class ConnectionPool {
         try {
             if (semaphore.tryAcquire(WAIT_MAX, TimeUnit.MILLISECONDS)) {
                 Connection connection = resources.poll();
-                LOGGER.debug("get connection total = "+resources.size());
+                LOGGER.debug("get connection total = " + resources.size());
                 return connection;
             }
         } catch (InterruptedException e) {
@@ -78,15 +78,17 @@ public class ConnectionPool {
     public void returnConnection(Connection connection) {
         resources.add(connection);
         semaphore.release();
-        LOGGER.debug("return connection total = "+resources.size());
+        LOGGER.debug("return connection total = " + resources.size());
     }
 
     public void closeConnections() {
         for (Connection connection : resources) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                LOGGER.error("Close all connections exception: " + e.getMessage());
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    LOGGER.error("Close all connections exception: " + e.getMessage());
+                }
             }
         }
     }
