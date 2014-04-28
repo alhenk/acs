@@ -1,4 +1,7 @@
-package kz.trei.acs.dao;
+package kz.trei.acs.dao.h2;
+
+import kz.trei.acs.dao.DaoFactory;
+import kz.trei.acs.dao.UserDao;
 
 /**
  * Created by alhen on 4/25/14.

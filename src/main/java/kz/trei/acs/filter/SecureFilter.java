@@ -8,15 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Created by alhen on 4/28/14.
- */
-public class LoginFilter implements Filter {
+public class SecureFilter implements Filter {
     private String contextPath;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         contextPath = filterConfig.getServletContext().getContextPath();
-
     }
 
     @Override
@@ -24,14 +21,28 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
+        String pathInfo = request.getPathInfo();
+        if (!isSecure(pathInfo)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            request.getRequestDispatcher("/WEB-INF/jsp/main.jsp").forward(request, response);
+        } else {
+            filterChain.doFilter(request, response);
+        }
+    }
 
-//        User user = (User) session.getAttribute("user");
-//        if(user==null){
-//            request.getRequestDispatcher("/WEB-INF/jsp/main.jsp").forward(request,response);
-//        }else{
-//            filterChain.doFilter(request, response);
-//        }
-        filterChain.doFilter(request, response);
+    private boolean isSecure(String path) {
+        if (path == null || path.equals("/main")
+                || path.equals("/sign-in")
+                || path.equals("/set-language")
+                || path.equals("/sign-out")
+                || path.equals("/error")) {
+            return false;
+        }
+        return true;
     }
 
     @Override

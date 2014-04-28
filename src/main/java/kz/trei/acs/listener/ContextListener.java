@@ -41,14 +41,17 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        ConnectionPool connectionPool=null;
+        ConnectionPool connectionPool = null;
+        LOGGER.info("Context destroyed");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
         }
         connectionPool.closeConnections();
-        // This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks wrto this class
+        // This manually deregisters JDBC driver,
+        // which prevents Tomcat 7 from complaining
+        // about memory leaks wrto this class
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();

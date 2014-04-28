@@ -19,7 +19,7 @@
     </listener>
     <filter>
         <filter-name>LoginFilter</filter-name>
-        <filter-class>kz.trei.acs.filter.LoginFilter</filter-class>
+        <filter-class>kz.trei.acs.filter.SecureFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>

@@ -1,5 +1,7 @@
-package kz.trei.acs.dao;
+package kz.trei.acs.dao.sqlite;
 
+import kz.trei.acs.dao.DaoException;
+import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
@@ -16,8 +18,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-public class UserDaoH2 implements UserDao {
-    private static final Logger LOGGER = Logger.getLogger(UserDaoH2.class);
+public class UserDaoSqlite implements UserDao {
+    private static final Logger LOGGER = Logger.getLogger(UserDaoSqlite.class);
 
     @Override
     public User find(String username, String password) throws DaoException {
@@ -63,7 +65,7 @@ public class UserDaoH2 implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
-        }finally {
+        } finally {
             DbUtil.close(stat);
             connectionPool.returnConnection(conn);
         }
@@ -91,7 +93,7 @@ public class UserDaoH2 implements UserDao {
         String username = user.getUsername();
         String password = user.getPassword();
         RoleType role = user.getRole();
-        Table1C tableID = user.getTableId();
+        String tableID = user.getTableId().getTableId();
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
@@ -125,11 +127,10 @@ public class UserDaoH2 implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
+            stat.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableID CHAR(32), userRole CHAR(20) )");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
             stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
-
             rs = stat.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
@@ -185,6 +186,9 @@ public class UserDaoH2 implements UserDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Table ID is not valid: " + e.getMessage());
+            throw new DaoException("Table ID is not valid");
         } finally {
             DbUtil.close(stat, rs);
             connectionPool.returnConnection(conn);
