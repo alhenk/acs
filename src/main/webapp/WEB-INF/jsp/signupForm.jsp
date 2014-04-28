@@ -12,6 +12,12 @@
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.table-id"/> :</td>
             <td align="left"><input type="text" name="table-id" value="${sessionScope["table-id"]}"></td>
+            <td align="left" style="color:red;">
+                <c:if test="${not empty sessionScope['table-id-error']}">
+                    <fmt:message bundle="${msg}" key="${sessionScope['table-id-error']}"/>
+                    <c:remove var="table-id-error" scope="session"/>
+                </c:if>
+            </td>
         </tr>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.user-role"/> :</td>

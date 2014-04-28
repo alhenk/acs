@@ -15,7 +15,7 @@
                 <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
             </c:when>
             <c:otherwise>
-                <p>USER</p>
+                <p><fmt:message bundle="${msg}" key="common.user"/></p>
             </c:otherwise>
         </c:choose>
     </jsp:body>

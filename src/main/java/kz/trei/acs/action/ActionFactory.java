@@ -19,6 +19,7 @@ public class ActionFactory {
         actions.put("GET/dashboard", new ShowDashboard());
         actions.put("GET/create-account", new ShowCreateAccountPage());
         actions.put("GET/user-list", new ShowUserList());
+        actions.put("GET/error", new ShowErrorPage());
 
         LOGGER.debug("Instantiated ActionFactory");
     }

@@ -42,6 +42,7 @@ public class Signup implements Action{
                 return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
             } catch (IllegalArgumentException e){
                 LOGGER.error("Table ID is not valid: " + e.getMessage());
+                session.setAttribute("table-id-error", "form.table-id-error");
                 session.setAttribute("status","status.create.account.fail");
                 return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
             }

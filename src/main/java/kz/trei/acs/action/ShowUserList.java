@@ -25,10 +25,10 @@ public class ShowUserList implements Action{
         try {
             users = userDao.list();
         } catch (DaoException e) {
-            LOGGER.error("Getting user list exception" + e.getMessage());
+            LOGGER.error("Getting user list exception: " + e.getMessage());
             return new ActionResult(ActionType.FORWARD,"error");
         } catch (IllegalArgumentException e){
-            LOGGER.error("Getting user list exception" + e.getMessage());
+            LOGGER.error("Getting user list exception: " + e.getMessage());
             return new ActionResult(ActionType.FORWARD,"error");
         }
         HttpSession session = request.getSession();
