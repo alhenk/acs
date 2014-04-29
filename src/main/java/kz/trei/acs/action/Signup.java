@@ -27,7 +27,12 @@ public class Signup implements Action{
         session.setAttribute("username", username);
         session.setAttribute("user-role", userRole);
         session.setAttribute("table-id", tableID);
+        session.setAttribute("password", password);
         session.removeAttribute("status");
+        session.removeAttribute("username-error");
+        session.removeAttribute("password-error");
+        session.removeAttribute("user-role-error");
+        session.removeAttribute("table-id-error");
 
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
@@ -48,6 +53,7 @@ public class Signup implements Action{
                 return new ActionResult(ActionType.REDIRECT,request.getHeader("referer"));
             }
             session.removeAttribute("username");
+            session.removeAttribute("password");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
             session.setAttribute("status","status.create.account.success");
@@ -58,14 +64,36 @@ public class Signup implements Action{
     }
 
     private boolean isFormComplete(HttpServletRequest request) {
+        HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String userRole = request.getParameter("user-role");
-        String tableID = request.getParameter("table-id");
-        if(username==null || username.isEmpty()) return false;
-        if(password==null || password.isEmpty()) return false;
-        if(userRole==null || userRole.isEmpty()) return false;
-        if(tableID==null || tableID.isEmpty()) return false;
+        String tableId = request.getParameter("table-id");
+        boolean isUserNameEmpty = false;
+        boolean isPasswordEmpty = false;
+        boolean isUserRoleEmpty = false;
+        boolean isTableIdEmpty = false;
+
+        if(username==null || username.isEmpty()) {
+            isUserNameEmpty = true;
+            session.setAttribute("username-error", "form.empty");
+        }
+        if(password==null || password.isEmpty()) {
+            isPasswordEmpty = true;
+            session.setAttribute("password-error", "form.empty");
+        }
+        if(userRole==null || userRole.isEmpty()) {
+            isUserRoleEmpty = true;
+            session.setAttribute("user-role-error", "form.empty");
+        }
+        if(tableId==null || tableId.isEmpty()) {
+            isTableIdEmpty = true;
+            session.setAttribute("table-id-error", "form.empty");
+        }
+
+        if(isUserNameEmpty || isPasswordEmpty || isUserRoleEmpty || isTableIdEmpty){
+            return false;
+        }
         return true;
     }
 }
