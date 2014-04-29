@@ -39,7 +39,7 @@ public class Signup implements Action{
         if(isFormComplete(request)){
             try {
                 User user = new User.Builder(username, password)
-                        .tableId(Table1C.createId(tableID))
+                        .tableId(Table1C.createId(tableID.toUpperCase()))
                         .role(RoleType.valueOf(userRole.toUpperCase())).build();
                 userDao.create(user);
             } catch (DaoException e) {
