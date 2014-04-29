@@ -42,12 +42,14 @@ public class SecurityFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         String pathInfo = request.getPathInfo();
         String action = request.getMethod() + request.getPathInfo();
         EnumSet<RoleType> group = groups.get(action);
         User user = (User) session.getAttribute("user");
         RoleType userRole = RoleType.UNREGISTERED;
+
         if (user != null) userRole = user.getRole();
         if (group == null || group.contains(userRole)) {
             filterChain.doFilter(request, response);

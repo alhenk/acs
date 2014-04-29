@@ -4,10 +4,22 @@
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.username"/>:</td>
             <td align="left"><input type="text" name="username" value="${sessionScope["username"]}"></td>
+            <td align="left" style="color:red;">
+                <c:if test="${not empty sessionScope['username-error']}">
+                    <fmt:message bundle="${msg}" key="${sessionScope['username-error']}"/>
+                    <c:remove var="username-error" scope="session"/>
+                </c:if>
+            </td>
         </tr>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.password"/> :</td>
-            <td align="left"><input type="password" name="password" ></td>
+            <td align="left"><input type="password" name="password" value="${sessionScope["password"]}" ></td>
+            <td align="left" style="color:red;">
+                <c:if test="${not empty sessionScope['password-error']}">
+                    <fmt:message bundle="${msg}" key="${sessionScope['password-error']}"/>
+                    <c:remove var="password-error" scope="session"/>
+                </c:if>
+            </td>
         </tr>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.table-id"/> :</td>
@@ -27,6 +39,12 @@
                 <option value="supervisor" >Supervisor</option>
                 <option value="administrator" >Administrator</option>
              </select>
+            </td>
+            <td align="left" style="color:red;">
+                <c:if test="${not empty sessionScope['user-role-error']}">
+                    <fmt:message bundle="${msg}" key="${sessionScope['user-role-error']}"/>
+                    <c:remove var="user-role-error" scope="session"/>
+                </c:if>
             </td>
         </tr>
         <tr>
