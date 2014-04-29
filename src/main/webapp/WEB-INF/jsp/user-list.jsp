@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" errorPage="errorPage.jsp" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" errorPage="errorPage.jsp" %>
 <%@taglib prefix="mtag" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 

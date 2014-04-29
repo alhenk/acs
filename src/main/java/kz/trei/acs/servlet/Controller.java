@@ -23,6 +23,7 @@ public class Controller extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.debug("Entered service() Method = " + request.getMethod() + " PathURI = " + request.getRequestURI());
+        response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         String actionName = getActionName(request);
         Action action = actionFactory.getAction(actionName);

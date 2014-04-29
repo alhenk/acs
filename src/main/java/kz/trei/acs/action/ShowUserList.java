@@ -19,6 +19,7 @@ public class ShowUserList implements Action{
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         List<User> users = new LinkedList<User>();

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ShowErrorPage implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         return new ActionResult(ActionType.FORWARD, "errorPage");
     }
 }

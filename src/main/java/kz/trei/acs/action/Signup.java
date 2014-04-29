@@ -18,6 +18,7 @@ public class Signup implements Action{
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");

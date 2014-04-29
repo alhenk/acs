@@ -13,6 +13,7 @@ public class SetLanguage implements Action  {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         String country="";
         String language = request.getParameter("language");
         if(language.equalsIgnoreCase("en")){
