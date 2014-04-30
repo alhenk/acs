@@ -32,7 +32,9 @@ public class Controller extends HttpServlet {
             case FORWARD:
                 LOGGER.debug("FORWARD -> "+result.getView());
                 String path = PropertyManager.getValue("jsp.view.path")+result.getView()+".jsp";
+                LOGGER.debug("FORWARD -> path ="+path);
                 request.getRequestDispatcher(path).forward(request,response);
+//                request.getRequestDispatcher("/WEB_INF/jsp/not-found.jsp").forward(request,response);
                 break;
             case REDIRECT:
                 LOGGER.debug("REDIRECT -> "+result.getView());

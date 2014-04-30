@@ -36,6 +36,7 @@ public class SecurityFilter implements Filter {
         groups.put("GET/create-account", administrator);
         groups.put("GET/user-list", administrator);
         groups.put("GET/error", all);
+        groups.put("GET/not-found", all);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SecurityFilter implements Filter {
             filterChain.doFilter(request, response);
             return;
         }
-        LOGGER.debug("Security filter make it forward to main page");
+        LOGGER.debug("Security filter makes it forward to main page");
         request.getRequestDispatcher("/WEB-INF/jsp/main.jsp").forward(request, response);
     }
 

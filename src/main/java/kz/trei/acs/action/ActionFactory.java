@@ -20,6 +20,7 @@ public class ActionFactory {
         actions.put("GET/create-account", new ShowCreateAccountPage());
         actions.put("GET/user-list", new ShowUserList());
         actions.put("GET/error", new ShowErrorPage());
+        actions.put("GET/not-found", new ShowNotFoundPage());
 
         LOGGER.debug("Instantiated ActionFactory");
     }
