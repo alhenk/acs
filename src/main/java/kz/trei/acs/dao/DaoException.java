@@ -1,8 +1,9 @@
 package kz.trei.acs.dao;
 
+import javax.servlet.ServletException;
 import java.io.Serializable;
 
-public class DaoException extends Exception {
+public class DaoException extends ServletException {
     private static final long serialVersionUID = 1L;
 
     public DaoException() {
@@ -12,17 +13,14 @@ public class DaoException extends Exception {
     public DaoException(String message) {
         super(message);
     }
-
-    public DaoException(String message, Throwable cause) {
-        super(message, cause);
+    public DaoException(String message, Throwable rootCause) {
+        super(message, rootCause);
     }
 
-    public DaoException(Throwable cause) {
-        super(cause);
+    public DaoException(Throwable rootCause) {
+        super(rootCause);
     }
-
-    protected DaoException(String message, Throwable cause,
-                           boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public Throwable getRootCause() {
+        return getRootCause();
     }
 }

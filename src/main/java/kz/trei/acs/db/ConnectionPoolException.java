@@ -1,9 +1,8 @@
 package kz.trei.acs.db;
 
-/**
- * Created by alhen on 4/21/14.
- */
-public class ConnectionPoolException extends Exception {
+import javax.servlet.ServletException;
+
+public class ConnectionPoolException extends ServletException {
     private static final long serialVersionUID = -8032709626402655713L;
 
     public ConnectionPoolException() {
@@ -14,16 +13,15 @@ public class ConnectionPoolException extends Exception {
         super(message);
     }
 
-    public ConnectionPoolException(String message, Throwable cause) {
-        super(message, cause);
+    public ConnectionPoolException(String message, Throwable rootCause) {
+        super(message, rootCause);
     }
 
-    public ConnectionPoolException(Throwable cause) {
-        super(cause);
+    public ConnectionPoolException(Throwable rootCause) {
+        super(rootCause);
     }
 
-    protected ConnectionPoolException(String message, Throwable cause,
-                                boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public Throwable getRootCause() {
+        return getRootCause();
     }
 }

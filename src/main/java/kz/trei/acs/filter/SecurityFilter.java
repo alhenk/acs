@@ -35,8 +35,8 @@ public class SecurityFilter implements Filter {
         groups.put("GET/dashboard", authorized);
         groups.put("GET/create-account", administrator);
         groups.put("GET/user-list", administrator);
-        groups.put("GET/error", all);
         groups.put("GET/not-found", all);
+        groups.put("GET/edit-account", authorized);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class SecurityFilter implements Filter {
 
         if (user != null) userRole = user.getRole();
         if (group == null || group.contains(userRole)) {
+            LOGGER.debug("all is clear");
             filterChain.doFilter(request, response);
             return;
         }
