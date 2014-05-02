@@ -6,6 +6,7 @@ import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.structure.Table1C;
+import kz.trei.acs.office.structure.Table1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
@@ -24,7 +25,7 @@ public class UserDaoSqlite implements UserDao {
     @Override
     public User find(String username, String password) throws DaoException {
         String userTable = PropertyManager.getValue("user.table");
-        Statement stat = null;
+        Statement stmt = null;
         ResultSet rs;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -37,12 +38,12 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
-            stat = conn.createStatement();
+            stmt = conn.createStatement();
             if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
                 LOGGER.debug("There are no attributes username/password");
                 throw new DaoException("There are no attributes username/password");
             }
-            rs = stat.executeQuery("SELECT * FROM " + userTable +
+            rs = stmt.executeQuery("SELECT * FROM " + userTable +
                     " WHERE username = '" + username + "' AND password = '" + password + "'");
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
@@ -64,7 +65,7 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } finally {
-            DbUtil.close(stat);
+            DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
         }
         LOGGER.debug("There is no such user");
@@ -73,12 +74,54 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public User find(long id) throws DaoException {
-        return null;
+        String userTable = PropertyManager.getValue("user.table");
+        Statement stmt = null;
+        ResultSet rs;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM " + userTable +
+                    " WHERE id = '" + id + "'");
+            LOGGER.debug("Execute Query " + rs);
+            if (rs.next()) {
+                String username = rs.getString("username");
+                String password =rs.getString("password");
+                RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
+                Table1C tableId = Table1C.createId(rs.getString("tableID"));
+                User user = new User.Builder(username, password)
+                        .id(id)
+                        .role(userRole)
+                        .tableId(tableId)
+                        .build();
+                LOGGER.debug(user);
+                return user;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("get connection exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
+        LOGGER.debug("There is no such user");
+        throw new DaoException("There is no such user");
     }
 
     @Override
     public void create(User user) throws DaoException {
-        Statement stat = null;
+        Statement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
@@ -94,8 +137,8 @@ public class UserDaoSqlite implements UserDao {
         String tableID = user.getTableId().getTableId();
         try {
             conn = connectionPool.getConnection();
-            stat = conn.createStatement();
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('" + username
+            stmt = conn.createStatement();
+            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('" + username
                     + "', '" + password + "', '" + tableID + "', '" + role + "')");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -104,14 +147,14 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } finally {
-            DbUtil.close(stat);
+            DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
         }
     }
 
     @Override
     public void createTable() throws DaoException {
-        Statement stat = null;
+        Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -124,12 +167,12 @@ public class UserDaoSqlite implements UserDao {
         String users = PropertyManager.getValue("user.table");
         try {
             conn = connectionPool.getConnection();
-            stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableID CHAR(32), userRole CHAR(20) )");
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
-            rs = stat.executeQuery("SELECT * FROM " + users);
+            stmt = conn.createStatement();
+            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableID CHAR(32), userRole CHAR(20) )");
+            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
+            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
+            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
+            rs = stmt.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
                 LOGGER.debug(rs.getString("username"));
@@ -141,14 +184,14 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } finally {
-            DbUtil.close(stat, rs);
+            DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
     }
 
     @Override
     public List<User> list() throws DaoException {
-        Statement stat = null;
+        Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -163,8 +206,8 @@ public class UserDaoSqlite implements UserDao {
         }
         try {
             conn = connectionPool.getConnection();
-            stat = conn.createStatement();
-            rs = stat.executeQuery("SELECT * FROM " + userTable);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM " + userTable);
             while (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
@@ -184,13 +227,42 @@ public class UserDaoSqlite implements UserDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (IllegalArgumentException e) {
+        } catch (Table1CException e) {
             LOGGER.error("Table ID is not valid: " + e.getMessage());
             throw new DaoException("Table ID is not valid");
         } finally {
-            DbUtil.close(stat, rs);
+            DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
         return users;
+    }
+
+    @Override
+    public void delete(long id) throws DaoException {
+        Statement stmt = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        String userTable = PropertyManager.getValue("user.table");
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            String sql = "DELETE FROM " + userTable + " WHERE id = '"+ id +"'";
+            stmt.executeUpdate(sql);
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
     }
 }

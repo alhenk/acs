@@ -73,7 +73,49 @@ public class UserDaoH2 implements UserDao {
 
     @Override
     public User find(long id) throws DaoException {
-        return null;
+        String userTable = PropertyManager.getValue("user.table");
+        Statement stat = null;
+        ResultSet rs;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
+            stat = conn.createStatement();
+            rs = stat.executeQuery("SELECT * FROM " + userTable +
+                    " WHERE id = '" + id + "'");
+            LOGGER.debug("Execute Query " + rs);
+            if (rs.next()) {
+                String username = rs.getString("username");
+                String password =rs.getString("password");
+                RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
+                Table1C tableId = Table1C.createId(rs.getString("tableID"));
+                User user = new User.Builder(username, password)
+                        .id(id)
+                        .role(userRole)
+                        .tableId(tableId)
+                        .build();
+                LOGGER.debug(user);
+                return user;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("get connection exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } finally {
+            DbUtil.close(stat);
+            connectionPool.returnConnection(conn);
+        }
+        LOGGER.debug("There is no such user");
+        throw new DaoException("There is no such user");
     }
 
     @Override
@@ -190,5 +232,10 @@ public class UserDaoH2 implements UserDao {
             connectionPool.returnConnection(conn);
         }
         return users;
+    }
+
+    @Override
+    public void delete(long id) throws DaoException {
+
     }
 }

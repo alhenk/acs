@@ -8,6 +8,6 @@ public class ShowEditAccount implements Action {
         @Override
         public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
             response.setCharacterEncoding("UTF-8");
-            return new ActionResult(ActionType.FORWARD,"editaccount");
+            return new ActionResult(ActionType.FORWARD,"edit-account");
         }
 }

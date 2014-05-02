@@ -13,6 +13,12 @@
                 <td>${user.password}</td>
                 <td>${user.tableId.tableId}</td>
                 <td>${user.role}</td>
+                <td>
+                    <a href="do/edit-account?id=${user.id}">edit</a>
+                </td>
+                <td>
+                    <a href="do/delete-account?id=${user.id}">delete</a>
+                </td>
             </tr>
     </c:forEach>
     </table>
