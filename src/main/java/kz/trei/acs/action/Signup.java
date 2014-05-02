@@ -32,10 +32,10 @@ public class Signup implements Action {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
         String userRole = request.getParameter("user-role");
-        String tableID = request.getParameter("table-id");
+        String tableId = request.getParameter("table-id");
         session.setAttribute("username", username);
         session.setAttribute("user-role", userRole);
-        session.setAttribute("table-id", tableID);
+        session.setAttribute("table-id", tableId);
         session.setAttribute("password", password);
         session.setAttribute("confirm-password", confirmPassword);
         session.removeAttribute("status");
@@ -50,7 +50,7 @@ public class Signup implements Action {
         if (isPasswordWellFormed(request) || isFormComplete(request)) {
             try {
                 User user = new User.Builder(username, password)
-                        .tableId(Table1C.createId(tableID.toUpperCase()))
+                        .tableId(Table1C.createId(tableId.toUpperCase()))
                         .role(RoleType.valueOf(userRole.toUpperCase())).build();
                 userDao.create(user);
             } catch (DaoException e) {

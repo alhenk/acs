@@ -48,7 +48,7 @@ public class UserDaoH2 implements UserDao {
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableID"));
+                Table1C tableId = Table1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -95,7 +95,7 @@ public class UserDaoH2 implements UserDao {
                 String username = rs.getString("username");
                 String password =rs.getString("password");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableID"));
+                Table1C tableId = Table1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -133,12 +133,12 @@ public class UserDaoH2 implements UserDao {
         String username = user.getUsername();
         String password = user.getPassword();
         RoleType role = user.getRole();
-        Table1C tableID = user.getTableId();
+        Table1C tableId = user.getTableId();
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('" + username
-                    + "', '" + password + "', '" + tableID + "', '" + role + "')");
+            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('" + username
+                    + "', '" + password + "', '" + tableId + "', '" + role + "')");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -167,10 +167,10 @@ public class UserDaoH2 implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableID varchar(32), userRole varchar(20) )");
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
-            stat.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
+            stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableId varchar(32), userRole varchar(20) )");
+            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
+            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
+            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
 
             rs = stat.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {

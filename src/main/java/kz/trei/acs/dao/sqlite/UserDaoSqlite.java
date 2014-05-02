@@ -12,10 +12,7 @@ import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,7 +46,7 @@ public class UserDaoSqlite implements UserDao {
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableID"));
+                Table1C tableId = Table1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -94,9 +91,9 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
                 String username = rs.getString("username");
-                String password =rs.getString("password");
+                String password = rs.getString("password");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableID"));
+                Table1C tableId = Table1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -111,6 +108,8 @@ public class UserDaoSqlite implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
+        } catch (Table1CException e){
+            LOGGER.error("Table 1C Exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -121,7 +120,8 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public void create(User user) throws DaoException {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
+//        Statement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
@@ -134,12 +134,18 @@ public class UserDaoSqlite implements UserDao {
         String username = user.getUsername();
         String password = user.getPassword();
         RoleType role = user.getRole();
-        String tableID = user.getTableId().getTableId();
+        String tableId = user.getTableId().getTableId();
         try {
             conn = connectionPool.getConnection();
-            stmt = conn.createStatement();
-            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('" + username
-                    + "', '" + password + "', '" + tableID + "', '" + role + "')");
+//            stmt = conn.createStatement();
+            stmt = conn.prepareStatement("INSERT INTO "+ users +" (username, password, tableId, userRole) VALUES (?,?,?,?)");
+            stmt.setString(1,user.getUsername());
+            stmt.setString(2,user.getPassword());
+            stmt.setString(3, user.getTableId().getTableId());
+            stmt.setString(4, user.getRole().toString());
+            stmt.execute();
+//            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('" + username
+//                    + "', '" + password + "', '" + tableId + "', '" + role + "')");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -168,10 +174,10 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableID CHAR(32), userRole CHAR(20) )");
-            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
-            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
-            stmt.execute("INSERT INTO " + users + "(username, password, tableID, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
+            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableId CHAR(32), userRole CHAR(20) )");
+            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
+            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
+            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
             rs = stmt.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
@@ -252,7 +258,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            String sql = "DELETE FROM " + userTable + " WHERE id = '"+ id +"'";
+            String sql = "DELETE FROM " + userTable + " WHERE id = '" + id + "'";
             stmt.executeUpdate(sql);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
