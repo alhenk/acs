@@ -5,7 +5,7 @@ import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
-import kz.trei.acs.office.structure.Table1C;
+import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
@@ -48,7 +48,7 @@ public class UserDaoH2 implements UserDao {
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -95,7 +95,7 @@ public class UserDaoH2 implements UserDao {
                 String username = rs.getString("username");
                 String password =rs.getString("password");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -132,8 +132,8 @@ public class UserDaoH2 implements UserDao {
         String users = PropertyManager.getValue("user.table");
         String username = user.getUsername();
         String password = user.getPassword();
-        RoleType role = user.getRole();
-        Table1C tableId = user.getTableId();
+        String role = user.getRole().toString();
+        String tableId = user.getAccount1C().getTableId();
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
@@ -212,7 +212,7 @@ public class UserDaoH2 implements UserDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                Table1C tableId = Table1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 RoleType role = RoleType.valueOf(rs.getString("userRole"));
                 user = new User.Builder(username, password)
                         .id(id)

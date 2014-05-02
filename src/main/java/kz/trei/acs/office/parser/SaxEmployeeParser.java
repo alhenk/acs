@@ -18,10 +18,10 @@ import kz.trei.acs.office.rfid.ProtocolType;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.RfidType;
 import kz.trei.acs.office.rfid.RfidUID;
+import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.structure.Table1C;
 import kz.trei.acs.office.util.DateStamp;
 
 import org.apache.log4j.Logger;
@@ -86,10 +86,10 @@ public class SaxEmployeeParser implements EmployeeParser {
 				employee = new Employee.Builder();
 				String value = attributes.getValue("id");
 				if (value == null) {
-					employee.setTableId(Table1C.createRandomId());
+					employee.setAccount1C1(Account1C.createRandomId());
 				} else {
 					try {
-						employee.setTableId(Table1C.createId(value));
+						employee.setAccount1C1(Account1C.createId(value));
 					} catch (IllegalArgumentException e) {
 						LOGGER.error(e);
 					}
@@ -128,7 +128,7 @@ public class SaxEmployeeParser implements EmployeeParser {
 				employee.addRoom(RoomType.valueOf(elementValue
 						.toString().trim()));
 			} else if (qName.equalsIgnoreCase("tns:TABLEID")) {
-				employee.setTableId(Table1C.createId(elementValue.toString()
+				employee.setAccount1C1(Account1C.createId(elementValue.toString()
                         .trim()));
 			} else if (qName.equalsIgnoreCase("tns:RFIDTAG")) {
 				employee.setTag(tag.build());

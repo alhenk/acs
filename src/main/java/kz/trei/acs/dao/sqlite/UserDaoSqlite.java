@@ -5,8 +5,8 @@ import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
-import kz.trei.acs.office.structure.Table1C;
-import kz.trei.acs.office.structure.Table1CException;
+import kz.trei.acs.office.structure.Account1C;
+import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
@@ -46,7 +46,7 @@ public class UserDaoSqlite implements UserDao {
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -93,7 +93,7 @@ public class UserDaoSqlite implements UserDao {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Table1C tableId = Table1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -108,7 +108,7 @@ public class UserDaoSqlite implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
-        } catch (Table1CException e){
+        } catch (Account1CException e){
             LOGGER.error("Table 1C Exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
@@ -121,7 +121,6 @@ public class UserDaoSqlite implements UserDao {
     @Override
     public void create(User user) throws DaoException {
         PreparedStatement stmt = null;
-//        Statement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
@@ -131,21 +130,14 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception");
         }
         String users = PropertyManager.getValue("user.table");
-        String username = user.getUsername();
-        String password = user.getPassword();
-        RoleType role = user.getRole();
-        String tableId = user.getTableId().getTableId();
-        try {
+         try {
             conn = connectionPool.getConnection();
-//            stmt = conn.createStatement();
             stmt = conn.prepareStatement("INSERT INTO "+ users +" (username, password, tableId, userRole) VALUES (?,?,?,?)");
             stmt.setString(1,user.getUsername());
             stmt.setString(2,user.getPassword());
-            stmt.setString(3, user.getTableId().getTableId());
+            stmt.setString(3, user.getAccount1C().getTableId());
             stmt.setString(4, user.getRole().toString());
             stmt.execute();
-//            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('" + username
-//                    + "', '" + password + "', '" + tableId + "', '" + role + "')");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -218,7 +210,7 @@ public class UserDaoSqlite implements UserDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                Table1C tableId = Table1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 RoleType role = RoleType.valueOf(rs.getString("userRole"));
                 user = new User.Builder(username, password)
                         .id(id)
@@ -233,7 +225,7 @@ public class UserDaoSqlite implements UserDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (Table1CException e) {
+        } catch (Account1CException e) {
             LOGGER.error("Table ID is not valid: " + e.getMessage());
             throw new DaoException("Table ID is not valid");
         } finally {

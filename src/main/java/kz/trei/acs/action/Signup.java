@@ -3,8 +3,8 @@ package kz.trei.acs.action;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
-import kz.trei.acs.office.structure.Table1C;
-import kz.trei.acs.office.structure.Table1CException;
+import kz.trei.acs.office.structure.Account1C;
+import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
@@ -45,22 +45,26 @@ public class Signup implements Action {
         session.removeAttribute("user-role-error");
         session.removeAttribute("table-id-error");
 
+        Account1C account1CTableId;
+        try {
+            account1CTableId = Account1C.createId(tableId);
+        } catch (Account1CException e) {
+            LOGGER.error("Table ID is not valid: " + e.getMessage());
+            session.setAttribute("table-id-error", "form.table-id-error");
+            session.setAttribute("error", "form.incomplete");
+            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
-        if (isPasswordWellFormed(request) || isFormComplete(request)) {
+        if (isPasswordWellFormed(request) && isFormComplete(request)) {
             try {
                 User user = new User.Builder(username, password)
-                        .tableId(Table1C.createId(tableId.toUpperCase()))
+                        .tableId(account1CTableId)
                         .role(RoleType.valueOf(userRole.toUpperCase())).build();
                 userDao.create(user);
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
                 session.setAttribute("status", "status.create.account.fail");
-                return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
-            } catch (Table1CException e) {
-                LOGGER.error("Table ID is not valid: " + e.getMessage());
-                session.setAttribute("table-id-error", "form.table-id-error");
-                session.setAttribute("error", "form.incomplete");
                 return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
             }
             session.removeAttribute("username");
@@ -107,7 +111,6 @@ public class Signup implements Action {
         boolean isPasswordEmpty = false;
         boolean isUserRoleEmpty = false;
         boolean isTableIdEmpty = false;
-
         if (username == null || username.isEmpty()) {
             isUserNameEmpty = true;
             session.setAttribute("username-error", "form.empty");
@@ -124,7 +127,6 @@ public class Signup implements Action {
             isTableIdEmpty = true;
             session.setAttribute("table-id-error", "form.empty");
         }
-
         if (isUserNameEmpty || isPasswordEmpty || isUserRoleEmpty || isTableIdEmpty) {
             return false;
         }

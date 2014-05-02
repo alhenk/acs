@@ -11,7 +11,7 @@
                 <td>${user.username}</td>
                 <%--for debug purpose--%>
                 <td>${user.password}</td>
-                <td>${user.tableId.tableId}</td>
+                <td>${user.account1C.tableId}</td>
                 <td>${user.role}</td>
                 <td>
                     <a href="do/edit-account?id=${user.id}">edit</a>

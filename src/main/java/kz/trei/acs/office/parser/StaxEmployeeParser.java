@@ -18,6 +18,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import kz.trei.acs.office.structure.Account1C;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -31,7 +32,6 @@ import kz.trei.acs.office.rfid.RfidUID;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.structure.Table1C;
 import kz.trei.acs.office.util.DateStamp;
 
 public class StaxEmployeeParser implements EmployeeParser {
@@ -107,10 +107,10 @@ public class StaxEmployeeParser implements EmployeeParser {
 						String value = xmlReader.getAttributeValue(null,
 								"tableId");
 						if (value == null) {
-							employee.setTableId(Table1C.createRandomId());
+							employee.setAccount1C1(Account1C.createRandomId());
 						} else {
 							try {
-								employee.setTableId(Table1C.createId(value));
+								employee.setAccount1C1(Account1C.createId(value));
 							} catch (IllegalArgumentException e) {
 								LOGGER.error(e);
 							}
@@ -148,7 +148,7 @@ public class StaxEmployeeParser implements EmployeeParser {
 					} else if (elementName.equalsIgnoreCase("ROOM")) {
 						employee.addRoom(RoomType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("TABLEID")) {
-						employee.setTableId(Table1C.createId(elementText));
+						employee.setAccount1C1(Account1C.createId(elementText));
 					} else if (elementName.equalsIgnoreCase("RFIDTAG")) {
 						employee.setTag(tag.build());
 					} else if (elementName.equalsIgnoreCase("TAGTYPE")) {

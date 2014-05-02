@@ -9,6 +9,7 @@ import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
+import kz.trei.acs.office.structure.Account1C;
 import org.apache.log4j.Logger;
 
 import kz.trei.acs.office.hr.Employee;
@@ -18,7 +19,6 @@ import kz.trei.acs.office.rfid.RfidUID;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.structure.Table1C;
 import kz.trei.acs.office.util.DateStamp;
 
 public class JaxbEmployeeSchema {
@@ -32,7 +32,7 @@ public class JaxbEmployeeSchema {
 			SchemaOutputResolver sor = new MySchemaOutputResolver();
 			jaxbContext = JAXBContext.newInstance(Staff.class, Employee.class,
 					RfidTag.class, DepartmentType.class, PositionType.class,
-					RoomType.class, RfidUID.class, Table1C.class,
+					RoomType.class, RfidUID.class, Account1C.class,
 					DateStamp.class);
 			jaxbContext.generateSchema(sor);
 		} catch (JAXBException e) {

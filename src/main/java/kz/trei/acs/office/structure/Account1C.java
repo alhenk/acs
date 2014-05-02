@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @throws IllegalArgumentException
  */
 //@XmlType(name = "tableId", namespace ="http://www.trei.kz/attendance/tns")
-public final class Table1C {
+public final class Account1C {
     static {
         PropertyManager.load("configure.properties");
     }
@@ -26,13 +26,13 @@ public final class Table1C {
     /**
      * Default constructor
      */
-    public Table1C() {
+    public Account1C() {
     }
 
     /**
      * Constructor with direct assignment.
      */
-    private Table1C(String id) {
+    private Account1C(String id) {
         this.tableId = id;
     }
 
@@ -51,11 +51,11 @@ public final class Table1C {
     /**
      * Static fabric method with random ID
      */
-    public static Table1C createRandomId() {
+    public static Account1C createRandomId() {
         StringBuilder id = new StringBuilder();
         long number = 1L + (long) (Math.random() * 9999L);
         id.append(PropertyManager.getValue("structure.tablePrefix"));
-        return new Table1C(id.append(String.format("%08d", number)).toString());
+        return new Account1C(id.append(String.format("%08d", number)).toString());
     }
 
     /**
@@ -63,11 +63,11 @@ public final class Table1C {
      *
      * @throws IllegalArgumentException
      */
-    public static Table1C createId(String id) {
+    public static Account1C createId(String id) {
         if (isValid(id)) {
-            return new Table1C(id);
+            return new Account1C(id);
         } else {
-            throw new Table1CException("does not match tableIDRegex ");
+            throw new Account1CException("does not match tableIDRegex ");
         }
     }
 
@@ -95,7 +95,7 @@ public final class Table1C {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Table1C other = (Table1C) obj;
+        Account1C other = (Account1C) obj;
         if (tableId == null) {
             if (other.tableId != null)
                 return false;
