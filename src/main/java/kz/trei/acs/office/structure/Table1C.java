@@ -67,7 +67,7 @@ public final class Table1C {
         if (isValid(id)) {
             return new Table1C(id);
         } else {
-            throw new IllegalArgumentException();
+            throw new Table1CException("does not match tableIDRegex ");
         }
     }
 

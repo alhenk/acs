@@ -6,7 +6,7 @@
 <mtag:pagetemplate title="exception">
     <jsp:body>
         <fmt:message bundle="${msg}" key="common.exception"/>
-        <h3>Exception Details</h3>
+        <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
         <ul>
             <li>
                 <strong>Status Code</strong>: "${sessionScope['status-code']}"

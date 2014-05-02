@@ -6,21 +6,21 @@
 <mtag:pagetemplate title="error">
     <jsp:body>
         <fmt:message bundle="${msg}" key="common.error"/>
-        <h3>Error Details</h3>
+        <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
         <br>
         <strong>Status Code</strong>: "${sessionScope['status-code']}"
         <c:choose>
             <c:when test="${sessionScope['status-code']=='401'}">
-                <h2>UNAUTHORIZED</h2>
+                <h2><fmt:message bundle="${msg}" key="common.unauthorized"/></h2>
             </c:when>
             <c:when test="${sessionScope['status-code']=='403'}">
-                <h2>FORBIDDEN</h2>
+                <h2><fmt:message bundle="${msg}" key="common.forbidden"/></h2>
             </c:when>
             <c:when test="${sessionScope['status-code']=='404'}">
-                <h2>FILE NOT FOUND</h2>
+                <h2><fmt:message bundle="${msg}" key="common.not-found"/></h2>
             </c:when>
             <c:otherwise>
-                <h2>ERROR</h2>
+                <h2><fmt:message bundle="${msg}" key="common.error"/></h2>
             </c:otherwise>
         </c:choose>
         <br>

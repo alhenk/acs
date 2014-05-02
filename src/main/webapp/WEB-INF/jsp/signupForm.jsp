@@ -22,6 +22,16 @@
             </td>
         </tr>
         <tr>
+            <td align="right"><fmt:message bundle="${msg}" key="form.confirm-password"/> :</td>
+            <td align="left"><input type="password" name="confirm-password" value="${sessionScope["confirm-password"]}" ></td>
+            <td align="left" style="color:red;">
+                <c:if test="${not empty sessionScope['confirm-password-error']}">
+                    <fmt:message bundle="${msg}" key="${sessionScope['confirm-password-error']}"/>
+                    <c:remove var="confirm-password-error" scope="session"/>
+                </c:if>
+            </td>
+        </tr>
+        <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.table-id"/> :</td>
             <td align="left"><input type="text" name="table-id" value="${sessionScope["table-id"]}"></td>
             <td align="left" style="color:red;">
