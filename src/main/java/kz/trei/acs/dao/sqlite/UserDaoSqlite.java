@@ -92,11 +92,13 @@ public class UserDaoSqlite implements UserDao {
             if (rs.next()) {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
+                String email = rs.getString("email");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
                 Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
+                        .email(email)
                         .tableId(tableId)
                         .build();
                 LOGGER.debug(user);
@@ -132,11 +134,12 @@ public class UserDaoSqlite implements UserDao {
         String users = PropertyManager.getValue("user.table");
          try {
             conn = connectionPool.getConnection();
-            stmt = conn.prepareStatement("INSERT INTO "+ users +" (username, password, tableId, userRole) VALUES (?,?,?,?)");
+            stmt = conn.prepareStatement("INSERT INTO "+ users +" (username, password, email, tableId, userRole) VALUES (?,?,?,?,?)");
             stmt.setString(1,user.getUsername());
             stmt.setString(2,user.getPassword());
-            stmt.setString(3, user.getAccount1C().getTableId());
-            stmt.setString(4, user.getRole().toString());
+            stmt.setString(3,user.getEmail());
+            stmt.setString(4, user.getAccount1C().getTableId());
+            stmt.setString(5, user.getRole().toString());
             stmt.execute();
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -166,10 +169,10 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), tableId CHAR(32), userRole CHAR(20) )");
-            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
-            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
-            stmt.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
+            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), email CHAR(32), tableId CHAR(32), userRole CHAR(20) )");
+            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('admin', '123', 'admin@example.com', 'KK00000001', 'ADMINISTRATOR')");
+            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Alhen', '123', 'alhen@example.com', 'KK00000002', 'SUPERVISOR')");
+            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Bob', '123', 'bob@example.com', 'KK00000003', 'EMPLOYEE')");
             rs = stmt.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
@@ -210,11 +213,13 @@ public class UserDaoSqlite implements UserDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
                 String password = rs.getString("password");
+                String email = rs.getString("email");
                 Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 RoleType role = RoleType.valueOf(rs.getString("userRole"));
                 user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
+                        .email(email)
                         .tableId(tableId)
                         .build();
                 users.add(user);

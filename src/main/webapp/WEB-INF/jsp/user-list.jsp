@@ -18,6 +18,7 @@
                     <td>${user.username}</td>
                         <%--for debug purpose--%>
                     <td>${user.password}</td>
+                    <td>${user.email}</td>
                     <td>${user.account1C.tableId}</td>
                     <td>${user.role}</td>
                     <td>

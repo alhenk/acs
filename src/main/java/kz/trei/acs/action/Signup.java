@@ -52,6 +52,7 @@ public class Signup implements Action {
         if (isFormValid(request)) {
             try {
                 User user = new User.Builder(username, password)
+                        .email(email)
                         .tableId(Account1C.createId(tableId))
                         .role(RoleType.valueOf(role.toUpperCase())).build();
                 userDao.create(user);
@@ -74,10 +75,9 @@ public class Signup implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
-        isEmailValid(request);
         return isUserNameValid(request)
                 & isPasswordValid(request)
-//                & isEmailValid(request)
+                & isEmailValid(request)
                 & isTableIdValid(request)
                 & isRoleValid(request);
     }
