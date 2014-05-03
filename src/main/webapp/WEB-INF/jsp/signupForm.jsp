@@ -32,6 +32,16 @@
             </td>
         </tr>
         <tr>
+            <td align="right"><fmt:message bundle="${msg}" key="form.user.email"/> :</td>
+            <td align="left"><input type="text" name="email" value="${sessionScope['email']}" ></td>
+            <td align="left" style="color:red;">
+                <c:if test="${not empty sessionScope['email-error']}">
+                    <fmt:message bundle="${msg}" key="${sessionScope['email-error']}"/>
+                    <c:remove var="email-error" scope="session"/>
+                </c:if>
+            </td>
+        </tr>
+        <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.user.table-id"/> :</td>
             <td align="left"><input type="text" name="table-id" value="${sessionScope["table-id"]}"></td>
             <td align="left" style="color:red;">

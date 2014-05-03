@@ -30,13 +30,16 @@ public class Signup implements Action {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
+        String email = request.getParameter("email");
+
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
         session.setAttribute("username", username);
-        session.setAttribute("role", role);
-        session.setAttribute("table-id", tableId);
         session.setAttribute("password", password);
         session.setAttribute("confirm-password", confirmPassword);
+        session.setAttribute("email", email);
+        session.setAttribute("role", role);
+        session.setAttribute("table-id", tableId);
         session.removeAttribute("status");
         session.removeAttribute("username-error");
         session.removeAttribute("password-error");
@@ -71,6 +74,7 @@ public class Signup implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
+        isEmailValid(request);
         return isUserNameValid(request)
                 & isPasswordValid(request)
 //                & isEmailValid(request)

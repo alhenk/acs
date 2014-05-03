@@ -31,5 +31,6 @@
                 </tr>
             </c:forEach>
         </table>
+        <a href="do/create-account"><fmt:message bundle="${msg}" key="create.account"/></a><br/>
     </jsp:body>
 </mtag:pagetemplate>
