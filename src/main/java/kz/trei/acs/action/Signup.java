@@ -4,7 +4,6 @@ import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.office.structure.Account1C;
-import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
@@ -31,10 +30,10 @@ public class Signup implements Action {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
-        String userRole = request.getParameter("user-role");
+        String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
         session.setAttribute("username", username);
-        session.setAttribute("user-role", userRole);
+        session.setAttribute("role", role);
         session.setAttribute("table-id", tableId);
         session.setAttribute("password", password);
         session.setAttribute("confirm-password", confirmPassword);
@@ -42,94 +41,165 @@ public class Signup implements Action {
         session.removeAttribute("username-error");
         session.removeAttribute("password-error");
         session.removeAttribute("confirm-password-error");
-        session.removeAttribute("user-role-error");
+        session.removeAttribute("role-error");
         session.removeAttribute("table-id-error");
 
-        Account1C account1CTableId;
-        try {
-            account1CTableId = Account1C.createId(tableId);
-        } catch (Account1CException e) {
-            LOGGER.error("Table ID is not valid: " + e.getMessage());
-            session.setAttribute("table-id-error", "form.table-id-error");
-            session.setAttribute("error", "form.incomplete");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
-        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
-        if (isPasswordWellFormed(request) && isFormComplete(request)) {
+        if (isFormValid(request)) {
             try {
                 User user = new User.Builder(username, password)
-                        .tableId(account1CTableId)
-                        .role(RoleType.valueOf(userRole.toUpperCase())).build();
+                        .tableId(Account1C.createId(tableId))
+                        .role(RoleType.valueOf(role.toUpperCase())).build();
                 userDao.create(user);
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
-                session.setAttribute("status", "status.create.account.fail");
+                session.setAttribute("status", "form.user.create.fail");
                 return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
             }
             session.removeAttribute("username");
             session.removeAttribute("password");
+            session.removeAttribute("email");
             session.removeAttribute("confirm-password");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
-            session.setAttribute("status", "status.create.account.success");
+            session.setAttribute("status", "form.user.create.success");
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
         }
-        session.setAttribute("error", "form.incomplete");
+        session.setAttribute("error", "form.user.incomplete");
         return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
     }
 
-    private boolean isPasswordWellFormed(HttpServletRequest request) {
+    private boolean isFormValid(HttpServletRequest request) {
+        return isUserNameValid(request)
+                & isPasswordValid(request)
+//                & isEmailValid(request)
+                & isTableIdValid(request)
+                & isRoleValid(request);
+    }
+
+    //USER NAME VALIDATION
+    private boolean isUserNameValid(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String username = request.getParameter("username");
+        boolean isUserNameValid = true;
+        Matcher userNameMatcher = null;
+        if (username == null || username.isEmpty()) {
+            isUserNameValid = false;
+            session.setAttribute("username-error", "form.user.empty");
+        } else {
+            String userNameRegex = PropertyManager.getValue("form.user.name.regex");
+            Pattern userNamePattern = Pattern.compile(userNameRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            userNameMatcher = userNamePattern.matcher(username);
+            if (userNameMatcher != null && userNameMatcher.matches()) {
+                isUserNameValid = true;
+            } else {
+                isUserNameValid = false;
+                session.setAttribute("username-error", "form.user.name.malformed");
+            }
+        }
+        return isUserNameValid;
+    }
+
+    //PASSWORD VALIDATION
+    private boolean isPasswordValid(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
+        boolean isPasswordValid = false;
+        Matcher passwordMatcher = null;
         if (password == null || password.isEmpty()) {
-            session.setAttribute("password-error", "form.empty");
-            return false;
+            isPasswordValid = false;
+            session.setAttribute("password-error", "form.user.empty");
+        } else {
+            String passwordRegex = PropertyManager.getValue("form.user.password.regex");
+            Pattern passwordPattern = Pattern.compile(passwordRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS);
+            passwordMatcher = passwordPattern.matcher(password);
+            if (passwordMatcher != null && passwordMatcher.matches()) {
+                isPasswordValid = true;
+            } else {
+                isPasswordValid = false;
+                session.setAttribute("password-error", "form.user.password.malformed");
+            }
+            if (isPasswordValid && !password.equals(confirmPassword)) {
+                session.setAttribute("confirm-password-error", "form.user.password.not-confirmed");
+                isPasswordValid = false;
+            }
         }
-        String passwordRegex = PropertyManager.getValue("form.passwordRegex");
-        Pattern passwordPattern = Pattern.compile(passwordRegex);
-        Matcher passwordMatcher = passwordPattern.matcher(password);
-        if (!passwordMatcher.matches()) {
-            session.setAttribute("password-error", "form.password.malformed");
-            return false;
-        }
-        if (!password.equals(confirmPassword)) {
-            session.setAttribute("confirm-password-error", "form.password.not-confirmed");
-            return false;
-        }
-        return true;
+        return isPasswordValid;
     }
 
-    private boolean isFormComplete(HttpServletRequest request) {
+    //EMAIL VALIDATION
+    private boolean isEmailValid(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String userRole = request.getParameter("user-role");
+        String email = request.getParameter("email");
+        boolean isEmailValid = false;
+        Matcher emailMatcher = null;
+        if (email == null || email.isEmpty()) {
+            isEmailValid = false;
+            session.setAttribute("email-error", "form.user.empty");
+        } else {
+            String emailRegex = PropertyManager.getValue("form.user.email.regex");
+            Pattern emailPattern = Pattern.compile(emailRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            emailMatcher = emailPattern.matcher(email);
+            if (emailMatcher != null && emailMatcher.matches()) {
+                isEmailValid = true;
+            } else {
+                isEmailValid = false;
+                session.setAttribute("email-error", "form.user.email.malformed");
+            }
+        }
+        return isEmailValid;
+    }
+
+    //ROLE MATCHER
+    private boolean isRoleValid(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String role = request.getParameter("role");
+        boolean isRoleValid = false;
+        Matcher roleMatcher = null;
+        if (role == null || role.isEmpty()) {
+            isRoleValid = false;
+            session.setAttribute("role-error", "form.user.empty");
+        } else {
+            String roleRegex = PropertyManager.getValue("form.user.role.regex");
+            Pattern userRolePattern = Pattern.compile(roleRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            roleMatcher = userRolePattern.matcher(role);
+            if (roleMatcher != null && roleMatcher.matches()) {
+                isRoleValid = true;
+            } else {
+                isRoleValid = false;
+                session.setAttribute("role-error", "form.user.role.malformed");
+            }
+        }
+        return isRoleValid;
+    }
+
+    //TABLE_ID MATCHER
+    private boolean isTableIdValid(HttpServletRequest request) {
+        HttpSession session = request.getSession();
         String tableId = request.getParameter("table-id");
-        boolean isUserNameEmpty = false;
-        boolean isPasswordEmpty = false;
-        boolean isUserRoleEmpty = false;
-        boolean isTableIdEmpty = false;
-        if (username == null || username.isEmpty()) {
-            isUserNameEmpty = true;
-            session.setAttribute("username-error", "form.empty");
-        }
-        if (password == null || password.isEmpty()) {
-            isPasswordEmpty = true;
-            session.setAttribute("password-error", "form.empty");
-        }
-        if (userRole == null || userRole.isEmpty()) {
-            isUserRoleEmpty = true;
-            session.setAttribute("user-role-error", "form.empty");
-        }
+        boolean isTableIdValid = false;
+        Matcher tableIdMatcher = null;
         if (tableId == null || tableId.isEmpty()) {
-            isTableIdEmpty = true;
-            session.setAttribute("table-id-error", "form.empty");
+            isTableIdValid = false;
+            session.setAttribute("table-id-error", "form.user.empty");
+        } else {
+            String tableIdRegex = PropertyManager.getValue("form.user.table-id.regex");
+            Pattern tableIdPattern = Pattern.compile(tableIdRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            tableIdMatcher = tableIdPattern.matcher(tableId);
+            if (tableIdMatcher != null && tableIdMatcher.matches()) {
+                isTableIdValid = true;
+            } else {
+                isTableIdValid = false;
+                session.setAttribute("table-id-error", "form.user.table-id.malformed");
+            }
         }
-        if (isUserNameEmpty || isPasswordEmpty || isUserRoleEmpty || isTableIdEmpty) {
-            return false;
-        }
-        return true;
+        return isTableIdValid;
     }
 }

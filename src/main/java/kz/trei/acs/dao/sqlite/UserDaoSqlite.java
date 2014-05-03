@@ -71,8 +71,8 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public User find(long id) throws DaoException {
-        String userTable = PropertyManager.getValue("user.table");
-        Statement stmt = null;
+        String users = PropertyManager.getValue("user.table");
+        PreparedStatement stmt = null;
         ResultSet rs;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -85,9 +85,9 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM " + userTable +
-                    " WHERE id = '" + id + "'");
+            stmt = conn.prepareStatement("INSERT INTO "+ users +" WHERE id = ?");
+            stmt.setLong (1,id);
+            rs = stmt.executeQuery();
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
                 String username = rs.getString("username");
@@ -237,10 +237,10 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public void delete(long id) throws DaoException {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
-        String userTable = PropertyManager.getValue("user.table");
+        String users = PropertyManager.getValue("user.table");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -249,9 +249,9 @@ public class UserDaoSqlite implements UserDao {
         }
         try {
             conn = connectionPool.getConnection();
-            stmt = conn.createStatement();
-            String sql = "DELETE FROM " + userTable + " WHERE id = '" + id + "'";
-            stmt.executeUpdate(sql);
+            stmt = conn.prepareStatement("DELETE FROM "+ users +" WHERE id = ?");
+            stmt.setLong (1,id);
+            stmt.executeUpdate();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");

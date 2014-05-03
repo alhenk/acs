@@ -39,7 +39,7 @@ public final class Account1C {
     /**
      * regex id verification
      */
-    private static boolean isValid(String id) {
+    public static boolean isValid(String id) {
         String tableIDregex = PropertyManager
                 .getValue("structure.tableIDRegex");
         Pattern tableIDPattern = Pattern.compile(tableIDregex,

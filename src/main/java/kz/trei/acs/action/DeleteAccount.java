@@ -22,13 +22,17 @@ public class DeleteAccount implements Action{
         long id = Long.valueOf(request.getParameter("id"));
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
+        if (id==1){
+            session.setAttribute("status", "delete.account.fail");
+            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+        }
         try {
             userDao.delete(id);
         } catch (DaoException e) {
-            session.setAttribute("error", "error.delete-account");
+            session.setAttribute("status", "delete.account.fail");
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
         }
-        session.setAttribute("status", "status.delete.account.success");
+        session.setAttribute("status", "delete.account.success");
         return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
     }
 }

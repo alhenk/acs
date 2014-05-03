@@ -93,7 +93,7 @@ public class UserDaoH2 implements UserDao {
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
                 String username = rs.getString("username");
-                String password =rs.getString("password");
+                String password = rs.getString("password");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
                 Account1C tableId = Account1C.createId(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
