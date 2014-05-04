@@ -7,6 +7,7 @@
 <mtag:pagetemplate title="edit-account">
     <jsp:body>
         <h2>EDIT ACCOUNT</h2>
+        <%@include file="edit-account-form.jsp"%>
         <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
     </jsp:body>
 </mtag:pagetemplate>

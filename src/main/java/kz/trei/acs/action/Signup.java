@@ -30,7 +30,6 @@ public class Signup implements Action {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
         String email = request.getParameter("email");
-
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
         session.setAttribute("username", username);

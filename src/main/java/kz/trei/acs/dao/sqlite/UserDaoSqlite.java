@@ -93,7 +93,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
-            stmt = conn.prepareStatement("INSERT INTO "+ users +" WHERE id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM "+ users +" WHERE id = ?");
             stmt.setLong (1,id);
             rs = stmt.executeQuery();
             LOGGER.debug("Execute Query " + rs);
