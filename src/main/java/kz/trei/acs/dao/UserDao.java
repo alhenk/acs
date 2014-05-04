@@ -10,6 +10,8 @@ public interface UserDao {
     public User find(long id) throws DaoException;
     public void create(User user) throws DaoException;
     public void createTable() throws DaoException;
+    public long totalNumber() throws DaoException;
+    public void update(long id) throws DaoException;
     public List<User> list()throws DaoException;
     public void delete(long id) throws DaoException;
 }

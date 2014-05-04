@@ -57,7 +57,7 @@ public class EditAccount implements Action {
                         .email(email)
                         .tableId(Account1C.createId(tableId))
                         .role(RoleType.valueOf(role.toUpperCase())).build();
-                userDao.update(user);
+                userDao.update(user.getId());
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
                 session.setAttribute("status", "form.user.create.fail");

@@ -202,6 +202,7 @@ public class UserDaoSqlite implements UserDao {
         }
     }
 
+    @Override
     public long totalNumber() throws DaoException{
         long totalNumber=0;
         Statement stmt = null;
