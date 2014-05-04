@@ -22,7 +22,8 @@ public class ActionFactory {
         actions.put("GET/error", new ShowErrorPage());
         actions.put("GET/exception", new ShowExceptionPage());
         actions.put("GET/not-found", new ShowNotFoundPage());
-        actions.put("GET/edit-account", new EditAccount());
+        actions.put("POST/edit-account", new EditAccount());
+        actions.put("GET/edit-account", new ShowEditAccountPage());
         actions.put("GET/delete-account", new DeleteAccount());
 
         LOGGER.debug("Instantiated ActionFactory");
