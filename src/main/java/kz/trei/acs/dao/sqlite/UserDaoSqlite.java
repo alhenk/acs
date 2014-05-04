@@ -45,10 +45,18 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
+                String email = rs.getString("email");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                Account1C tableId;
+                try{
+                    tableId = Account1C.createId(rs.getString("tableId"));
+                } catch (Account1CException e){
+                    tableId = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " +e.getMessage());
+                }
                 User user = new User.Builder(username, password)
                         .id(id)
+                        .email(email)
                         .role(userRole)
                         .tableId(tableId)
                         .build();
@@ -94,7 +102,13 @@ public class UserDaoSqlite implements UserDao {
                 String password = rs.getString("password");
                 String email = rs.getString("email");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                Account1C tableId;
+                try{
+                    tableId = Account1C.createId(rs.getString("tableId"));
+                } catch (Account1CException e){
+                    tableId = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " +e.getMessage());
+                }
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(userRole)
@@ -110,8 +124,6 @@ public class UserDaoSqlite implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
-        } catch (Account1CException e){
-            LOGGER.error("Table 1C Exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -190,6 +202,41 @@ public class UserDaoSqlite implements UserDao {
         }
     }
 
+    public long totalNumber() throws DaoException{
+        long totalNumber=0;
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        String userTable = PropertyManager.getValue("user.table");
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM " + userTable);
+            while(rs.next()){
+                totalNumber = Long.valueOf(rs.getString("TotalNumber"));
+                LOGGER.debug("Total number of ROWS = " + totalNumber);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return totalNumber;
+
+    }
+
     @Override
     public List<User> list() throws DaoException {
         Statement stmt = null;
@@ -214,7 +261,13 @@ public class UserDaoSqlite implements UserDao {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 String email = rs.getString("email");
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                Account1C tableId;
+                try{
+                    tableId = Account1C.createId(rs.getString("tableId"));
+                } catch (Account1CException e){
+                    tableId = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " +e.getMessage());
+                }
                 RoleType role = RoleType.valueOf(rs.getString("userRole"));
                 user = new User.Builder(username, password)
                         .id(id)
@@ -224,15 +277,16 @@ public class UserDaoSqlite implements UserDao {
                         .build();
                 users.add(user);
             }
+            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM " + userTable);
+            while(rs.next()){
+                LOGGER.debug("Total number of ROWS = " + rs.getString("TotalNumber"));
+            }
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (Account1CException e) {
-            LOGGER.error("Table ID is not valid: " + e.getMessage());
-            throw new DaoException("Table ID is not valid");
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);

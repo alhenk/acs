@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  */
 //@XmlType(name = "tableId", namespace ="http://www.trei.kz/attendance/tns")
 public final class Account1C {
+    public static final String DEFAULT_TABLE_ID = "XX00000000";
     static {
         PropertyManager.load("configure.properties");
     }
@@ -69,6 +70,14 @@ public final class Account1C {
         } else {
             throw new Account1CException("does not match tableIDRegex ");
         }
+    }
+
+    /**
+     * Used for assign default table ID in case of Account1CException
+     *
+     */
+    public static Account1C defaultId(){
+        return new Account1C(DEFAULT_TABLE_ID);
     }
 
     /**

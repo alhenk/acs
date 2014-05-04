@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 
 public class Signup implements Action {
     private static final Logger LOGGER = Logger.getLogger(Signup.class);
-
     static {
         PropertyManager.load("configure.properties");
     }
