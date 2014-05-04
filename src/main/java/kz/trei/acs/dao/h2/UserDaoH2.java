@@ -190,6 +190,16 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
+    public long totalNumber() throws DaoException {
+        return 0;
+    }
+
+    @Override
+    public void update(User user) throws DaoException {
+
+    }
+
+    @Override
     public List<User> list() throws DaoException {
         Statement stat = null;
         ResultSet rs = null;

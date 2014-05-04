@@ -1,5 +1,6 @@
 <h2><fmt:message bundle="${msg}" key="edit.account"/> </h2>
 <form action="do/edit-account" method="post">
+    <input type="hidden" name="id" value="${sessionScope.account.id}">
     <table>
         <tr>
             <td align="right"><fmt:message bundle="${msg}" key="form.user.name"/>:</td>
