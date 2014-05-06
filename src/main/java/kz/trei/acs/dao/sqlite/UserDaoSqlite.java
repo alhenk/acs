@@ -9,9 +9,12 @@ import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.PasswordHash;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,11 +24,11 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public User find(String username, String password) throws DaoException {
-        String userTable = PropertyManager.getValue("user.table");
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs;
         Connection conn = null;
         ConnectionPool connectionPool = null;
+        boolean isPasswordValid = false;
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -35,15 +38,35 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
-            stmt = conn.createStatement();
+            //stmt = conn.createStatement();
             if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
                 LOGGER.debug("There are no attributes username/password");
                 throw new DaoException("There are no attributes username/password");
             }
-            rs = stmt.executeQuery("SELECT * FROM " + userTable +
-                    " WHERE username = '" + username + "' AND password = '" + password + "'");
-            LOGGER.debug("Execute Query " + rs);
-            if (rs.next()) {
+            stmt = conn.prepareStatement("SELECT * FROM USERS WHERE username = ?");
+            stmt.setString(1,username);
+            rs = stmt.executeQuery();
+            LOGGER.debug("Executed Query " + rs);
+            //Multiple identical users are constrained in database
+            if(rs.next()){
+                String hash = rs.getString("password");
+                try {
+                    String hash2="1000:241c4899116ae9c374d4d78711a27e49643196a2b9d70c87:2e9b4d7a67e449fb45777e8a214a1fbc2fcbff731c20cb01";
+                    isPasswordValid =PasswordHash.validatePassword(password,hash2);
+                    isPasswordValid =PasswordHash.validatePassword(password,hash);
+                } catch (NoSuchAlgorithmException e) {
+                    LOGGER.debug("Password validation Error" + e.getMessage());
+                    throw new DaoException("Password validation Error" + e.getMessage());
+                } catch (InvalidKeySpecException e) {
+                    LOGGER.debug("Password validation Error" + e.getMessage());
+                    throw new DaoException("Password validation Error" + e.getMessage());
+                }
+            } else {
+                LOGGER.debug("There is no such user");
+                throw new DaoException("There is no such user");
+            }
+            if(isPasswordValid){
+                String hash = rs.getString("password");
                 long id = Long.valueOf(rs.getString("id"));
                 String email = rs.getString("email");
                 RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
@@ -179,13 +202,17 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception");
         }
         String users = PropertyManager.getValue("user.table");
+        String securePassword;
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(32), email CHAR(32), tableId CHAR(32), userRole CHAR(20) )");
-            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('admin', '123', 'admin@example.com', 'KK00000001', 'ADMINISTRATOR')");
-            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Alhen', '123', 'alhen@example.com', 'KK00000002', 'SUPERVISOR')");
-            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Bob', '123', 'bob@example.com', 'KK00000003', 'EMPLOYEE')");
+            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(128), email CHAR(32), tableId CHAR(32), userRole CHAR(20) )");
+            securePassword = PasswordHash.createHash("123");
+            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('admin', '"+securePassword+"', 'admin@example.com', 'KK00000001', 'ADMINISTRATOR')");
+            securePassword = PasswordHash.createHash("1234");
+            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Alhen', '"+securePassword+"', 'alhen@example.com', 'KK00000002', 'SUPERVISOR')");
+            securePassword = PasswordHash.createHash("12345");
+            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Bob', '"+securePassword+"', 'bob@example.com', 'KK00000003', 'EMPLOYEE')");
             rs = stmt.executeQuery("SELECT * FROM " + users);
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
@@ -197,6 +224,11 @@ public class UserDaoSqlite implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
+        } catch (InvalidKeySpecException e) {
+            LOGGER.error("Secure password creation error" + e.getMessage());
+            throw new DaoException("Secure password creation error");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
