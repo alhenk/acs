@@ -196,8 +196,9 @@ public class UserDaoSqlite implements UserDao {
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
-        String createStaffTableSql=FileManager.readFile("create_staff_table.sql");
-        String createUserTableSql=FileManager.readFile("create_user_table.sql");
+        String createStaffTableSql = FileManager.readFile("create_staff_table.sql");
+        String createUserTableSql = FileManager.readFile("create_user_table.sql");
+        String createRfidTagTableSql = FileManager.readFile("create_rfidtag_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -226,6 +227,14 @@ public class UserDaoSqlite implements UserDao {
                         + rs.getString("username") + "\t"
                         + rs.getString("tableId") + "\t"
                         + rs.getString("userRole"));
+            }
+            stmt.executeUpdate(createRfidTagTableSql);
+            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("id") + "\t"
+                        + rs.getString("uid") + "\t"
+                        + rs.getString("type") + "\t"
+                        + rs.getString("protocol"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());

@@ -6,28 +6,63 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 
 public final class DbUtil {
+    private static final Logger LOGGER = Logger.getLogger(DbUtil.class);
+
     static {
         PropertyManager.load("configure.properties");
     }
 
-    private static final Logger LOGGER = Logger.getLogger(DbUtil.class);
-    public static final String CREATE_STAFF_TABLE=
-            "CREATE TABLE IF NOT EXISTS STAFF (id INTEGER PRIMARY KEY, "
-            +"firstName CHAR(40), patronym CHAR(40), lastName CHAR (40),"
-            +"birthDate CHAR (10), jobPosition CHAR (40), department CHAR (40),"
-            +"room CHAR(10), tableId CHAR (10), uid CHAR (40), UNIQUE (tableId) );"
-            +"INSERT INTO STAFF (firstName, lastName, tableId)VALUES ('Iar','Blinov','KK00000001');"
-            +"INSERT INTO STAFF (firstName, lastName, tableId)VALUES ('Anton','Keks','KK00000002');"
-            +"INSERT INTO STAFF (firstName, lastName, tableId)VALUES ('Bob','Martin','KK00000003');";
-
     private DbUtil() {
+    }
+
+    public static void convertStaffDb(String dbName) {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        String uid, date, time;
+        String[] splittedDate = new String[3];
+        try {
+            Class.forName("org.sqlite.JDBC");
+            conn = DriverManager.getConnection("jdbc:sqlite:STAFF_DB.3db");
+            stmt=conn.prepareStatement("CREATE TABLE ATTEND (id INTEGER PRIMARY KEY, uid CHAR (20), direction CHAR(8), dDate CHAR(10), tTime CHAR(8));");
+            stmt.executeUpdate();
+            stmt = conn.prepareStatement("SELECT * FROM ATTENDANCE");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                uid = rs.getString("UID");
+                date = rs.getString("Date");
+                time = rs.getString("Time");
+                splittedDate = date.split("\\.");
+                date = splittedDate[2] +"."+ splittedDate[1] +"."+  splittedDate[0];
+                LOGGER.debug("UID : " + uid + " DATE -> " + date + " TIME -> " + time);
+                stmt = conn.prepareStatement("INSERT INTO ATTEND (uid, dDate, tTime) VALUES (?,?,?)");
+                stmt.setString(1, uid);
+                stmt.setString(2, date);
+                stmt.setString(3, time);
+                stmt.executeUpdate();
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DbUtil.close(stmt, rs);
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static boolean isTableExist(String tablename) {
         Connection conn = null;
         ResultSet tables;
         DatabaseMetaData dbm;
-        ConnectionPool connectionPool=null;
+        ConnectionPool connectionPool = null;
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {

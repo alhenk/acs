@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS "STAFF";
-CREATE TABLE IF NOT EXISTS STAFF (
+CREATE TABLE STAFF (
         id INTEGER PRIMARY KEY,
         firstName CHAR(40),
         patronym CHAR(40),
@@ -50,7 +50,7 @@ INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1990.08.02','KK00000287','2E8969EF');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1981.10.15','KK00000289','9EE168EF');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1989.10.03','KK00000292','AE2665EF');
-INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','14.10.1981.10.14','KK00000125','E0040100594794590000');
+INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1981.10.14','KK00000125','E0040100594794590000');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1983.08.21','KK00000062','8E5E65EF');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1986.11.05','KK00000302','3ED812DF');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('NA' ,'NA','1973.06.23','KK00000007','E004010059476A8B0000');
