@@ -11,6 +11,14 @@ public final class DbUtil {
     }
 
     private static final Logger LOGGER = Logger.getLogger(DbUtil.class);
+    public static final String CREATE_STAFF_TABLE=
+            "CREATE TABLE IF NOT EXISTS STAFF (id INTEGER PRIMARY KEY, "
+            +"firstName CHAR(40), patronym CHAR(40), lastName CHAR (40),"
+            +"birthDate CHAR (10), jobPosition CHAR (40), department CHAR (40),"
+            +"room CHAR(10), tableId CHAR (10), uid CHAR (40), UNIQUE (tableId) );"
+            +"INSERT INTO STAFF (firstName, lastName, tableId)VALUES ('Iar','Blinov','KK00000001');"
+            +"INSERT INTO STAFF (firstName, lastName, tableId)VALUES ('Anton','Keks','KK00000002');"
+            +"INSERT INTO STAFF (firstName, lastName, tableId)VALUES ('Bob','Martin','KK00000003');";
 
     private DbUtil() {
     }

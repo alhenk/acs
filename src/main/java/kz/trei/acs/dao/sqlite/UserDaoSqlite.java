@@ -9,6 +9,7 @@ import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.FileManager;
 import kz.trei.acs.util.PasswordHash;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
@@ -38,22 +39,22 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
-            //stmt = conn.createStatement();
             if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
                 LOGGER.debug("There are no attributes username/password");
                 throw new DaoException("There are no attributes username/password");
             }
             stmt = conn.prepareStatement("SELECT * FROM USERS WHERE username = ?");
-            stmt.setString(1,username);
+            stmt.setString(1, username);
             rs = stmt.executeQuery();
             LOGGER.debug("Executed Query " + rs);
-            //Multiple identical users are constrained in database
-            if(rs.next()){
+            //rs must contain single username
+            // because database constrains a unique username as a primary key
+            if (rs.next()) {
                 String hash = rs.getString("password");
                 try {
-                    String hash2="1000:241c4899116ae9c374d4d78711a27e49643196a2b9d70c87:2e9b4d7a67e449fb45777e8a214a1fbc2fcbff731c20cb01";
-                    isPasswordValid =PasswordHash.validatePassword(password,hash2);
-                    isPasswordValid =PasswordHash.validatePassword(password,hash);
+                    String hash2 = "1000:241c4899116ae9c374d4d78711a27e49643196a2b9d70c87:2e9b4d7a67e449fb45777e8a214a1fbc2fcbff731c20cb01";
+                    isPasswordValid = PasswordHash.validatePassword(password, hash2);
+                    isPasswordValid = PasswordHash.validatePassword(password, hash);
                 } catch (NoSuchAlgorithmException e) {
                     LOGGER.debug("Password validation Error" + e.getMessage());
                     throw new DaoException("Password validation Error" + e.getMessage());
@@ -65,7 +66,7 @@ public class UserDaoSqlite implements UserDao {
                 LOGGER.debug("There is no such user");
                 throw new DaoException("There is no such user");
             }
-            if(isPasswordValid){
+            if (isPasswordValid) {
                 String hash = rs.getString("password");
                 long id = Long.valueOf(rs.getString("id"));
                 String email = rs.getString("email");
@@ -195,28 +196,36 @@ public class UserDaoSqlite implements UserDao {
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
+        String createStaffTableSql=FileManager.readFile("create_staff_table.sql");
+        String createUserTableSql=FileManager.readFile("create_user_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
-        String users = PropertyManager.getValue("user.table");
         String securePassword;
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            stmt.execute("CREATE TABLE " + users + " (id INTEGER PRIMARY KEY, username CHAR(20), password CHAR(128), email CHAR(32), tableId CHAR(32), userRole CHAR(20) )");
-            securePassword = PasswordHash.createHash("123");
-            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('admin', '"+securePassword+"', 'admin@example.com', 'KK00000001', 'ADMINISTRATOR')");
-            securePassword = PasswordHash.createHash("1234");
-            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Alhen', '"+securePassword+"', 'alhen@example.com', 'KK00000002', 'SUPERVISOR')");
-            securePassword = PasswordHash.createHash("12345");
-            stmt.execute("INSERT INTO " + users + "(username, password, email, tableId, userRole) VALUES ('Bob', '"+securePassword+"', 'bob@example.com', 'KK00000003', 'EMPLOYEE')");
-            rs = stmt.executeQuery("SELECT * FROM " + users);
+            stmt.execute("PRAGMA foreign_keys = ON");
+            stmt.executeUpdate(createStaffTableSql);
+            rs = stmt.executeQuery("SELECT * FROM STAFF");
             while (rs.next()) {
-                LOGGER.debug(rs.getString("id") + "\t");
-                LOGGER.debug(rs.getString("username"));
+                LOGGER.debug(rs.getString("id") + "\t"
+                        + rs.getString("firstName") + "\t"
+                        + rs.getString("lastName") + "\t"
+                        + rs.getString("tableId") + "\t"
+                        + rs.getString("uid") + "\t"
+                );
+            }
+            stmt.executeUpdate(createUserTableSql);
+            rs = stmt.executeQuery("SELECT * FROM USERS");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("id") + "\t"
+                        + rs.getString("username") + "\t"
+                        + rs.getString("tableId") + "\t"
+                        + rs.getString("userRole"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -224,11 +233,6 @@ public class UserDaoSqlite implements UserDao {
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
-        } catch (InvalidKeySpecException e) {
-            LOGGER.error("Secure password creation error" + e.getMessage());
-            throw new DaoException("Secure password creation error");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
