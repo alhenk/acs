@@ -182,7 +182,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="tableId">
+	<xs:simpleType name="account1C">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[\p{IsCyrillic}]{2}[0-9]{8}" />
 		</xs:restriction>

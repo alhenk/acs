@@ -3,7 +3,7 @@ package kz.trei.acs.dao;
 import javax.servlet.ServletException;
 import java.io.Serializable;
 
-public class DaoException extends ServletException {
+public class DaoException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public DaoException() {

@@ -5,7 +5,7 @@
 
 <mtag:pagetemplate title="dashboard">
     <jsp:body>
-        <%@ include file="signupForm.jsp"%>
+        <%@ include file="signup-form.jsp"%>
             <c:if test="${not empty sessionScope.error}">
                 <p  style="color:red;">
                     <fmt:message bundle="${msg}" key="${sessionScope.error}"/>

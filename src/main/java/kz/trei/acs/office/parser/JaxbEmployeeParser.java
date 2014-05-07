@@ -10,6 +10,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import kz.trei.acs.office.structure.Account1C;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -24,7 +25,6 @@ import kz.trei.acs.office.rfid.RfidUID;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.structure.Table1C;
 import kz.trei.acs.office.util.DateStamp;
 
 public class JaxbEmployeeParser implements EmployeeParser {
@@ -45,7 +45,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 			JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] {
 					Staff.class, Employee.class, RfidTag.class,
 					DepartmentType.class, PositionType.class, RoomType.class,
-					RfidUID.class, Table1C.class, DateStamp.class });
+					RfidUID.class, Account1C.class, DateStamp.class });
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
 			if (xsdfile != null) {
@@ -81,7 +81,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 	}
 
 	public static Staff createTestStaff() {
-		Person person = new Employee(Table1C.createId("КК00000007"));
+		Person person = new Employee(Account1C.createId("КК00000007"));
 		Staff staff = new Staff();
 		person.setBirthday(DateStamp.create("1967-06-10"));
 		person.setFirstName("Alexandr");
@@ -101,7 +101,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 
 		((Employee) person).setTag(rfidTag);
 		staff.addEmployee(person);
-		person = new Employee(Table1C.createId("КК00000012"));
+		person = new Employee(Account1C.createId("КК00000012"));
 		person.setBirthday(DateStamp.create("1991-05-21"));
 		person.setFirstName("Oleg");
 		person.setPatronym("I.");

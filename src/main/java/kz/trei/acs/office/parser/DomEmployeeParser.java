@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import kz.trei.acs.office.structure.Account1C;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,7 +29,6 @@ import kz.trei.acs.office.rfid.RfidUID;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.structure.Table1C;
 import kz.trei.acs.office.util.DateStamp;
 
 public class DomEmployeeParser implements EmployeeParser {
@@ -62,7 +62,7 @@ public class DomEmployeeParser implements EmployeeParser {
 				employee = new Employee.Builder();
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) node;
-					employee.setTableId(Table1C.createId(eElement
+					employee.setAccount1C1(Account1C.createId(eElement
                             .getAttribute("id")));
 					employee.setFirstName(eElement
 							.getElementsByTagName("tns:firstName").item(0)

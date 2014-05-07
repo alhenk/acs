@@ -12,12 +12,16 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-public class Signup implements Action {
-    private static final Logger LOGGER = Logger.getLogger(Signup.class);
+/**
+ * Created by alhen on 5/4/14.
+ */
+public class EditAccount implements Action {
+    private static final Logger LOGGER = Logger.getLogger(EditAccount.class);
     static {
         PropertyManager.load("configure.properties");
     }
@@ -26,12 +30,14 @@ public class Signup implements Action {
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
+        String id = request.getParameter("id");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
         String email = request.getParameter("email");
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
+        session.setAttribute("id", id);
         session.setAttribute("username", username);
         session.setAttribute("password", password);
         session.setAttribute("confirm-password", confirmPassword);
@@ -50,23 +56,26 @@ public class Signup implements Action {
         if (isFormValid(request)) {
             try {
                 User user = new User.Builder(username, password)
+                        .id(Long.valueOf(id))
                         .email(email)
                         .tableId(Account1C.createId(tableId))
                         .role(RoleType.valueOf(role.toUpperCase())).build();
-                userDao.create(user);
+                userDao.update(user);
+                LOGGER.debug("user ->"+user);
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
                 session.setAttribute("status", "form.user.create.fail");
                 return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
             }
+            session.removeAttribute("id");
             session.removeAttribute("username");
             session.removeAttribute("password");
             session.removeAttribute("email");
             session.removeAttribute("confirm-password");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
-            session.setAttribute("status", "form.user.create.success");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+            //session.setAttribute("status", "form.user.create.success");
+            return new ActionResult(ActionType.REDIRECT, "user-list");
         }
         session.setAttribute("error", "form.user.incomplete");
         return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));

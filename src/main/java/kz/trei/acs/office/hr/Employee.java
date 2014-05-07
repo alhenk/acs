@@ -10,10 +10,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import kz.trei.acs.office.rfid.RfidTag;
+import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.structure.Table1C;
 import kz.trei.acs.office.util.DateStamp;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +30,7 @@ public class Employee extends Person {
 	@XmlElementWrapper(name = "rooms")
 	private Set<RoomType> room;
 	@XmlAttribute(name = "id", required = true)
-	private Table1C tableId;
+	private Account1C account1C;
 	@XmlElement(name = "rfidTag", required = true)
 	private RfidTag rfidTag;
 
@@ -39,19 +39,19 @@ public class Employee extends Person {
 		this.position = new HashSet<PositionType>();
 	}
 
-	public Employee(Table1C tableId) {
-		this.tableId = tableId;
+	public Employee(Account1C account1C) {
+		this.account1C = account1C;
 		this.room = new HashSet<RoomType>();
 		this.position = new HashSet<PositionType>();
 	}
 
 	public Employee(Set<PositionType> position, DepartmentType department,
-			Set<RoomType> room, Table1C tableId, RfidTag tag) {
+			Set<RoomType> room, Account1C account1C, RfidTag tag) {
 		this();
 		this.position = position;
 		this.department = department;
 		this.room = room;
-		this.tableId = tableId;
+		this.account1C = account1C;
 		this.rfidTag = tag;
 	}
 
@@ -95,20 +95,20 @@ public class Employee extends Person {
 		this.room = room;
 	}
 
-	public Table1C getTableId() {
-		return tableId;
+	public Account1C getAccount1C() {
+		return account1C;
 	}
 
 	public String getTableIdValue() {
-		return tableId.getTableId();
+		return account1C.getTableId();
 	}
 
-	public void setTableId(Table1C tableId) {
-		this.tableId = tableId;
+	public void setAccount1C(Account1C account1C) {
+		this.account1C = account1C;
 	}
 
 	public void setTableId(String tableId) {
-		this.tableId = Table1C.createId(tableId);
+		this.account1C = Account1C.createId(tableId);
 	}
 
 	public void setTag(RfidTag tag) {
@@ -120,7 +120,7 @@ public class Employee extends Person {
 	}
 
 	public static class Builder {
-		private Table1C tableId;
+		private Account1C account1C1;
 		private String firstName;
 		private String patronym;
 		private String lastName;
@@ -130,8 +130,8 @@ public class Employee extends Person {
 		private Set<RoomType> room = new HashSet<RoomType>();
 		private RfidTag rfidTag;
 
-		public Builder setTableId(Table1C tableId) {
-			this.tableId = tableId;
+		public Builder setAccount1C1(Account1C account1C1) {
+			this.account1C1 = account1C1;
 			return this;
 		}
 
@@ -188,7 +188,7 @@ public class Employee extends Person {
 		public Person build() {
 			Person person;
 			person = new Employee();
-			((Employee) person).setTableId(tableId);
+			((Employee) person).setAccount1C(account1C1);
 			((Employee) person).setBirthday(birthday);
 			((Employee) person).setDepartment(department);
 			((Employee) person).setFirstName(firstName);
@@ -208,7 +208,7 @@ public class Employee extends Person {
 				+ ", uid = "
 				+ ((rfidTag != null && rfidTag.getRfidUid() != null) ? rfidTag
 						.getRfidUid().getRfidUID() : "null") + ", tableID = "
-				+ ((this.tableId != null) ? this.tableId.getTableId() : "null")
+				+ ((this.account1C != null) ? this.account1C.getTableId() : "null")
 				+ "]";
 	}
 
@@ -221,7 +221,7 @@ public class Employee extends Person {
 		result = prime * result
 				+ ((position == null) ? 0 : position.hashCode());
 		result = prime * result + ((room == null) ? 0 : room.hashCode());
-		result = prime * result + ((tableId == null) ? 0 : tableId.hashCode());
+		result = prime * result + ((account1C == null) ? 0 : account1C.hashCode());
 		result = prime * result + ((rfidTag == null) ? 0 : rfidTag.hashCode());
 		return result;
 	}
@@ -241,10 +241,10 @@ public class Employee extends Person {
 			return false;
 		if (room != other.room)
 			return false;
-		if (tableId == null) {
-			if (other.tableId != null)
+		if (account1C == null) {
+			if (other.account1C != null)
 				return false;
-		} else if (!tableId.equals(other.tableId))
+		} else if (!account1C.equals(other.account1C))
 			return false;
 		if (rfidTag == null) {
 			if (other.rfidTag != null)
