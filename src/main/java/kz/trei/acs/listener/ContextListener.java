@@ -21,7 +21,6 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        DbUtil.convertStaffDb("");
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         String users = PropertyManager.getValue("user.table");

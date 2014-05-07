@@ -5,13 +5,8 @@ import kz.trei.acs.user.User;
 import java.util.List;
 
 
-public interface UserDao {
+public interface UserDao extends AbstractDao<User>{
     public User find(String username, String password) throws DaoException;
-    public User find(long id) throws DaoException;
-    public void create(User user) throws DaoException;
     public void createTable() throws DaoException;
-    public long totalNumber() throws DaoException;
-    public void update(User user) throws DaoException;
-    public List<User> list()throws DaoException;
-    public void delete(long id) throws DaoException;
+    public List<User> findByName(String username) throws DaoException;
 }

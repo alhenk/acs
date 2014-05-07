@@ -16,6 +16,7 @@ public final class DbUtil {
     }
 
     public static void convertStaffDb(String dbName) {
+        //dbName - STAFF_DB.3db
         PreparedStatement stmt = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -23,7 +24,7 @@ public final class DbUtil {
         String[] splittedDate = new String[3];
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:STAFF_DB.3db");
+            conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
             stmt=conn.prepareStatement("CREATE TABLE ATTEND (id INTEGER PRIMARY KEY, uid CHAR (20), direction CHAR(8), dDate CHAR(10), tTime CHAR(8));");
             stmt.executeUpdate();
             stmt = conn.prepareStatement("SELECT * FROM ATTENDANCE");

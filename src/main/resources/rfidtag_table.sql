@@ -1,5 +1,12 @@
 DROP TABLE IF EXISTS "RFIDTAGS";
-CREATE TABLE RFIDTAGS (id INTEGER PRIMARY KEY, uid CHAR (20), type CHAR(10), protocol CHAR(16), issueDate CHAR(10), expirationDate CHAR(10), UNIQUE (uid));
+CREATE TABLE RFIDTAGS (
+  id INTEGER PRIMARY KEY,
+  uid CHAR (20),
+  type CHAR(10),
+  protocol CHAR(16),
+  issueDate CHAR(10),
+  expirationDate CHAR(10),
+  UNIQUE (uid));
 INSERT INTO "RFIDTAGS" (uid, type, protocol, issueDate, expirationDate) VALUES('7AF52830','CARD','ISO14443A',NULL ,NULL );
 INSERT INTO "RFIDTAGS" (uid, type, protocol, issueDate, expirationDate) VALUES('CEBC3CF4','KEYFOB','ISO14443A',NULL ,NULL);
 INSERT INTO "RFIDTAGS" (uid, type, protocol, issueDate, expirationDate) VALUES('EEE73CF4','CARD','ISO14443A',NULL ,NULL);

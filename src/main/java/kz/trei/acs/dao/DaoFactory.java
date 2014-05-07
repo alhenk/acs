@@ -36,4 +36,8 @@ public abstract class DaoFactory {
     }
 
     public abstract UserDao getUserDao();
+    public abstract EmployeeDao getEmployeeDao();
+    public abstract RfidTagDao getRfidTagDao();
+    public abstract AttendanceDao getAttendanceDao();
+
 }

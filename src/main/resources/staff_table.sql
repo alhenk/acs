@@ -1,16 +1,17 @@
 DROP TABLE IF EXISTS "STAFF";
 CREATE TABLE STAFF (
         id INTEGER PRIMARY KEY,
-        firstName CHAR(40),
+        firstName CHAR(40)  NOT NULL ,
         patronym CHAR(40),
-        lastName CHAR (40),
-        birthDate CHAR (10),
+        lastName CHAR (40)  NOT NULL ,
+        birthDate CHAR (10) NOT NULL ,
         jobPosition CHAR (40),
         department CHAR (40),
         room CHAR(10),
         tableId CHAR (10),
         uid CHAR (20),
-        UNIQUE (tableId) );
+        UNIQUE (tableId),
+        FOREIGN KEY (uid) REFERENCES RFIDTAGS(uid));
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('Iar','Blinov','1983.05.14','KK00000001','7AF52830');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('Anton','Keks','1980.08.02','KK00000002','CEBC3CF4');
 INSERT INTO "STAFF" (firstName, lastName, birthDate, tableId, uid) VALUES('Bob','Martin','1952.01.01','KK00000003','EEE73CF4');

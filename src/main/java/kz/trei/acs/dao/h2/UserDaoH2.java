@@ -72,7 +72,7 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
-    public User find(long id) throws DaoException {
+    public User findById(long id) throws DaoException {
         String userTable = PropertyManager.getValue("user.table");
         Statement stat = null;
         ResultSet rs;
@@ -190,6 +190,11 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
+    public List<User> findByName(String username) throws DaoException {
+        return null;
+    }
+
+    @Override
     public long totalNumber() throws DaoException {
         return 0;
     }
@@ -200,7 +205,7 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
-    public List<User> list() throws DaoException {
+    public List<User> findAll() throws DaoException {
         Statement stat = null;
         ResultSet rs = null;
         Connection conn = null;

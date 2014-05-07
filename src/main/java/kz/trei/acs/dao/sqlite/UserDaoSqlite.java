@@ -52,8 +52,6 @@ public class UserDaoSqlite implements UserDao {
             if (rs.next()) {
                 String hash = rs.getString("password");
                 try {
-                    String hash2 = "1000:241c4899116ae9c374d4d78711a27e49643196a2b9d70c87:2e9b4d7a67e449fb45777e8a214a1fbc2fcbff731c20cb01";
-                    isPasswordValid = PasswordHash.validatePassword(password, hash2);
                     isPasswordValid = PasswordHash.validatePassword(password, hash);
                 } catch (NoSuchAlgorithmException e) {
                     LOGGER.debug("Password validation Error" + e.getMessage());
@@ -102,7 +100,7 @@ public class UserDaoSqlite implements UserDao {
     }
 
     @Override
-    public User find(long id) throws DaoException {
+    public User findById(long id) throws DaoException {
         String users = PropertyManager.getValue("user.table");
         PreparedStatement stmt = null;
         ResultSet rs;
@@ -196,9 +194,7 @@ public class UserDaoSqlite implements UserDao {
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
-        String createStaffTableSql = FileManager.readFile("create_staff_table.sql");
-        String createUserTableSql = FileManager.readFile("create_user_table.sql");
-        String createRfidTagTableSql = FileManager.readFile("create_rfidtag_table.sql");
+        String createUserTableSql = FileManager.readFile("user_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -210,16 +206,6 @@ public class UserDaoSqlite implements UserDao {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
-            stmt.executeUpdate(createStaffTableSql);
-            rs = stmt.executeQuery("SELECT * FROM STAFF");
-            while (rs.next()) {
-                LOGGER.debug(rs.getString("id") + "\t"
-                        + rs.getString("firstName") + "\t"
-                        + rs.getString("lastName") + "\t"
-                        + rs.getString("tableId") + "\t"
-                        + rs.getString("uid") + "\t"
-                );
-            }
             stmt.executeUpdate(createUserTableSql);
             rs = stmt.executeQuery("SELECT * FROM USERS");
             while (rs.next()) {
@@ -227,14 +213,6 @@ public class UserDaoSqlite implements UserDao {
                         + rs.getString("username") + "\t"
                         + rs.getString("tableId") + "\t"
                         + rs.getString("userRole"));
-            }
-            stmt.executeUpdate(createRfidTagTableSql);
-            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
-            while (rs.next()) {
-                LOGGER.debug(rs.getString("id") + "\t"
-                        + rs.getString("uid") + "\t"
-                        + rs.getString("type") + "\t"
-                        + rs.getString("protocol"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -246,6 +224,11 @@ public class UserDaoSqlite implements UserDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+    }
+
+    @Override
+    public List<User> findByName(String username) throws DaoException {
+        return null;
     }
 
     @Override
@@ -326,7 +309,7 @@ public class UserDaoSqlite implements UserDao {
     }
 
     @Override
-    public List<User> list() throws DaoException {
+    public List<User> findAll() throws DaoException {
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
