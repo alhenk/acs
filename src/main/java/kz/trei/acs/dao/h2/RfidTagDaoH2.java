@@ -1,19 +1,21 @@
-package kz.trei.acs.dao.sqlite;
+package kz.trei.acs.dao.h2;
 
 import kz.trei.acs.dao.DaoException;
-import kz.trei.acs.dao.EmployeeDao;
+import kz.trei.acs.dao.RfidTagDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class EmployeeDaoSqlite implements EmployeeDao {
-    private static final Logger LOGGER = Logger.getLogger(EmployeeDaoSqlite.class);
+
+public class RfidTagDaoH2 implements RfidTagDao {
+    private static final Logger LOGGER = Logger.getLogger(RfidTagDaoH2.class);
 
     @Override
     public void createTable() throws DaoException {
@@ -21,7 +23,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
-        String createStaffTableSql = FileManager.readFile("employee_table.sql");
+        String createRfidTagTableSql = FileManager.readFile("rfidtag_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -32,15 +34,14 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
-            stmt.executeUpdate(createStaffTableSql);
-            rs = stmt.executeQuery("SELECT * FROM STAFF");
+            stmt.executeUpdate(createRfidTagTableSql);
+            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
             for (int i = 0; i < 20; i++) {
                 if (rs.next()) {
                     LOGGER.debug(rs.getString("id") + "\t"
-                            + rs.getString("firstName") + "\t"
-                            + rs.getString("lastName") + "\t"
-                            + rs.getString("tableId") + "\t"
-                            + rs.getString("uid"));
+                            + rs.getString("uid") + "\t"
+                            + rs.getString("type") + "\t"
+                            + rs.getString("protocol"));
                 }
             }
         } catch (SQLException e) {

@@ -25,7 +25,7 @@ public class ShowEditAccountPage implements Action {
             UserDao userDao = daoFactory.getUserDao();
             User user;
             try {
-                user = userDao.find(id);
+                user = userDao.findById(id);
             } catch (DaoException e) {
                 LOGGER.error("Getting user list exception: " + e.getMessage());
                 return new ActionResult(ActionType.FORWARD,"error");

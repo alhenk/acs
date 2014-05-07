@@ -24,7 +24,7 @@ public class ShowUserList implements Action{
         UserDao userDao = daoFactory.getUserDao();
         List<User> users = new LinkedList<User>();
         try {
-            users = userDao.list();
+            users = userDao.findAll();
         } catch (DaoException e) {
             LOGGER.error("Getting user list exception: " + e.getMessage());
             return new ActionResult(ActionType.FORWARD,"error");

@@ -1,4 +1,4 @@
-package kz.trei.acs.dao.sqlite;
+package kz.trei.acs.dao.h2;
 
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.EmployeeDao;
@@ -7,13 +7,14 @@ import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class EmployeeDaoSqlite implements EmployeeDao {
-    private static final Logger LOGGER = Logger.getLogger(EmployeeDaoSqlite.class);
+public class EmployeeDaoH2 implements EmployeeDao {
+    private static final Logger LOGGER = Logger.getLogger(EmployeeDaoH2.class);
 
     @Override
     public void createTable() throws DaoException {
