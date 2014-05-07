@@ -20,7 +20,7 @@ public class ConnectionPool {
             .getValue("connection.poolSize"));
     private final static long WAIT_MAX = Long.valueOf(PropertyManager.getValue("connection.wait.millis.max"));
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
-    private static ConnectionPool instance;
+    private static volatile ConnectionPool instance;
     private static String dbName = PropertyManager.getValue("db.name");
     private static String dbDriver = PropertyManager.getValue("db." + dbName + ".driver");
     private static String dbUrl = PropertyManager.getValue("db." + dbName + ".url");

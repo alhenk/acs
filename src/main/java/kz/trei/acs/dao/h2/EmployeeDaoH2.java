@@ -5,7 +5,7 @@ import kz.trei.acs.dao.EmployeeDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
-import kz.trei.acs.office.hr.Employee;
+import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
@@ -65,7 +65,7 @@ public class EmployeeDaoH2 implements EmployeeDao {
     }
 
     @Override
-    public void create(Employee entity) throws DaoException {
+    public void create(Person entity) throws DaoException {
 
     }
 
@@ -75,12 +75,12 @@ public class EmployeeDaoH2 implements EmployeeDao {
     }
 
     @Override
-    public void update(Employee entity) throws DaoException {
+    public void update(Person entity) throws DaoException {
 
     }
 
     @Override
-    public List<Employee> findAll() throws DaoException {
+    public List<Person> findAll() throws DaoException {
         return null;
     }
 

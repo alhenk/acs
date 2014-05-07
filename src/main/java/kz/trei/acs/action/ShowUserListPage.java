@@ -30,6 +30,7 @@ public class ShowUserListPage implements Action{
             return new ActionResult(ActionType.FORWARD,"error");
         } catch (IllegalArgumentException e){
             LOGGER.error("Getting user list exception: " + e.getMessage());
+            session.setAttribute("error","error.db.user-list");
             return new ActionResult(ActionType.FORWARD,"error");
         }
 

@@ -315,7 +315,6 @@ public class UserDaoSqlite implements UserDao {
         ConnectionPool connectionPool = null;
         User user;
         List<User> users = new LinkedList<User>();
-        String userTable = PropertyManager.getValue("user.table");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -325,7 +324,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM " + userTable);
+            rs = stmt.executeQuery("SELECT * FROM USERS");
             while (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");

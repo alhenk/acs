@@ -36,6 +36,6 @@ public class Signin implements Action {
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
         }
         session.setAttribute("user", user);
-        return new ActionResult(ActionType.REDIRECT, "main");
+        return new ActionResult(ActionType.REDIRECT, "dashboard");
     }
 }

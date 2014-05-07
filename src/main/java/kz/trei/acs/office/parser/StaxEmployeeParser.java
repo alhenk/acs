@@ -107,10 +107,10 @@ public class StaxEmployeeParser implements EmployeeParser {
 						String value = xmlReader.getAttributeValue(null,
 								"tableId");
 						if (value == null) {
-							employee.setAccount1C1(Account1C.createRandomId());
+							employee.account1C(Account1C.createRandomId());
 						} else {
 							try {
-								employee.setAccount1C1(Account1C.createId(value));
+								employee.account1C(Account1C.createId(value));
 							} catch (IllegalArgumentException e) {
 								LOGGER.error(e);
 							}
@@ -133,24 +133,24 @@ public class StaxEmployeeParser implements EmployeeParser {
 					if (elementName.equalsIgnoreCase("EMPLOYEE")) {
 						staff.add(employee.build());
 					} else if (elementName.equalsIgnoreCase("FIRSTNAME")) {
-						employee.setFirstName(elementText);
+						employee.firstName(elementText);
 					} else if (elementName.equalsIgnoreCase("PATRONYM")) {
-						employee.setPatronym(elementText);
+						employee.patronym(elementText);
 					} else if (elementName.equalsIgnoreCase("LASTNAME")) {
-						employee.setLastName(elementText);
+						employee.lastName(elementText);
 					} else if (elementName.equalsIgnoreCase("BIRTHDAY")) {
-						employee.setBirthday(DateStamp.create(elementText));
+						employee.birthDate(DateStamp.create(elementText));
 					} else if (elementName.equalsIgnoreCase("POSITION")) {
 						employee.addPosition(PositionType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("DEPARTMENT")) {
-						employee.setDepartment(DepartmentType
-								.valueOf(elementText));
+						employee.department(DepartmentType
+                                .valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("ROOM")) {
 						employee.addRoom(RoomType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("TABLEID")) {
-						employee.setAccount1C1(Account1C.createId(elementText));
+						employee.account1C(Account1C.createId(elementText));
 					} else if (elementName.equalsIgnoreCase("RFIDTAG")) {
-						employee.setTag(tag.build());
+						employee.rfidTag(tag.build());
 					} else if (elementName.equalsIgnoreCase("TAGTYPE")) {
 						tag.type(RfidType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("PROTOCOL")) {

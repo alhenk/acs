@@ -25,7 +25,8 @@ public class ActionFactory {
         actions.put("POST/edit-account", new EditAccount());
         actions.put("GET/edit-account", new ShowEditAccountPage());
         actions.put("GET/delete-account", new DeleteAccount());
-        actions.put("GET/rfidtag-list", new ShowRfidTagList());
+        actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
+        actions.put("GET/employee-list", new ShowEmployeeListPage());
         LOGGER.debug("Instantiated ActionFactory");
     }
 

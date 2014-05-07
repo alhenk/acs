@@ -86,10 +86,10 @@ public class SaxEmployeeParser implements EmployeeParser {
 				employee = new Employee.Builder();
 				String value = attributes.getValue("id");
 				if (value == null) {
-					employee.setAccount1C1(Account1C.createRandomId());
+					employee.account1C(Account1C.createRandomId());
 				} else {
 					try {
-						employee.setAccount1C1(Account1C.createId(value));
+						employee.account1C(Account1C.createId(value));
 					} catch (IllegalArgumentException e) {
 						LOGGER.error(e);
 					}
@@ -110,28 +110,28 @@ public class SaxEmployeeParser implements EmployeeParser {
 			if (qName.equalsIgnoreCase("tns:EMPLOYEE")) {
 				staff.add(employee.build());
 			} else if (qName.equalsIgnoreCase("tns:FIRSTNAME")) {
-				employee.setFirstName(elementValue.toString().trim());
+				employee.firstName(elementValue.toString().trim());
 			} else if (qName.equalsIgnoreCase("tns:PATRONYM")) {
-				employee.setPatronym(elementValue.toString().trim());
+				employee.patronym(elementValue.toString().trim());
 			} else if (qName.equalsIgnoreCase("tns:LASTNAME")) {
-				employee.setLastName(elementValue.toString().trim());
+				employee.lastName(elementValue.toString().trim());
 			} else if (qName.equalsIgnoreCase("tns:BIRTHDAY")) {
-				employee.setBirthday(DateStamp.create(elementValue.toString()
-						.trim()));
+				employee.birthDate(DateStamp.create(elementValue.toString()
+                        .trim()));
 			} else if (qName.equalsIgnoreCase("tns:POSITION")) {
 				employee.addPosition(PositionType.valueOf(elementValue
 						.toString().trim()));
 			} else if (qName.equalsIgnoreCase("tns:DEPARTMENT")) {
-				employee.setDepartment(DepartmentType.valueOf(elementValue
-						.toString().trim()));
+				employee.department(DepartmentType.valueOf(elementValue
+                        .toString().trim()));
 			} else if (qName.equalsIgnoreCase("tns:ROOM")) {
 				employee.addRoom(RoomType.valueOf(elementValue
 						.toString().trim()));
 			} else if (qName.equalsIgnoreCase("tns:TABLEID")) {
-				employee.setAccount1C1(Account1C.createId(elementValue.toString()
+				employee.account1C(Account1C.createId(elementValue.toString()
                         .trim()));
 			} else if (qName.equalsIgnoreCase("tns:RFIDTAG")) {
-				employee.setTag(tag.build());
+				employee.rfidTag(tag.build());
 			} else if (qName.equalsIgnoreCase("tns:TAGTYPE")) {
 				tag.type(RfidType
                         .valueOf(elementValue.toString().trim()));

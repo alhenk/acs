@@ -62,31 +62,31 @@ public class DomEmployeeParser implements EmployeeParser {
 				employee = new Employee.Builder();
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) node;
-					employee.setAccount1C1(Account1C.createId(eElement
+					employee.account1C(Account1C.createId(eElement
                             .getAttribute("id")));
-					employee.setFirstName(eElement
-							.getElementsByTagName("tns:firstName").item(0)
-							.getTextContent());
+					employee.firstName(eElement
+                            .getElementsByTagName("tns:firstName").item(0)
+                            .getTextContent());
 					String patronym = eElement.getElementsByTagName("tns:patronym")
 							.item(0).getTextContent();
 					if (patronym != null) {
-						employee.setPatronym(patronym);
+						employee.patronym(patronym);
 					}
-					employee.setLastName(eElement
-							.getElementsByTagName("tns:lastName").item(0)
-							.getTextContent());
-					employee.setBirthday(DateStamp.create(eElement
-							.getElementsByTagName("tns:birthday").item(0)
-							.getTextContent()));
+					employee.lastName(eElement
+                            .getElementsByTagName("tns:lastName").item(0)
+                            .getTextContent());
+					employee.birthDate(DateStamp.create(eElement
+                            .getElementsByTagName("tns:birthday").item(0)
+                            .getTextContent()));
 					for (int i = 0; i < eElement.getElementsByTagName(
 							"tns:position").getLength(); i++) {
 						employee.addPosition(PositionType.valueOf(eElement
 								.getElementsByTagName("tns:position").item(i)
 								.getTextContent()));
 					}
-					employee.setDepartment(DepartmentType.valueOf(eElement
-							.getElementsByTagName("tns:department").item(0)
-							.getTextContent()));
+					employee.department(DepartmentType.valueOf(eElement
+                            .getElementsByTagName("tns:department").item(0)
+                            .getTextContent()));
 					for (int i = 0; i < eElement.getElementsByTagName("tns:room")
 							.getLength(); i++) {
 						employee.addRoom(RoomType.valueOf(eElement
@@ -115,7 +115,7 @@ public class DomEmployeeParser implements EmployeeParser {
                             .getElementsByTagName("tns:expirationDate").item(0)
                             .getTextContent()));
 					rfidTag.issue(issue.build());
-					employee.setTag(rfidTag.build());
+					employee.rfidTag(rfidTag.build());
 					staff.add(employee.build());
 				}
 			}

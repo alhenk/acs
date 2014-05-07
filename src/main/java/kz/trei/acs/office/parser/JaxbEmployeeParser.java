@@ -99,7 +99,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 				.uid(RfidUID.createUID("E0040100594737350000"))
 				.issue(issue).type(RfidType.CARD).build();
 
-		((Employee) person).setTag(rfidTag);
+		((Employee) person).setRfidTag(rfidTag);
 		staff.addEmployee(person);
 		person = new Employee(Account1C.createId("КК00000012"));
 		person.setBirthday(DateStamp.create("1991-05-21"));
@@ -115,7 +115,7 @@ public class JaxbEmployeeParser implements EmployeeParser {
 				.uid(RfidUID.createUID("3A08265B")).issue(issue)
 				.type(RfidType.KEYFOB).build();
 
-		((Employee) person).setTag(rfidTag);
+		((Employee) person).setRfidTag(rfidTag);
 		staff.addEmployee(person);
 		return staff;
 	}

@@ -6,13 +6,20 @@ import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.hr.Employee;
+import kz.trei.acs.office.hr.Person;
+import kz.trei.acs.office.rfid.RfidUID;
+import kz.trei.acs.office.structure.Account1C;
+import kz.trei.acs.office.structure.Account1CException;
+import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
+import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 
 public class EmployeeDaoSqlite implements EmployeeDao {
@@ -64,9 +71,11 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public void create(Employee entity) throws DaoException {
+    public void create(Person entity) throws DaoException {
 
     }
+
+
 
     @Override
     public long totalNumber() throws DaoException {
@@ -74,13 +83,61 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public void update(Employee entity) throws DaoException {
+    public void update(Person entity) throws DaoException {
 
     }
 
     @Override
-    public List<Employee> findAll() throws DaoException {
-        return null;
+    public List<Person> findAll() throws DaoException {
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        Person employee;
+        List<Person> employees = new LinkedList<Person>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES");
+            while (rs.next()) {
+                long id = Long.valueOf(rs.getString("id"));
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String uid = rs.getString("uid");
+                String tableId = rs.getString("tableId");
+                Account1C account1C;
+                try {
+                    account1C = Account1C.createId(tableId);
+                } catch (Account1CException e) {
+                    account1C = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+                }
+                employee = new Employee.Builder()
+                        .id(id)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .account1C(account1C)
+//                        .rfidTag(uid)
+                        .build();
+                employees.add(employee);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return employees;
     }
 
     @Override

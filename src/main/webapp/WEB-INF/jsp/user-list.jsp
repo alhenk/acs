@@ -12,6 +12,12 @@
             </c:if>
         </p>
         <table>
+            <tr>
+                <td>USERNAME</td>
+                <td>EMAIL</td>
+                <td>TABLE ID</td>
+                <td>ROLE</td>
+            </tr>
             <c:forEach var="user" items="${sessionScope.users}">
                 <tr>
                     <td>${user.username}</td>

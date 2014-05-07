@@ -8,6 +8,11 @@
         <fmt:message bundle="${msg}" key="common.error"/>
         <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
         <br>
+        <c:if test="${not empty sessionScope.error}">
+            <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
+            <c:remove var="error" scope="session"/>
+        </c:if>
+        <br/>
         <strong>Status Code</strong>: "${sessionScope['status-code']}"
         <c:choose>
             <c:when test="${sessionScope['status-code']=='401'}">
