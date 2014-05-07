@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import kz.trei.acs.office.util.DateStamp;
 import kz.trei.acs.office.util.PropertyManager;
+import kz.trei.acs.user.User;
 
 //@XmlRootElement(name = "issue", namespace ="http://www.trei.kz/attendance/tns")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,6 +41,11 @@ public class Issue implements Serializable, Comparable<Issue> {
 		this.expirationDate = DateStamp.create(calendar.getTime());
 	}
 
+    public Issue(Builder builder){
+        this.issueDate = builder.issueDate;
+        this.expirationDate = builder.expirationDate;
+    }
+
 	public Issue(DateStamp issueDate, DateStamp expirationDate) {
 		this.issueDate = issueDate;
 		this.expirationDate = expirationDate;
@@ -49,18 +55,18 @@ public class Issue implements Serializable, Comparable<Issue> {
 		private DateStamp issueDate;
 		private DateStamp expirationDate;
 
-		public Builder setIssueDate(DateStamp issueDate) {
+		public Builder issueDate(DateStamp issueDate) {
 			this.issueDate = issueDate;
 			return this;
 		}
 
-		public Builder setExpirationDate(DateStamp experationDate) {
+		public Builder expirationDate(DateStamp experationDate) {
 			this.expirationDate = experationDate;
 			return this;
 		}
 
 		public Issue build() {
-			return new Issue(issueDate, expirationDate);
+			return new Issue(this);
 		}
 	}
 

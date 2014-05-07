@@ -7,6 +7,12 @@
     <jsp:body>
         <fmt:message bundle="${msg}" key="common.exception"/>
         <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
+
+        <%--<h2>--%>
+            <%--<c:if test="${not null sessionScope.error}">--%>
+                <%--${sessionScope.error}--%>
+            <%--</c:if>--%>
+        <%--</h2>--%>
         <ul>
             <li>
                 <strong>Status Code</strong>: "${sessionScope['status-code']}"

@@ -18,14 +18,14 @@ public class ActionFactory {
         actions.put("GET/sign-out", new Signout());
         actions.put("GET/dashboard", new ShowDashboard());
         actions.put("GET/create-account", new ShowCreateAccountPage());
-        actions.put("GET/user-list", new ShowUserList());
+        actions.put("GET/user-list", new ShowUserListPage());
         actions.put("GET/error", new ShowErrorPage());
         actions.put("GET/exception", new ShowExceptionPage());
         actions.put("GET/not-found", new ShowNotFoundPage());
         actions.put("POST/edit-account", new EditAccount());
         actions.put("GET/edit-account", new ShowEditAccountPage());
         actions.put("GET/delete-account", new DeleteAccount());
-
+        actions.put("GET/rfidtag-list", new ShowRfidTagList());
         LOGGER.debug("Instantiated ActionFactory");
     }
 

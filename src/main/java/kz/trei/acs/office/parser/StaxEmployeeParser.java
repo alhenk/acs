@@ -119,7 +119,7 @@ public class StaxEmployeeParser implements EmployeeParser {
 						tag = new RfidTag.Builder();
 						String value = xmlReader.getAttributeValue(null, "uid");
 						if (value != null) {
-							tag.setRfidUID(RfidUID.createUID(value));
+							tag.uid(RfidUID.createUID(value));
 						}
 					} else if (elementName.equalsIgnoreCase("ISSUE")) {
 						issue = new Issue.Builder();
@@ -152,15 +152,15 @@ public class StaxEmployeeParser implements EmployeeParser {
 					} else if (elementName.equalsIgnoreCase("RFIDTAG")) {
 						employee.setTag(tag.build());
 					} else if (elementName.equalsIgnoreCase("TAGTYPE")) {
-						tag.setRfidType(RfidType.valueOf(elementText));
+						tag.type(RfidType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("PROTOCOL")) {
-						tag.setProtocol(ProtocolType.valueOf(elementText));
+						tag.protocol(ProtocolType.valueOf(elementText));
 					} else if (elementName.equalsIgnoreCase("ISSUE")) {
-						tag.setIssue(issue.build());
+						tag.issue(issue.build());
 					} else if (elementName.equalsIgnoreCase("ISSUEDATE")) {
-						issue.setIssueDate(DateStamp.create(elementText));
+						issue.issueDate(DateStamp.create(elementText));
 					} else if (elementName.equalsIgnoreCase("EXPIRATIONDATE")) {
-						issue.setExpirationDate(DateStamp.create(elementText));
+						issue.expirationDate(DateStamp.create(elementText));
 					}
 					break;
 				default:

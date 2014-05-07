@@ -97,24 +97,24 @@ public class DomEmployeeParser implements EmployeeParser {
 					NodeList rfidNodes = eElement
 							.getElementsByTagName("tns:rfidTag");
 					Element rfidElement = (Element) rfidNodes.item(0);
-					rfidTag.setRfidUID(RfidUID.createUID(rfidElement
-							.getAttribute("uid")));
-					rfidTag.setProtocol(ProtocolType.valueOf(rfidElement
-							.getElementsByTagName("tns:protocol").item(0)
-							.getTextContent()));
-					rfidTag.setRfidType(RfidType.valueOf(rfidElement
-							.getElementsByTagName("tns:tagtype").item(0)
-							.getTextContent()));
+					rfidTag.uid(RfidUID.createUID(rfidElement
+                            .getAttribute("uid")));
+					rfidTag.protocol(ProtocolType.valueOf(rfidElement
+                            .getElementsByTagName("tns:protocol").item(0)
+                            .getTextContent()));
+					rfidTag.type(RfidType.valueOf(rfidElement
+                            .getElementsByTagName("tns:tagtype").item(0)
+                            .getTextContent()));
 					Issue.Builder issue = new Issue.Builder();
 					rfidNodes = eElement.getElementsByTagName("tns:issue");
 					rfidElement = (Element) rfidNodes.item(0);
-					issue.setIssueDate(DateStamp.create(rfidElement
-							.getElementsByTagName("tns:issueDate").item(0)
-							.getTextContent()));
-					issue.setIssueDate(DateStamp.create(rfidElement
-							.getElementsByTagName("tns:expirationDate").item(0)
-							.getTextContent()));
-					rfidTag.setIssue(issue.build());
+					issue.issueDate(DateStamp.create(rfidElement
+                            .getElementsByTagName("tns:issueDate").item(0)
+                            .getTextContent()));
+					issue.issueDate(DateStamp.create(rfidElement
+                            .getElementsByTagName("tns:expirationDate").item(0)
+                            .getTextContent()));
+					rfidTag.issue(issue.build());
 					employee.setTag(rfidTag.build());
 					staff.add(employee.build());
 				}

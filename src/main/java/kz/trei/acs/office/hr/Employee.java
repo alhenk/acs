@@ -207,7 +207,7 @@ public class Employee extends Person {
 				+ this.getLastName()
 				+ ", uid = "
 				+ ((rfidTag != null && rfidTag.getRfidUid() != null) ? rfidTag
-						.getRfidUid().getRfidUID() : "null") + ", tableID = "
+						.getRfidUid().getValue() : "null") + ", tableID = "
 				+ ((this.account1C != null) ? this.account1C.getTableId() : "null")
 				+ "]";
 	}

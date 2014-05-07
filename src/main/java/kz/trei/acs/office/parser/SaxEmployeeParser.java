@@ -98,7 +98,7 @@ public class SaxEmployeeParser implements EmployeeParser {
 				tag = new RfidTag.Builder();
 				String value = attributes.getValue("uid");
 				if (value != null) {
-					tag.setRfidUID(RfidUID.createUID(value));
+					tag.uid(RfidUID.createUID(value));
 				}
 			} else if (qName.equalsIgnoreCase("tns:ISSUE")) {
 				issue = new Issue.Builder();
@@ -133,19 +133,19 @@ public class SaxEmployeeParser implements EmployeeParser {
 			} else if (qName.equalsIgnoreCase("tns:RFIDTAG")) {
 				employee.setTag(tag.build());
 			} else if (qName.equalsIgnoreCase("tns:TAGTYPE")) {
-				tag.setRfidType(RfidType
-						.valueOf(elementValue.toString().trim()));
+				tag.type(RfidType
+                        .valueOf(elementValue.toString().trim()));
 			} else if (qName.equalsIgnoreCase("tns:PROTOCOL")) {
-				tag.setProtocol(ProtocolType.valueOf(elementValue.toString()
-						.trim()));
+				tag.protocol(ProtocolType.valueOf(elementValue.toString()
+                        .trim()));
 			} else if (qName.equalsIgnoreCase("tns:ISSUE")) {
-				tag.setIssue(issue.build());
+				tag.issue(issue.build());
 			} else if (qName.equalsIgnoreCase("tns:ISSUEDATE")) {
-				issue.setIssueDate(DateStamp.create(elementValue.toString()
-						.trim()));
+				issue.issueDate(DateStamp.create(elementValue.toString()
+                        .trim()));
 			} else if (qName.equalsIgnoreCase("tns:EXPIRATIONDATE")) {
-				issue.setExpirationDate(DateStamp.create(elementValue
-						.toString().trim()));
+				issue.expirationDate(DateStamp.create(elementValue
+                        .toString().trim()));
 			}
 		}
 

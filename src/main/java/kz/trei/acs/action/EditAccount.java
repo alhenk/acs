@@ -12,47 +12,48 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by alhen on 5/4/14.
- */
+
 public class EditAccount implements Action {
     private static final Logger LOGGER = Logger.getLogger(EditAccount.class);
     static {
         PropertyManager.load("configure.properties");
     }
-
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         String id = request.getParameter("id");
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirm-password");
         String email = request.getParameter("email");
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
-        session.setAttribute("id", id);
-        session.setAttribute("username", username);
-        session.setAttribute("password", password);
-        session.setAttribute("confirm-password", confirmPassword);
-        session.setAttribute("email", email);
-        session.setAttribute("role", role);
-        session.setAttribute("table-id", tableId);
         session.removeAttribute("status");
         session.removeAttribute("username-error");
         session.removeAttribute("password-error");
         session.removeAttribute("confirm-password-error");
         session.removeAttribute("role-error");
         session.removeAttribute("table-id-error");
-
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
+        User originalUser;
+        String password = null;
+        try {
+            originalUser = userDao.findById(Long.valueOf(id));
+        } catch (DaoException e) {
+            LOGGER.error("Find by ID exception: " + e.getMessage());
+            session.setAttribute("error", "error.db.find-by-id");
+            return new ActionResult(ActionType.FORWARD, "exception");
+        }
+        password = originalUser.getPassword();
+        session.setAttribute("id", id);
+        session.setAttribute("username", username);
+        session.setAttribute("password", password);
+        session.setAttribute("email", email);
+        session.setAttribute("role", role);
+        session.setAttribute("table-id", tableId);
         if (isFormValid(request)) {
             try {
                 User user = new User.Builder(username, password)
@@ -61,7 +62,7 @@ public class EditAccount implements Action {
                         .tableId(Account1C.createId(tableId))
                         .role(RoleType.valueOf(role.toUpperCase())).build();
                 userDao.update(user);
-                LOGGER.debug("user ->"+user);
+                LOGGER.debug("user ->" + user);
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
                 session.setAttribute("status", "form.user.create.fail");
@@ -74,7 +75,6 @@ public class EditAccount implements Action {
             session.removeAttribute("confirm-password");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
-            //session.setAttribute("status", "form.user.create.success");
             return new ActionResult(ActionType.REDIRECT, "user-list");
         }
         session.setAttribute("error", "form.user.incomplete");
@@ -83,7 +83,7 @@ public class EditAccount implements Action {
 
     private boolean isFormValid(HttpServletRequest request) {
         return isUserNameValid(request)
-                & isPasswordValid(request)
+//                & isPasswordValid(request)
                 & isEmailValid(request)
                 & isTableIdValid(request)
                 & isRoleValid(request);
@@ -190,7 +190,9 @@ public class EditAccount implements Action {
         return isRoleValid;
     }
 
-    //TABLE_ID MATCHER
+    /**
+     * TABLE_ID MATCHER
+     */
     private boolean isTableIdValid(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String tableId = request.getParameter("table-id");

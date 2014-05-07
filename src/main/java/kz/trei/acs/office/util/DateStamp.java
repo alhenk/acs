@@ -40,7 +40,7 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 			return new DateStamp(date);
 		}
 		LOGGER.error(date + " is not a valid timestamp");
-		return null;
+		throw new IllegalArgumentException("The Date is not a valid timestamp");
 	}
 
 	/**

@@ -1,7 +1,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@tag language="java" pageEncoding="UTF-8" %>
 
-<a href="do/main"><fmt:message bundle="${msg}" key="common.home"/> </a>
+<a href="do/main"> <fmt:message bundle="${msg}" key="common.home"/> </a>
+<br/>
+<c:if test="${not empty sessionScope['user']}">
+    <a href="do/dashboard"> <fmt:message bundle="${msg}" key="common.dashboard"/> </a>
+</c:if>
 <br/>
 <br/>
 <form action="do/set-language" method="post">

@@ -5,6 +5,8 @@ import kz.trei.acs.dao.RfidTagDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
+import kz.trei.acs.office.rfid.RfidTag;
+import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
@@ -12,6 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 
 public class RfidTagDaoH2 implements RfidTagDao {
@@ -54,5 +57,35 @@ public class RfidTagDaoH2 implements RfidTagDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+    }
+
+    @Override
+    public User findById(long id) throws DaoException {
+        return null;
+    }
+
+    @Override
+    public void create(RfidTag entity) throws DaoException {
+
+    }
+
+    @Override
+    public long totalNumber() throws DaoException {
+        return 0;
+    }
+
+    @Override
+    public void update(RfidTag entity) throws DaoException {
+
+    }
+
+    @Override
+    public List<RfidTag> findAll() throws DaoException {
+        return null;
+    }
+
+    @Override
+    public void delete(long id) throws DaoException {
+
     }
 }

@@ -5,12 +5,15 @@ import kz.trei.acs.dao.RfidTagDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
+import kz.trei.acs.office.rfid.*;
+import kz.trei.acs.office.util.DateStamp;
+import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class RfidTagDaoSqlite implements RfidTagDao {
@@ -53,5 +56,159 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+    }
+
+    @Override
+    public User findById(long id) throws DaoException {
+        return null;
+    }
+
+    @Override
+    public void create(RfidTag entity) throws DaoException {
+    }
+
+    @Override
+    public long totalNumber() throws DaoException {
+        long totalNumber = 0;
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM RFIDTAGS");
+            while (rs.next()) {
+                totalNumber = Long.valueOf(rs.getString("TotalNumber"));
+                LOGGER.debug("Total number of ROWS = " + totalNumber);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("RfidTags total number exception: " + e.getMessage());
+            throw new DaoException("RfidTags total number exception");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return totalNumber;
+    }
+
+    @Override
+    public void update(RfidTag entity) throws DaoException {
+    }
+
+    @Override
+    public List<RfidTag> findAll() throws DaoException {
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        RfidTag rfidTag;
+        List<RfidTag> rfidTags = new LinkedList<RfidTag>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
+            while (rs.next()) {
+                long id = Long.valueOf(rs.getString("id"));
+                RfidUID uid;
+                try {
+                    uid = RfidUID.createUID(rs.getString("uid"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.error("RFID UID format exception: " + e.getMessage());
+                    throw new DaoException("RFID UID format exception");
+                }
+                RfidType type = RfidType.valueOf(rs.getString("type"));
+                ProtocolType protocol = ProtocolType.valueOf(rs.getString("protocol"));
+                DateStamp issueDate;
+                DateStamp expirationDate;
+                String issueDateString = rs.getString("issueDate");
+                if (issueDateString == null || issueDateString.isEmpty()) {
+                    issueDate = null;
+                } else {
+                    try {
+                        issueDate = DateStamp.create(rs.getString("issueDate"));
+                    } catch (IllegalArgumentException e) {
+                        LOGGER.error("IssueDate format exception: " + e.getMessage());
+                        throw new DaoException("IssueDate format exception");
+                    }
+                }
+                String expirationDateString = rs.getString("expirationDate");
+                if (expirationDateString == null || expirationDateString.isEmpty()) {
+                    expirationDate = null;
+                } else {
+                    try {
+                        expirationDate = DateStamp.create(rs.getString("expirationDate"));
+                    } catch (IllegalArgumentException e) {
+                        LOGGER.error("ExpirationDate format exception: " + e.getMessage());
+                        throw new DaoException("ExpirationDate UID format exception");
+                    }
+                }
+                Issue issue = new Issue.Builder()
+                        .issueDate(issueDate)
+                        .expirationDate(expirationDate)
+                        .build();
+                rfidTag = new RfidTag.Builder(uid)
+                        .id(id)
+                        .type(type)
+                        .protocol(protocol)
+                        .issue(issue)
+                        .build();
+                rfidTags.add(rfidTag);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return rfidTags;
+    }
+
+    @Override
+    public void delete(long id) throws DaoException {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.prepareStatement("DELETE FROM RFIDTAGS WHERE id = ?");
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("Delete from rfidTags exception: " + e.getMessage());
+            throw new DaoException("Delete from rfidTags exception");
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
+
     }
 }

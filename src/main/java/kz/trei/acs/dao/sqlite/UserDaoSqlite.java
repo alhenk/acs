@@ -238,7 +238,6 @@ public class UserDaoSqlite implements UserDao {
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
-        String userTable = PropertyManager.getValue("user.table");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -248,7 +247,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM " + userTable);
+            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM USERS");
             while (rs.next()) {
                 totalNumber = Long.valueOf(rs.getString("TotalNumber"));
                 LOGGER.debug("Total number of ROWS = " + totalNumber);
@@ -348,10 +347,6 @@ public class UserDaoSqlite implements UserDao {
                         .build();
                 users.add(user);
             }
-            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM " + userTable);
-            while (rs.next()) {
-                LOGGER.debug("Total number of ROWS = " + rs.getString("TotalNumber"));
-            }
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
@@ -370,7 +365,6 @@ public class UserDaoSqlite implements UserDao {
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
-        String users = PropertyManager.getValue("user.table");
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -379,7 +373,7 @@ public class UserDaoSqlite implements UserDao {
         }
         try {
             conn = connectionPool.getConnection();
-            stmt = conn.prepareStatement("DELETE FROM " + users + " WHERE id = ?");
+            stmt = conn.prepareStatement("DELETE FROM USERS WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (ConnectionPoolException e) {

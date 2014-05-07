@@ -95,9 +95,9 @@ public class JaxbEmployeeParser implements EmployeeParser {
 		((Employee) person).addRoom(RoomType.ROOM204);
 		Issue issue = new Issue();
 		RfidTag rfidTag = new RfidTag.Builder()
-				.setProtocol(ProtocolType.ISO14443A)
-				.setRfidUID(RfidUID.createUID("E0040100594737350000"))
-				.setIssue(issue).setRfidType(RfidType.CARD).build();
+				.protocol(ProtocolType.ISO14443A)
+				.uid(RfidUID.createUID("E0040100594737350000"))
+				.issue(issue).type(RfidType.CARD).build();
 
 		((Employee) person).setTag(rfidTag);
 		staff.addEmployee(person);
@@ -111,9 +111,9 @@ public class JaxbEmployeeParser implements EmployeeParser {
 		((Employee) person).addPosition(PositionType.SECURITY_GUARD);
 		((Employee) person).addRoom(RoomType.ROOM101);
 		issue = new Issue();
-		rfidTag = new RfidTag.Builder().setProtocol(ProtocolType.ISO15693)
-				.setRfidUID(RfidUID.createUID("3A08265B")).setIssue(issue)
-				.setRfidType(RfidType.KEYFOB).build();
+		rfidTag = new RfidTag.Builder().protocol(ProtocolType.ISO15693)
+				.uid(RfidUID.createUID("3A08265B")).issue(issue)
+				.type(RfidType.KEYFOB).build();
 
 		((Employee) person).setTag(rfidTag);
 		staff.addEmployee(person);
