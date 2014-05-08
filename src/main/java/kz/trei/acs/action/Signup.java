@@ -168,9 +168,9 @@ public class Signup implements Action {
             session.setAttribute("role-error", "form.user.empty");
         } else {
             String roleRegex = PropertyManager.getValue("form.user.role.regex");
-            Pattern userRolePattern = Pattern.compile(roleRegex,
+            Pattern rolePattern = Pattern.compile(roleRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
-            roleMatcher = userRolePattern.matcher(role);
+            roleMatcher = rolePattern.matcher(role);
             if (roleMatcher != null && roleMatcher.matches()) {
                 isRoleValid = true;
             } else {

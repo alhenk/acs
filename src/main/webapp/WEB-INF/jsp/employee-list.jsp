@@ -11,16 +11,52 @@
                 <c:remove var="status" scope="session"/>
             </c:if>
         </p>
+
+
         <table>
             <tr>
-                <td>ID</td>
-                <td>FIRST NAME</td>
-                <td>LAST NAME</td>
-                <td>BIRTH DATE</td>
+                <td style='width: 20px'>
+                    <form method="GET" action="do/employee-list">
+                        <input type="checkbox" name="sort" value="ID"  ${param.sort == 'ID' ? 'checked':''} onchange="submit()"/>
+                    </form >
+                    ID
+                </td>
+                <td>
+                    <form method="GET" action="do/employee-list">
+                        <input type="checkbox" name="sort" value="FIRST_NAME"  ${param.sort == 'FIRST_NAME' ? 'checked':''} onchange="submit()"/>
+                    </form >
+                    FIRST NAME
+                </td>
+                <td>
+                    <form method="GET" action="do/employee-list">
+                        <input type="checkbox" name="sort"
+                               value="LAST_NAME"  ${param.sort == 'LAST_NAME' ? 'checked':''} onchange="submit()"/>
+                    </form>
+                    LAST NAME
+                </td>
+                <td>
+                    <form method="GET" action="do/employee-list">
+                        <input type="checkbox" name="sort"
+                               value="BIRTH_DATE"  ${param.sort == 'BIRTH_DATE' ? 'checked':''} onchange="submit()"/>
+                    </form>
+                    BIRTH DATE
+                </td>
                 <td>POSITION</td>
                 <td>DEPARTMENT</td>
-                <td>TABLE ID</td>
-                <td>UID</td>
+                <td>
+                    <form method="GET" action="do/employee-list">
+                        <input type="checkbox" name="sort"
+                               value="TABLE_ID"  ${param.sort == 'TABLE_ID' ? 'checked':''} onchange="submit()"/>
+                    </form>
+                    TABLE ID
+                </td>
+                <td>
+                    <form method="GET" action="do/employee-list">
+                        <input type="checkbox" name="sort"
+                               value="UID"  ${param.sort == 'UID' ? 'checked':''} onchange="submit()"/>
+                    </form>
+                    UID
+                </td>
             </tr>
             <c:forEach var="employee" items="${sessionScope.employees}">
                 <tr>

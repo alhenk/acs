@@ -68,7 +68,7 @@ public class UserDaoSqlite implements UserDao {
                 String hash = rs.getString("password");
                 long id = Long.valueOf(rs.getString("id"));
                 String email = rs.getString("email");
-                RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
+                RoleType role = RoleType.valueOf(rs.getString("role"));
                 Account1C tableId;
                 try {
                     tableId = Account1C.createId(rs.getString("tableId"));
@@ -79,7 +79,7 @@ public class UserDaoSqlite implements UserDao {
                 User user = new User.Builder(username, password)
                         .id(id)
                         .email(email)
-                        .role(userRole)
+                        .role(role)
                         .tableId(tableId)
                         .build();
                 LOGGER.debug(user);
@@ -123,7 +123,7 @@ public class UserDaoSqlite implements UserDao {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 String email = rs.getString("email");
-                RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
+                RoleType role = RoleType.valueOf(rs.getString("role"));
                 Account1C tableId;
                 try {
                     tableId = Account1C.createId(rs.getString("tableId"));
@@ -134,7 +134,7 @@ public class UserDaoSqlite implements UserDao {
                 LOGGER.debug("find by id = " + id);
                 User user = new User.Builder(username, password)
                         .id(id)
-                        .role(userRole)
+                        .role(role)
                         .email(email)
                         .tableId(tableId)
                         .build();
@@ -166,10 +166,9 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
-        String users = PropertyManager.getValue("user.table");
         try {
             conn = connectionPool.getConnection();
-            stmt = conn.prepareStatement("INSERT INTO " + users + " (username, password, email, tableId, userRole) VALUES (?,?,?,?,?)");
+            stmt = conn.prepareStatement("INSERT INTO USERS (username, password, email, tableId, role) VALUES (?,?,?,?,?)");
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getEmail());
@@ -212,7 +211,7 @@ public class UserDaoSqlite implements UserDao {
                 LOGGER.debug(rs.getString("id") + "\t"
                         + rs.getString("username") + "\t"
                         + rs.getString("tableId") + "\t"
-                        + rs.getString("userRole"));
+                        + rs.getString("role"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -280,7 +279,7 @@ public class UserDaoSqlite implements UserDao {
         String users = PropertyManager.getValue("user.table");
         try {
             conn = connectionPool.getConnection();
-            stmt = conn.prepareStatement("UPDATE " + users + " SET username = ?, password = ?, email = ?, tableId = ?, userRole = ? WHERE id = ?");
+            stmt = conn.prepareStatement("UPDATE " + users + " SET username = ?, password = ?, email = ?, tableId = ?, role = ? WHERE id = ?");
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getEmail());
@@ -337,7 +336,7 @@ public class UserDaoSqlite implements UserDao {
                     tableId = Account1C.defaultId();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
-                RoleType role = RoleType.valueOf(rs.getString("userRole"));
+                RoleType role = RoleType.valueOf(rs.getString("role"));
                 user = new User.Builder(username, password)
                         .id(id)
                         .role(role)

@@ -50,10 +50,10 @@ public class SecurityFilter implements Filter {
         String action = request.getMethod() + request.getPathInfo();
         EnumSet<RoleType> group = groups.get(action);
         User user = (User) session.getAttribute("user");
-        RoleType userRole = RoleType.UNREGISTERED;
+        RoleType role = RoleType.UNREGISTERED;
 
-        if (user != null) userRole = user.getRole();
-        if (group == null || group.contains(userRole)) {
+        if (user != null) role = user.getRole();
+        if (group == null || group.contains(role)) {
             LOGGER.debug("all is clear");
             filterChain.doFilter(request, response);
             return;

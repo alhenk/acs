@@ -20,7 +20,7 @@ public final class Account1C {
     }
 
     /**
-     * Table ID number (KK00000001)
+     * Table ID number (example: KK00000001)
      */
     @XmlValue
     private String tableId;

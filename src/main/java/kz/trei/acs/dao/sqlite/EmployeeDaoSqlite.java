@@ -112,7 +112,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String lastName = rs.getString("lastName");
                 String uid = rs.getString("uid");
                 String tableId = rs.getString("tableId");
-
                 DepartmentType department=null;
                 try {
                     department = DepartmentType.valueOf(rs.getString("department"));
@@ -123,7 +122,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     LOGGER.debug("db attribute department is null" + e);
                     department = null;
                 }
-
                 PositionType position = null;
                 try{
                     position = PositionType.valueOf(rs.getString("jobPosition"));
@@ -134,7 +132,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     LOGGER.debug("db attribute job position is null" + e);
                     department = null;
                 }
-
                 Account1C account1C;
                 try {
                     account1C = Account1C.createId(tableId);
