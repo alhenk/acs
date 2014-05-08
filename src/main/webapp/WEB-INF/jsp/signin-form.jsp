@@ -1,20 +1,22 @@
-<h2><fmt:message bundle="${msg}" key="form.sign-in.please-login"/> </h2>
+<h3><fmt:message bundle="${msg}" key="form.sign-in.please-login"/></h3>
+
+<p> &nbsp;</p>
+
 <form action="do/sign-in" method="post">
-    <table>
-        <tr>
-            <td align="right"><fmt:message bundle="${msg}" key="form.sign-in.name"/>:</td>
-            <td align="left"><input type="text" name="username"></td>
-        </tr>
-        <tr>
-            <td align="right"><fmt:message bundle="${msg}" key="form.sign-in.password"/> :</td>
-            <td align="left"><input type="password" name="password"></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <button type="submit">
-                    <fmt:message bundle="${msg}" key="form.sign-in.submit"/>
-                </button>
-            </td>
-        </tr>
-    </table>
+    <fieldset class="login">
+        <p>
+            <label><fmt:message bundle="${msg}"
+                                key="form.sign-in.name"/></label>
+            <input type="text" name="username">
+        </p>
+
+        <p>
+            <label><fmt:message bundle="${msg}"
+                                key="form.sign-in.password"/></label>
+            <input type="password" name="password">
+        </p>
+        <input class="login button" type="submit"
+               value="<fmt:message bundle="${msg}" key="form.sign-in.submit"/>">
+        </input>
+    </fieldset>
 </form>

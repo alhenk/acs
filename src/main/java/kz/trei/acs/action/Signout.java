@@ -4,9 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Created by alhen on 4/17/14.
- */
+
 public class Signout implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
