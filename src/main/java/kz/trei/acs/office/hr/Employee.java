@@ -5,50 +5,20 @@ import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.office.util.DateStamp;
+import kz.trei.acs.util.DateStamp;
 
-import javax.xml.bind.annotation.*;
-import java.util.HashSet;
-import java.util.Set;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "employee", namespace = "http://www.trei.kz/attendance/tns")
-@XmlType(propOrder = {"position", "department", "room", "rfidTag"})
 public class Employee extends Person {
     private static final long serialVersionUID = -8363247132437924285L;
     private long id;
-    @XmlElement(name = "position", required = true)
-    @XmlElementWrapper(name = "positions", required = true)
-    private Set<PositionType> position;
-    @XmlElement(name = "department", required = true)
+    private PositionType position;
     private DepartmentType department;
-    @XmlElement(name = "room", required = true)
-    @XmlElementWrapper(name = "rooms")
-    private Set<RoomType> room;
-    @XmlAttribute(name = "id", required = true)
+    private RoomType room;
     private Account1C account1C;
-    @XmlElement(name = "rfidTag", required = true)
     private RfidTag rfidTag;
 
     public Employee() {
-        this.room = new HashSet<RoomType>();
-        this.position = new HashSet<PositionType>();
-    }
-
-    public Employee(Account1C account1C) {
-        this.account1C = account1C;
-        this.room = new HashSet<RoomType>();
-        this.position = new HashSet<PositionType>();
-    }
-
-    public Employee(Set<PositionType> position, DepartmentType department,
-                    Set<RoomType> room, Account1C account1C, RfidTag tag) {
-        this();
-        this.position = position;
-        this.department = department;
-        this.room = room;
-        this.account1C = account1C;
-        this.rfidTag = tag;
+        super();
     }
 
     public Employee(Builder builder) {
@@ -61,31 +31,15 @@ public class Employee extends Person {
         this.setFirstName(builder.firstName);
         this.setLastName(builder.lastName);
         this.setPatronym(builder.patronym);
-        this.setBirthday(builder.birthDate);
+        this.setBirthDate(builder.birthDate);
     }
 
-    public Set<PositionType> getPosition() {
+    public PositionType getPosition() {
         return position;
     }
 
-    public void setPosition(Set<PositionType> position) {
+    public void setPosition(PositionType position) {
         this.position = position;
-    }
-
-    public void addRoom(RoomType room) {
-        this.room.add(room);
-    }
-
-    public void removeRoom(RoomType room) {
-        this.room.remove(room);
-    }
-
-    public void addPosition(PositionType position) {
-        this.position.add(position);
-    }
-
-    public void removePosition(PositionType position) {
-        this.position.remove(position);
     }
 
     public long getId() {
@@ -104,11 +58,11 @@ public class Employee extends Person {
         this.department = department;
     }
 
-    public Set<RoomType> getRoom() {
+    public RoomType getRoom() {
         return room;
     }
 
-    public void setRoom(Set<RoomType> room) {
+    public void setRoom(RoomType room) {
         this.room = room;
     }
 
@@ -141,8 +95,8 @@ public class Employee extends Person {
         return "Employee ["
                 + this.getLastName()
                 + ", uid = "
-                + ((rfidTag != null && rfidTag.getRfidUid() != null) ? rfidTag
-                .getRfidUid().getValue() : "null") + ", tableID = "
+                + ((rfidTag != null && rfidTag.getUid() != null) ? rfidTag
+                .getUid() : "null") + ", tableID = "
                 + ((this.account1C != null) ? this.account1C.getTableId() : "null")
                 + "]";
     }
@@ -202,14 +156,13 @@ public class Employee extends Person {
         private String patronym;
         private String lastName;
         private DateStamp birthDate;
-        private Set<PositionType> position;
+        private PositionType position;
         private DepartmentType department;
-        private Set<RoomType> room;
+        private RoomType room;
         private RfidTag rfidTag;
 
         public Builder() {
-            position = new HashSet<PositionType>();
-            room = new HashSet<RoomType>();
+            super();
         }
 
         public Builder id(long id) {
@@ -232,16 +185,6 @@ public class Employee extends Person {
             return this;
         }
 
-        public Builder addRoom(RoomType room) {
-            this.room.add(room);
-            return this;
-        }
-
-        public Builder addPosition(PositionType position) {
-            this.position.add(position);
-            return this;
-        }
-
         public Builder lastName(String lastName) {
             this.lastName = lastName;
             return this;
@@ -252,7 +195,7 @@ public class Employee extends Person {
             return this;
         }
 
-        public Builder position(Set<PositionType> position) {
+        public Builder position(PositionType position) {
             this.position = position;
             return this;
         }
@@ -262,7 +205,7 @@ public class Employee extends Person {
             return this;
         }
 
-        public Builder room(Set<RoomType> room) {
+        public Builder room(RoomType room) {
             this.room = room;
             return this;
         }

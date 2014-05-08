@@ -6,8 +6,9 @@ import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.rfid.*;
-import kz.trei.acs.office.util.DateStamp;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.DateStamp;
+import kz.trei.acs.util.DateStampException;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
@@ -125,13 +126,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
             while (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
-                RfidUID uid;
-                try {
-                    uid = RfidUID.createUID(rs.getString("uid"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.error("RFID UID format exception: " + e.getMessage());
-                    throw new DaoException("RFID UID format exception");
-                }
+                String uid = rs.getString("uid");
                 RfidType type = RfidType.valueOf(rs.getString("type"));
                 ProtocolType protocol = ProtocolType.valueOf(rs.getString("protocol"));
                 DateStamp issueDate;
@@ -142,7 +137,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                 } else {
                     try {
                         issueDate = DateStamp.create(rs.getString("issueDate"));
-                    } catch (IllegalArgumentException e) {
+                    } catch (DateStampException e) {
                         LOGGER.error("IssueDate format exception: " + e.getMessage());
                         throw new DaoException("IssueDate format exception");
                     }
@@ -153,7 +148,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                 } else {
                     try {
                         expirationDate = DateStamp.create(rs.getString("expirationDate"));
-                    } catch (IllegalArgumentException e) {
+                    } catch (DateStampException e) {
                         LOGGER.error("ExpirationDate format exception: " + e.getMessage());
                         throw new DaoException("ExpirationDate UID format exception");
                     }
@@ -164,6 +159,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                         .build();
                 rfidTag = new RfidTag.Builder(uid)
                         .id(id)
+                        .uid(uid)
                         .type(type)
                         .protocol(protocol)
                         .issue(issue)
@@ -176,6 +172,9 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
+        } catch (UidFormatException e) {
+            LOGGER.error("RFID tag building exception: " + e.getMessage());
+            throw new DaoException("RFID tag building exception " + e.getMessage());
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);

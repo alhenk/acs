@@ -1,27 +1,26 @@
 package kz.trei.acs.office.hr;
 
-import java.io.Serializable;
-import javax.xml.bind.annotation.XmlType;
-import kz.trei.acs.office.util.DateStamp;
+import kz.trei.acs.util.DateStamp;
 
-//@XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
-@XmlType (propOrder={"firstName","patronym","lastName","birthday"})
+import java.io.Serializable;
+
 public abstract class Person implements Serializable, Comparable<Person> {
 	private static final long serialVersionUID = -756620067328644499L;
 	private String firstName;
 	private String patronym;
 	private String lastName;
-	private DateStamp birthday;
+	private DateStamp birthDate;
 
 	public Person() {
+        super();
 	}
 
 	public Person(String firstName, String patronym, String lastName,
-			DateStamp birthday) {
+			DateStamp birthDate) {
 		this.firstName = firstName;
 		this.patronym = patronym;
 		this.lastName = lastName;
-		this.birthday = birthday;
+		this.birthDate = birthDate;
 	}
 
 	public String getFirstName() {
@@ -48,12 +47,12 @@ public abstract class Person implements Serializable, Comparable<Person> {
 		this.lastName = lastName;
 	}
 
-	public DateStamp getBirthday() {
-		return birthday;
+	public DateStamp getBirthDate() {
+		return birthDate;
 	}
 
-	public void setBirthday(DateStamp birthday) {
-		this.birthday = birthday;
+	public void setBirthDate(DateStamp birthDate) {
+		this.birthDate = birthDate;
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public abstract class Person implements Serializable, Comparable<Person> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((birthday == null) ? 0 : birthday.hashCode());
+				+ ((birthDate == null) ? 0 : birthDate.hashCode());
 		result = prime * result
 				+ ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result
@@ -80,10 +79,10 @@ public abstract class Person implements Serializable, Comparable<Person> {
 		if (getClass() != obj.getClass())
 			return false;
 		Person other = (Person) obj;
-		if (birthday == null) {
-			if (other.birthday != null)
+		if (birthDate == null) {
+			if (other.birthDate != null)
 				return false;
-		} else if (!birthday.equals(other.birthday))
+		} else if (!birthDate.equals(other.birthDate))
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)

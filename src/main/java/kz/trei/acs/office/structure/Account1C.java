@@ -1,6 +1,7 @@
 package kz.trei.acs.office.structure;
 
-import kz.trei.acs.office.util.PropertyManager;
+
+import kz.trei.acs.util.PropertyManager;
 
 import javax.xml.bind.annotation.XmlValue;
 import java.util.regex.Matcher;

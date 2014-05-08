@@ -18,6 +18,7 @@
                 <td>LAST NAME</td>
                 <td>BIRTH DATE</td>
                 <td>POSITION</td>
+                <td>DEPARTMENT</td>
                 <td>TABLE ID</td>
                 <td>UID</td>
             </tr>
@@ -26,10 +27,11 @@
                     <td>${employee.id}</td>
                     <td>${employee.firstName}</td>
                     <td>${employee.lastName}</td>
-                    <%--<td>${employee.birthDate}</td>--%>
-                    <%--<td>${employee.position}</td>--%>
+                    <td>${employee.birthDate.date}</td>
+                    <td>${employee.position}</td>
+                    <td>${employee.department}</td>
                     <td>${employee.account1C.tableId}</td>
-                    <%--<td>${employee.uid}</td>--%>
+                    <td>${employee.rfidTag.uid}</td>
                     <td>
                         <a href="do/edit-employee?id=${employee.id}">edit</a>
                     </td>

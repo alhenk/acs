@@ -1,21 +1,21 @@
 package kz.trei.acs.office.attendance;
 
+import kz.trei.acs.util.DateStamp;
+import kz.trei.acs.util.TimeStamp;
+
 import java.util.Date;
 
-import kz.trei.acs.office.rfid.RfidUID;
-import kz.trei.acs.office.util.DateStamp;
-import kz.trei.acs.office.util.TimeStamp;
 
 public class Attendance {
-	private RfidUID uid;
+	private String uid;
 	private DirectionType direction;
-	private DateStamp date;  
-	private TimeStamp time; 
+	private DateStamp date;
+	private TimeStamp time;
 
 	public Attendance() {
 	}
 
-	public Attendance(RfidUID uid, DirectionType direction, Date date) {
+	public Attendance(String uid, DirectionType direction, Date date) {
 		super();
 		this.uid = uid;
 		this.direction = direction;
@@ -23,11 +23,11 @@ public class Attendance {
 		this.time = TimeStamp.create(date);
 	}
 
-	public RfidUID getUid() {
+	public String getUid() {
 		return uid;
 	}
 
-	public void setUid(RfidUID uid) {
+	public void setUid(String uid) {
 		this.uid = uid;
 	}
 

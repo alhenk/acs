@@ -8,22 +8,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-import kz.trei.acs.office.util.DateStamp;
-import kz.trei.acs.office.util.PropertyManager;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.DateStamp;
+import kz.trei.acs.util.PropertyManager;
 
-//@XmlRootElement(name = "issue", namespace ="http://www.trei.kz/attendance/tns")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "issueDate", "expirationDate"})
 public class Issue implements Serializable, Comparable<Issue> {
 	private static final long serialVersionUID = -7410469239152467286L;
 	static {
 		PropertyManager.load("configure.properties");
 	}
-	@XmlElement(required = true)
 	private DateStamp issueDate;
-	@XmlElement(required = true)
 	private DateStamp expirationDate;
 
 	/**
@@ -74,7 +68,6 @@ public class Issue implements Serializable, Comparable<Issue> {
 		return issueDate;
 	}
 
-	
 	public void setIssueDate(DateStamp issueDate) {
 		this.issueDate = issueDate;
 	}
@@ -83,7 +76,6 @@ public class Issue implements Serializable, Comparable<Issue> {
 		return expirationDate;
 	}
 
-	
 	public void setExpirationDate(DateStamp expirationDate) {
 		this.expirationDate = expirationDate;
 	}

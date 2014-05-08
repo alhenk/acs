@@ -14,6 +14,8 @@
                 <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
                 <br/>
                 <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
+                <br/>
+                <%--<a href="do/attendance-log"><fmt:message bundle="${msg}" key="common.attendance-log"/></a>--%>
             </c:when>
             <c:otherwise>
                 <p><fmt:message bundle="${msg}" key="common.user"/></p>

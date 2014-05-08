@@ -23,7 +23,7 @@
             <c:forEach var="rfidtag" items="${sessionScope.rfidtags}">
                 <tr>
                     <td>${rfidtag.id}</td>
-                    <td>${rfidtag.rfidUid.value}</td>
+                    <td>${rfidtag.uid}</td>
                     <td>${rfidtag.type}</td>
                     <td>${rfidtag.protocol}</td>
                     <td>${rfidtag.issue.issueDate.date}</td>
@@ -37,6 +37,6 @@
                 </tr>
             </c:forEach>
         </table>
-        <%--<a href="do/create-account"><fmt:message bundle="${msg}" key="create.account"/></a><br/>--%>
+        <a href="do/create-rfidtag"><fmt:message bundle="${msg}" key="create.rfidtag"/></a><br/>
     </jsp:body>
 </mtag:pagetemplate>

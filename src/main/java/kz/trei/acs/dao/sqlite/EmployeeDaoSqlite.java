@@ -7,14 +7,17 @@ import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
-import kz.trei.acs.office.rfid.RfidUID;
+import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.Account1CException;
-import kz.trei.acs.user.RoleType;
+import kz.trei.acs.office.structure.DepartmentType;
+import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.DateStamp;
+import kz.trei.acs.util.DateStampException;
 import kz.trei.acs.util.FileManager;
-import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,8 +78,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     }
 
-
-
     @Override
     public long totalNumber() throws DaoException {
         return 0;
@@ -111,6 +112,29 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String lastName = rs.getString("lastName");
                 String uid = rs.getString("uid");
                 String tableId = rs.getString("tableId");
+
+                DepartmentType department=null;
+                try {
+                    department = DepartmentType.valueOf(rs.getString("department"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.debug("db attribute department is illegal " + e);
+                    department = null;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("db attribute department is null" + e);
+                    department = null;
+                }
+
+                PositionType position = null;
+                try{
+                    position = PositionType.valueOf(rs.getString("jobPosition"));
+                }catch (IllegalArgumentException e) {
+                    LOGGER.debug("db attribute job position is illegal " + e);
+                    department = null;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("db attribute job position is null" + e);
+                    department = null;
+                }
+
                 Account1C account1C;
                 try {
                     account1C = Account1C.createId(tableId);
@@ -118,12 +142,25 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     account1C = Account1C.defaultId();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
+                DateStamp birthDate;
+                try {
+                    birthDate = DateStamp.create(rs.getString("birthDate"));
+                } catch (DateStampException e) {
+                    birthDate = null;
+                    LOGGER.debug("Birth Date field is invalid or empty");
+                }
+                RfidTag rfidTag = new RfidTag.Builder()
+                        .uid(uid)
+                        .build();
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
                         .lastName(lastName)
+                        .birthDate(birthDate)
+                        .position(position)
+                        .department(department)
                         .account1C(account1C)
-//                        .rfidTag(uid)
+                        .rfidTag(rfidTag)
                         .build();
                 employees.add(employee);
             }
@@ -131,8 +168,8 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception execute: " + e.getMessage());
-            throw new DaoException("SQL statement exception execute");
+            LOGGER.error("Select EMPLOYEES table exception: " + e.getMessage());
+            throw new DaoException("Select EMPLOYEES table exception");
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);

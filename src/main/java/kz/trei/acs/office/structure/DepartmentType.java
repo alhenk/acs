@@ -28,5 +28,7 @@ public enum DepartmentType {
 	@XmlEnumValue("ADMINISTRATIVE_SERVICE_UTILITY")
 	ADMINISTRATIVE_SERVICE_UTILITY,
 	@XmlEnumValue("NONE")
-	NONE;
+	NONE,
+    @XmlEnumValue("DEFAULT")
+    DEFAULT;
 }
