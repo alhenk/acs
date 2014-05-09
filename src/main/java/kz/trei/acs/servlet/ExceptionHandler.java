@@ -20,7 +20,7 @@ public class ExceptionHandler extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOGGER.debug("doGet...");
+        LOGGER.debug("doGet...ww");
         processError(request, response);
         request.getRequestDispatcher(PropertyManager.getValue("jsp.view.path") + "/exception.jsp").forward(request, response);
     }

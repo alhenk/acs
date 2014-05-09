@@ -1,4 +1,4 @@
-<h2><fmt:message bundle="${msg}" key="create.account"/> </h2>
+<%--<h2><fmt:message bundle="${msg}" key="create.account"/> </h2>--%>
 <form action="do/sign-up" method="post">
     <table>
         <tr>

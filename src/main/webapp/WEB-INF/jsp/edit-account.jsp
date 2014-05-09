@@ -6,8 +6,14 @@
 
 <mtag:pagetemplate title="edit-account">
     <jsp:body>
-        <h2>EDIT ACCOUNT</h2>
-        <%@include file="edit-account-form.jsp"%>
-        <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
+        <div class="grid_8">
+            <div class="box">
+                <h2>
+                    <a href="#"><fmt:message bundle="${msg}" key="edit.account"/></a>
+                </h2>
+                <%@include file="edit-account-form.jsp" %>
+                <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
+            </div>
+        </div>
     </jsp:body>
 </mtag:pagetemplate>

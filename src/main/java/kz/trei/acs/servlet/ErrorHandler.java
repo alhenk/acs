@@ -19,7 +19,7 @@ public class ErrorHandler extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOGGER.debug("doGet...");
+        LOGGER.debug("doGet...z");
         processError(request, response);
         request.getRequestDispatcher(PropertyManager.getValue("jsp.view.path")+"/error.jsp").forward(request, response);
     }
@@ -42,6 +42,8 @@ public class ErrorHandler extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("status-code", statusCode);
         session.setAttribute("request-uri", requestUri);
+        LOGGER.debug("Status Code "+ statusCode);
+        LOGGER.debug("Request Uri "+ requestUri);
         return;
     }
 }
