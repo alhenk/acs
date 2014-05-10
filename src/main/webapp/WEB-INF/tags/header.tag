@@ -17,6 +17,19 @@
         <c:if test="${not empty sessionScope['user']}">
             <li>
                 <a href="do/dashboard"><fmt:message bundle="${msg}" key="common.dashboard"/></a>
+                <c:if test="${sessionScope['user'].role == 'ADMINISTRATOR'}">
+                    <ul>
+                        <li>
+                            <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
+                        </li>
+                        <li>
+                            <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
+                        </li>
+                        <li>
+                            <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
+                        </li>
+                    </ul>
+                </c:if>
             </li>
         </c:if>
         <li>
@@ -24,6 +37,7 @@
         </li>
         <li class="secondary">
             <br>
+
             <form action="do/set-language" method="post">
                 <select id="language" name="language" onchange="submit()">
                     <option value="en" ${locale.language == 'en' ? 'selected' : ''}>English</option>

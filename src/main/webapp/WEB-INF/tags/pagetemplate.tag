@@ -19,11 +19,11 @@
     <c:set var="uri">${pageContext.request.requestURI}</c:set>
     <c:set var="ctx">${pageContext.request.contextPath}</c:set>
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(uri))}${ctx}/"/>
-    <link rel="stylesheet" type="text/css" href="css/grid.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="css/layout.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="css/text.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="css/nav.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" media="all" href="css/grid.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" media="all" href="css/layout.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" media="all" href="css/text.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" media="all" href="css/nav.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" media="screen"/>
 </head>
 <body>
 <div class="container_16">

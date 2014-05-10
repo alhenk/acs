@@ -5,38 +5,68 @@
 
 <mtag:pagetemplate title="rfidtag-list">
     <jsp:body>
-        <p>
-            <c:if test="${not empty sessionScope.status}">
-                <fmt:message bundle="${msg}" key="${sessionScope.status}"/>
-                <c:remove var="status" scope="session"/>
-            </c:if>
-        </p>
-        <table>
-            <tr>
-                <td>ID</td>
-                <td>UID</td>
-                <td>TYPE</td>
-                <td>PROTOCOL</td>
-                <td>ISSUE DATE</td>
-                <td>EXPIRATION DATE</td>
-            </tr>
-            <c:forEach var="rfidtag" items="${sessionScope.rfidtags}">
-                <tr>
-                    <td>${rfidtag.id}</td>
-                    <td>${rfidtag.uid}</td>
-                    <td>${rfidtag.type}</td>
-                    <td>${rfidtag.protocol}</td>
-                    <td>${rfidtag.issue.issueDate.date}</td>
-                    <td>${rfidtag.issue.expirationDate.date}</td>
-                    <td>
-                        <a href="do/edit-rfidtag?id=${rfidtag.id}">edit</a>
-                    </td>
-                    <td>
-                        <a href="do/delete-rfidtag?id=${rfidtag.id}">delete</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-        <a href="do/create-rfidtag"><fmt:message bundle="${msg}" key="create.rfidtag"/></a><br/>
+        <div class="grid_12">
+            <div class="box">
+                <h2>
+                    <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
+                </h2>
+
+                <p>
+                    <c:if test="${not empty sessionScope.status}">
+                        <fmt:message bundle="${msg}" key="${sessionScope.status}"/>
+                        <c:remove var="status" scope="session"/>
+                    </c:if>
+                </p>
+
+                <div class="block">
+                    <div id="employee-list-table" style="height:1200px;">
+                        <table summary="RFID tag list">
+                            <thead>
+                                <th>ID</th>
+                                <th>UID</th>
+                                <th>TYPE</th>
+                                <th>PROTOCOL</th>
+                                <th>ISSUE DATE</th>
+                                <th>EXPIRATION DATE</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            </thead>
+                            </tr>
+                            <c:forEach var="rfidtag" items="${sessionScope.rfidtags}">
+                                <tr>
+                                    <td>${rfidtag.id}</td>
+                                    <td>${rfidtag.uid}</td>
+                                    <td>${rfidtag.type}</td>
+                                    <td>${rfidtag.protocol}</td>
+                                    <td>${rfidtag.issue.issueDate.date}</td>
+                                    <td>${rfidtag.issue.expirationDate.date}</td>
+                                    <td>
+                                        <a href="do/edit-rfidtag?id=${rfidtag.id}"><img src="img/edit.png"></a>
+                                    </td>
+                                    <td>
+                                        <a href="do/delete-rfidtag?id=${rfidtag.id}"><img src="img/delete.png"></a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid_4">
+            <div class="box">
+                <h2>
+                    INFO
+                </h2>
+                <br/>
+                <div class="block">
+                    <div id="user-list-control" style="height:304px;">
+                        <form action="do/create-rfidtag" method="get">
+                            <input type="submit" value="<fmt:message bundle='${msg}' key='create.rfidtag'/>"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </jsp:body>
 </mtag:pagetemplate>

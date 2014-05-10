@@ -13,7 +13,7 @@
                 </h2>
 
                 <div class="block">
-                    <div id="sign-form" style="height:280px;">
+                    <div id="sign-form" style="height:320px;">
                         <p> &nbsp;</p>
 
                         <p> &nbsp;</p>
@@ -33,9 +33,9 @@
                                     <h3><fmt:message bundle="${msg}" key="common.welcome"/>
                                             ${sessionScope.user.username}
                                     </h3>
-                                    <a href="do/dashboard"><fmt:message bundle="${msg}" key="common.dashboard"/></a>
-                                    <br/>
-                                    <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/> </a>
+                                    <%--<a href="do/dashboard"><fmt:message bundle="${msg}" key="common.dashboard"/></a>--%>
+                                    <%--<br/>--%>
+                                    <%--<a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/> </a>--%>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -55,7 +55,7 @@
                 <h2><a href="#" id="specifications">ACS</a></h2>
 
                 <div class="block">
-                    <div id="info" style="height:280px;">
+                    <div id="info" style="height:320px;">
 
                     </div>
                 </div>

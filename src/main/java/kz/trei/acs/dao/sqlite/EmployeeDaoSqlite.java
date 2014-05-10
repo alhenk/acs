@@ -117,20 +117,20 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     department = DepartmentType.valueOf(rs.getString("department"));
                 } catch (IllegalArgumentException e) {
                     LOGGER.debug("db attribute department is illegal " + e);
-                    department = null;
+                    department = DepartmentType.DEFAULT;
                 } catch (NullPointerException e) {
                     LOGGER.debug("db attribute department is null" + e);
-                    department = null;
+                    department = DepartmentType.DEFAULT;
                 }
                 PositionType position = null;
                 try{
                     position = PositionType.valueOf(rs.getString("jobPosition"));
                 }catch (IllegalArgumentException e) {
                     LOGGER.debug("db attribute job position is illegal " + e);
-                    department = null;
+                    position = PositionType.DEFAULT;
                 } catch (NullPointerException e) {
                     LOGGER.debug("db attribute job position is null" + e);
-                    department = null;
+                    position = PositionType.DEFAULT;
                 }
                 Account1C account1C;
                 try {

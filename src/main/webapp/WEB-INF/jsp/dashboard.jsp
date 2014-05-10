@@ -11,22 +11,25 @@
                 <h2>
                     <a href="#"><fmt:message bundle="${msg}" key="common.dashboard"/></a>
                 </h2>
+
                 <div class="block">
-                    <c:choose>
-                        <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
-                            <p><fmt:message bundle="${msg}" key="common.administrator"/></p>
-                            <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
-                            <br/>
-                            <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
-                            <br/>
-                            <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
-                            <br/>
-                            <%--<a href="do/attendance-log"><fmt:message bundle="${msg}" key="common.attendance-log"/></a>--%>
-                        </c:when>
-                        <c:otherwise>
-                            <p><fmt:message bundle="${msg}" key="common.user"/></p>
-                        </c:otherwise>
-                    </c:choose>
+                    <div id="sign-form" style="height:320px;">
+                        <c:choose>
+                            <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
+                                <p><fmt:message bundle="${msg}" key="common.administrator"/></p>
+                                <%--<a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>--%>
+                                <%--<br/>--%>
+                                <%--<a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>--%>
+                                <%--<br/>--%>
+                                <%--<a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>--%>
+                                <%--<br/>--%>
+                                <%--<a href="do/attendance-log"><fmt:message bundle="${msg}" key="common.attendance-log"/></a>--%>
+                            </c:when>
+                            <c:otherwise>
+                                <p><fmt:message bundle="${msg}" key="common.user"/></p>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
             </div>
         </div>
