@@ -35,6 +35,7 @@
         <li>
             <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/></a>
         </li>
+
         <li class="secondary">
             <br>
 
@@ -45,6 +46,13 @@
                         &#x420;&#x443;&#x441;&#x441;&#x43a;&#x438;&#x439;</option>
                 </select>
             </form>
+        </li>
+        <li class="secondary"> &nbsp;
+            <c:if test="${sessionScope['user'].role == 'ADMINISTRATOR'}">
+                <a href="#">
+                    <fmt:message bundle='${msg}' key='common.user'/> &nbsp; ${sessionScope.user.username}
+                </a>
+            </c:if>
         </li>
     </ul>
 </div>

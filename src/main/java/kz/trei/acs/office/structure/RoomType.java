@@ -69,11 +69,20 @@ public enum RoomType {
 		}
 	}
 
-	public String getRoomName() {
-		return roomName;
-	}
+	public int getRoomNumber() {
+        return roomNumber;
+    }
 
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
-	}
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
 }

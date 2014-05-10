@@ -2,9 +2,7 @@ package kz.trei.acs.office.hr;
 
 import java.util.Comparator;
 
-/**
- * Created by Admin on 08.05.14.
- */
+
 public class EmployeeComparator implements Comparator<Person> {
     private CompareType type;
 
@@ -23,6 +21,10 @@ public class EmployeeComparator implements Comparator<Person> {
                 return e1.getLastName().compareTo(e2.getLastName());
             case BIRTH_DATE:
                 return e1.getBirthDate().compareTo(e2.getBirthDate());
+            case POSITION:
+                return  new Integer(((Employee) e1).getPosition().getHierarchy()).compareTo(((Employee) e2).getPosition().getHierarchy());
+            case DEPARTMENT:
+                return ((Employee) e1).getDepartment().compareTo(((Employee) e2).getDepartment());
             case ROOM:
                 return ((Employee) e1).getRoom().compareTo(((Employee) e2).getRoom());
             case TABLE_ID:
@@ -35,7 +37,7 @@ public class EmployeeComparator implements Comparator<Person> {
     }
 
     public enum CompareType {
-        ID, FIRST_NAME, LAST_NAME,BIRTH_DATE, ROOM, TABLE_ID, UID;
+        ID, FIRST_NAME, LAST_NAME, BIRTH_DATE, POSITION, DEPARTMENT, ROOM, TABLE_ID, UID;
 
         @Override
         public String toString() {

@@ -27,8 +27,6 @@ public enum DepartmentType {
 	VERIFICATION_LABORATORY,
 	@XmlEnumValue("ADMINISTRATIVE_SERVICE_UTILITY")
 	ADMINISTRATIVE_SERVICE_UTILITY,
-	@XmlEnumValue("NONE")
-	NONE,
-    @XmlEnumValue("DEFAULT")
+	@XmlEnumValue("DEFAULT")
     DEFAULT;
 }

@@ -5,7 +5,7 @@
 
 <mtag:pagetemplate title="employee-list">
     <jsp:body>
-        <div class="grid_13">
+        <div class="grid_16">
             <div class="box">
                 <h2>
                     <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
@@ -20,28 +20,34 @@
 
                 <div class="block">
                     <div id="employee-list-table" style="height:1200px;">
+                        <form action="do/create-employee" method="get">
+                            <input type="submit" value="<fmt:message bundle='${msg}' key='create.employee'/>">
+                        </form>
+                        <p>&nbsp;</p>
                         <table summary="employee list">
                             <thead>
-                            <th>ID</th>
-                            <th>FIRST NAME</th>
-                            <th>LAST NAME</th>
-                            <th>BIRTH DATE</th>
-                            <th>POSITION</th>
-                            <th>DEPARTMENT</th>
-                            <th>TABLE ID</th>
+                                <%--<th>ID</th>--%>
+                            <th><fmt:message bundle='${msg}' key='table.employee.first-name'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.patronym'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.last-name'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.birth-date'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.position'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.department'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.room'/></th>
+                            <th><fmt:message bundle='${msg}' key='table.employee.table-id'/></th>
                             <th>UID</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tr>
-                                <td style='width: 20px'>
-                                    <form method="GET" action="do/employee-list">
-                                        <input type="checkbox" name="sort"
-                                               value="ID"  ${param.sort == 'ID' ? 'checked':''}
-                                               onchange="submit()"/>
-                                    </form>
-                                </td>
+                                    <%--<td style='width: 20px'>--%>
+                                    <%--<form method="GET" action="do/employee-list">--%>
+                                    <%--<input type="checkbox" name="sort"--%>
+                                    <%--value="ID"  ${param.sort == 'ID' ? 'checked':''}--%>
+                                    <%--onchange="submit()"/>--%>
+                                    <%--</form>--%>
+                                    <%--</td>--%>
                                 <td>
                                     <form method="GET" action="do/employee-list">
                                         <input type="checkbox" name="sort"
@@ -49,6 +55,7 @@
                                                onchange="submit()"/>
                                     </form>
                                 </td>
+                                <td>&nbsp;</td>
                                 <td>
                                     <form method="GET" action="do/employee-list">
                                         <input type="checkbox" name="sort"
@@ -63,8 +70,27 @@
                                                onchange="submit()"/>
                                     </form>
                                 </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                                <td>
+                                    <form method="GET" action="do/employee-list">
+                                        <input type="checkbox" name="sort"
+                                               value="POSITION"  ${param.sort == 'POSITION' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="GET" action="do/employee-list">
+                                        <input type="checkbox" name="sort"
+                                               value="DEPARTMENT"  ${param.sort == 'DEPARTMENT' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="GET" action="do/employee-list">
+                                        <input type="checkbox" name="sort"
+                                               value="ROOM"  ${param.sort == 'ROOM' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
                                 <td>
                                     <form method="GET" action="do/employee-list">
                                         <input type="checkbox" name="sort"
@@ -83,12 +109,16 @@
                             </tr>
                             <c:forEach var="employee" items="${sessionScope.employees}">
                                 <tr>
-                                    <td>${employee.id}</td>
+                                        <%--<td>${employee.id}</td>--%>
                                     <td>${employee.firstName}</td>
+                                    <td>${employee.patronym}</td>
                                     <td>${employee.lastName}</td>
                                     <td>${employee.birthDate.date}</td>
-                                    <td><fmt:message bundle="${msg}" key="structure.position.${employee.position}"/></td>
-                                    <td><fmt:message bundle="${msg}" key="structure.department.${employee.department}"/></td>
+                                    <td><fmt:message bundle="${msg}"
+                                                     key="structure.position.${employee.position}"/></td>
+                                    <td><fmt:message bundle="${msg}"
+                                                     key="structure.department.${employee.department}"/></td>
+                                    <td>${employee.room.roomNumber}</td>
                                     <td>${employee.account1C.tableId}</td>
                                     <td>${employee.rfidTag.uid}</td>
                                     <td>
@@ -104,21 +134,21 @@
                 </div>
             </div>
         </div>
-        <div class="grid_3">
-            <div class="box">
-                <h2>
-                    INFO
-                </h2>
-                <br/>
+        <%--<div class="grid_3">--%>
+        <%--<div class="box">--%>
+        <%--<h2>--%>
+        <%--INFO--%>
+        <%--</h2>--%>
+        <%--<br/>--%>
 
-                <div class="block">
-                    <div id="user-list-control" style="height:304px;">
-                        <form action="do/create-employee" method="get">
-                            <input type="submit" value="<fmt:message bundle='${msg}' key='create.employee'/>">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <%--<div class="block">--%>
+        <%--<div id="user-list-control" style="height:304px;">--%>
+        <%--<form action="do/create-employee" method="get">--%>
+        <%--<input type="submit" value="<fmt:message bundle='${msg}' key='create.employee'/>">--%>
+        <%--</form>--%>
+        <%--</div>--%>
+        <%--</div>--%>
+        <%--</div>--%>
+        <%--</div>--%>
     </jsp:body>
 </mtag:pagetemplate>

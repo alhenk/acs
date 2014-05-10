@@ -8,10 +8,7 @@ import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
-import kz.trei.acs.office.structure.Account1C;
-import kz.trei.acs.office.structure.Account1CException;
-import kz.trei.acs.office.structure.DepartmentType;
-import kz.trei.acs.office.structure.PositionType;
+import kz.trei.acs.office.structure.*;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.DateStampException;
@@ -110,16 +107,16 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
-                String uid = rs.getString("uid");
                 String tableId = rs.getString("tableId");
+                String uid = rs.getString("uid");
                 DepartmentType department=null;
                 try {
                     department = DepartmentType.valueOf(rs.getString("department"));
                 } catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute department is illegal " + e);
+                    LOGGER.debug("db attribute department is illegal " + e.getMessage());
                     department = DepartmentType.DEFAULT;
                 } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute department is null" + e);
+                    LOGGER.debug("db attribute department is null" + e.getMessage());
                     department = DepartmentType.DEFAULT;
                 }
                 PositionType position = null;
@@ -131,6 +128,16 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 } catch (NullPointerException e) {
                     LOGGER.debug("db attribute job position is null" + e);
                     position = PositionType.DEFAULT;
+                }
+                RoomType room;
+                try{
+                    room = RoomType.valueOf(rs.getString("room"));
+                }catch (IllegalArgumentException e) {
+                    LOGGER.debug("db attribute room is illegal " + e);
+                    room = RoomType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("db attribute room is null" + e);
+                    room = RoomType.DEFAULT;
                 }
                 Account1C account1C;
                 try {
@@ -156,6 +163,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                         .birthDate(birthDate)
                         .position(position)
                         .department(department)
+                        .room(room)
                         .account1C(account1C)
                         .rfidTag(rfidTag)
                         .build();
