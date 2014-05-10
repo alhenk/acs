@@ -64,13 +64,13 @@
 </div>
 <div class="clear"></div>
 <div class="grid_16">&nbsp;</div>
-<c:if test="${not empty sessionScope.user}">
-    <div class="grid_2">
-        <fmt:message bundle='${msg}' key='common.user'/>
-    </div>
-    <div class="grid_1">
-            ${sessionScope.user.username}
-    </div>
-</c:if>
+<%--<c:if test="${not empty sessionScope.user}">--%>
+    <%--<div class="grid_2">--%>
+        <%--<fmt:message bundle='${msg}' key='common.user'/>--%>
+    <%--</div>--%>
+    <%--<div class="grid_1">--%>
+            <%--${sessionScope.user.username}--%>
+    <%--</div>--%>
+<%--</c:if>--%>
 <div class="clear"></div>
 

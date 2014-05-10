@@ -133,7 +133,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                 DateStamp expirationDate;
                 String issueDateString = rs.getString("issueDate");
                 if (issueDateString == null || issueDateString.isEmpty()) {
-                    issueDate = null;
+                    issueDate = DateStamp.createEmptyDate();
                 } else {
                     try {
                         issueDate = DateStamp.create(rs.getString("issueDate"));
@@ -144,7 +144,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                 }
                 String expirationDateString = rs.getString("expirationDate");
                 if (expirationDateString == null || expirationDateString.isEmpty()) {
-                    expirationDate = null;
+                    expirationDate = DateStamp.createEmptyDate();
                 } else {
                     try {
                         expirationDate = DateStamp.create(rs.getString("expirationDate"));

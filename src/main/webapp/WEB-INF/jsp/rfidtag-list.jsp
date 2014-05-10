@@ -22,24 +22,66 @@
                     <div id="employee-list-table" style="height:1200px;">
                         <table summary="RFID tag list">
                             <thead>
-                                <th>ID</th>
-                                <th>UID</th>
-                                <th>TYPE</th>
-                                <th>PROTOCOL</th>
-                                <th>ISSUE DATE</th>
-                                <th>EXPIRATION DATE</th>
+                                <%--<th>ID</th>--%>
+                            <th>UID</th>
+                            <th>TYPE</th>
+                            <th>PROTOCOL</th>
+                            <th>ISSUE DATE</th>
+                            <th>EXPIRATION DATE</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             </thead>
+                            <tr>
+                                <td>
+                                    <form method="GET" action="do/rfidtag-list">
+                                        <input type="checkbox" name="sort"
+                                               value="UID"  ${param.sort == 'UID' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="GET" action="do/rfidtag-list">
+                                        <input type="checkbox" name="sort"
+                                               value="TYPE"  ${param.sort == 'TYPE' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="GET" action="do/rfidtag-list">
+                                        <input type="checkbox" name="sort"
+                                               value="PROTOCOL"  ${param.sort == 'PROTOCOL' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="GET" action="do/rfidtag-list">
+                                        <input type="checkbox" name="sort"
+                                               value="ISSUE_DATE"  ${param.sort == 'ISSUE_DATE' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="GET" action="do/rfidtag-list">
+                                        <input type="checkbox" name="sort"
+                                               value="EXPIRATION_DATE"  ${param.sort == 'EXPIRATION_DATE' ? 'checked':''}
+                                               onchange="submit()"/>
+                                    </form>
+                                </td>
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
                             </tr>
                             <c:forEach var="rfidtag" items="${sessionScope.rfidtags}">
                                 <tr>
-                                    <td>${rfidtag.id}</td>
+                                        <%--<td>${rfidtag.id}</td>--%>
                                     <td>${rfidtag.uid}</td>
                                     <td>${rfidtag.type}</td>
                                     <td>${rfidtag.protocol}</td>
-                                    <td>${rfidtag.issue.issueDate.date}</td>
-                                    <td>${rfidtag.issue.expirationDate.date}</td>
+                                    <td>
+                                            ${rfidtag.issue.issueDate.date}
+                                    </td>
+                                    <td>
+                                            ${rfidtag.issue.expirationDate.date}
+                                    </td>
                                     <td>
                                         <a href="do/edit-rfidtag?id=${rfidtag.id}"><img src="img/edit.png"></a>
                                     </td>
@@ -59,6 +101,7 @@
                     INFO
                 </h2>
                 <br/>
+
                 <div class="block">
                     <div id="user-list-control" style="height:304px;">
                         <form action="do/create-rfidtag" method="get">

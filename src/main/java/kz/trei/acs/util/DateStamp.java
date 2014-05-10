@@ -34,6 +34,9 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 		LOGGER.error(date + " is not a valid timestamp");
         throw new DateStampException(date + " is not a valid timestamp");
 	}
+    public static DateStamp createEmptyDate(){
+        return new DateStamp("");
+    }
 
 	/**
 	 * Default constructor gets the current Date
