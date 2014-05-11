@@ -13,5 +13,6 @@ public interface AbstractDao<T> {
     public long totalNumber() throws DaoException;
     public void update(T entity) throws DaoException;
     public List<T> findAll()throws DaoException;
+    public  List<T> findInRange(long offset, long length) throws DaoException;
     public void delete(long id) throws DaoException;
 }

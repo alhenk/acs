@@ -9,7 +9,14 @@
         <div class="grid_8">
             <div class="box">
                 <h2>
-                    <a href="#"><fmt:message bundle="${msg}" key="common.sing-in"/></a>
+                    <c:choose>
+                        <c:when test="${empty sessionScope.user}">
+                            <a href="#"><fmt:message bundle="${msg}" key="common.sing-in"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="#"><fmt:message bundle="${msg}" key="common.welcome"/></a>
+                        </c:otherwise>
+                    </c:choose>
                 </h2>
 
                 <div class="block">

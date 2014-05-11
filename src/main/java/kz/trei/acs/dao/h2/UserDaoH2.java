@@ -249,6 +249,11 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
+    public List<User> findInRange(long offset, long length) throws DaoException {
+        return null;
+    }
+
+    @Override
     public void delete(long id) throws DaoException {
 
     }

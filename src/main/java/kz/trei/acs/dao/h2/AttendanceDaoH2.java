@@ -85,6 +85,11 @@ public class AttendanceDaoH2 implements AttendanceDao {
     }
 
     @Override
+    public List<Attendance> findInRange(long offset, long length) throws DaoException {
+        return null;
+    }
+
+    @Override
     public void delete(long id) throws DaoException {
 
     }

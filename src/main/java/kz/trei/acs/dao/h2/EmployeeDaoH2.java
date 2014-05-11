@@ -85,6 +85,11 @@ public class EmployeeDaoH2 implements EmployeeDao {
     }
 
     @Override
+    public List<Person> findInRange(long offset, long length) throws DaoException {
+        return null;
+    }
+
+    @Override
     public void delete(long id) throws DaoException {
 
     }

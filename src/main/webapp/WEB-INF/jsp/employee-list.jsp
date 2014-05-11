@@ -3,6 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:set var="offset" value="${sessionScope.offset}"/>
+<c:set var="length" value="${sessionScope.length}"/>
+<c:set var="total-number" value="${sessionScope['total-number']}"/>
+<c:set var="nextPage" value="${offset+length}"/>
+
 <mtag:pagetemplate title="employee-list">
     <jsp:body>
         <div class="grid_16">
@@ -10,7 +15,9 @@
                 <h2>
                     <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
                 </h2>
-
+<p>${nextPage}</p>
+                <p>${sessionScope.length}</p>
+                <p>${length}</p>
                 <p>
                     <c:if test="${not empty sessionScope.status}">
                         <fmt:message bundle="${msg}" key="${sessionScope.status}"/>
@@ -24,6 +31,12 @@
                             <input type="submit" value="<fmt:message bundle='${msg}' key='create.employee'/>">
                         </form>
                         <p>&nbsp;</p>
+                        <form action="do/employee-list" method="get">
+                            <input type="hidden" name="offset" value="${nextPage}">
+                            <input type="submit" value="next">
+                        </form>
+                        <p>&nbsp;</p>
+
                         <table summary="employee list">
                             <thead>
                             <th><fmt:message bundle='${msg}' key='table.employee.first-name'/></th>
@@ -101,7 +114,6 @@
                             </tr>
                             <c:forEach var="employee" items="${sessionScope.employees}">
                                 <tr>
-                                        <%--<td>${employee.id}</td>--%>
                                     <td>${employee.firstName}</td>
                                     <td>${employee.patronym}</td>
                                     <td>${employee.lastName}</td>
@@ -126,21 +138,5 @@
                 </div>
             </div>
         </div>
-        <%--<div class="grid_3">--%>
-        <%--<div class="box">--%>
-        <%--<h2>--%>
-        <%--INFO--%>
-        <%--</h2>--%>
-        <%--<br/>--%>
-
-        <%--<div class="block">--%>
-        <%--<div id="user-list-control" style="height:304px;">--%>
-        <%--<form action="do/create-employee" method="get">--%>
-        <%--<input type="submit" value="<fmt:message bundle='${msg}' key='create.employee'/>">--%>
-        <%--</form>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-        <%--</div>--%>
     </jsp:body>
 </mtag:pagetemplate>

@@ -6,6 +6,7 @@ import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.EmployeeDao;
 import kz.trei.acs.office.hr.EmployeeComparator;
 import kz.trei.acs.office.hr.Person;
+import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,33 +15,58 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
-public class ShowEmployeeListPage implements Action  {
+public class ShowEmployeeListPage implements Action {
     private static final Logger LOGGER = Logger.getLogger(ShowEmployeeListPage.class);
+
+    static {
+        PropertyManager.load("configure.properties");
+    }
+
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
+        int offset = 0;
+        int length;
+        long totalNumber = 0;
+        try {
+            offset = Integer.valueOf(request.getParameter("offset"));
+        } catch (NumberFormatException e) {
+            LOGGER.error("Offset is not valid");
+            offset = 0;
+        }
+        try {
+            length = Integer.valueOf(request.getParameter("length"));
+        } catch (NumberFormatException e) {
+            LOGGER.error("Length is not valid");
+            length = Integer.valueOf(PropertyManager.getValue("paging.length"));
+        }
         EmployeeComparator.CompareType compareType;
-        try{
-        compareType =
-                EmployeeComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
-        } catch (NullPointerException e){
+        try {
+            compareType =
+                    EmployeeComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
+        } catch (NullPointerException e) {
             compareType = EmployeeComparator.CompareType.ID;
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             compareType = EmployeeComparator.CompareType.ID;
         }
         List<Person> employees;
         try {
-            employees = employeeDao.findAll();
-            Collections.sort(employees, new EmployeeComparator(compareType)  );
+//            employees = employeeDao.findAll();
+            employees = employeeDao.findInRange(offset, length);
+            Collections.sort(employees, new EmployeeComparator(compareType));
+            totalNumber = employeeDao.totalNumber();
         } catch (DaoException e) {
             LOGGER.error("Getting employee list exception: " + e.getMessage());
-            session.setAttribute("error","error.db.employee-list");
-            return new ActionResult(ActionType.FORWARD,"error");
+            session.setAttribute("error", "error.db.employee-list");
+            return new ActionResult(ActionType.FORWARD, "error");
         }
         session.setAttribute("employees", employees);
-        return new ActionResult(ActionType.FORWARD,"employee-list");
+        session.setAttribute("total-number", totalNumber);
+        session.setAttribute("offset", offset);
+        session.setAttribute("length", length);
+        return new ActionResult(ActionType.FORWARD, "employee-list");
     }
 }

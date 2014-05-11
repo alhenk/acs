@@ -359,6 +359,11 @@ public class UserDaoSqlite implements UserDao {
     }
 
     @Override
+    public List<User> findInRange(long offset, long length) throws DaoException {
+        return null;
+    }
+
+    @Override
     public void delete(long id) throws DaoException {
         PreparedStatement stmt = null;
         Connection conn = null;

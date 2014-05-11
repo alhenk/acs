@@ -15,10 +15,7 @@ import kz.trei.acs.util.DateStampException;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,6 +82,102 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     }
 
+    @Override
+    public  List<Person> findInRange(long offset, long length) throws DaoException{
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        Person employee;
+        List<Person> employees = new LinkedList<Person>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT "+ length + " OFFSET "+offset);
+            while (rs.next()) {
+                long id = Long.valueOf(rs.getString("id"));
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String tableId = rs.getString("tableId");
+                String uid = rs.getString("uid");
+                DepartmentType department=null;
+                try {
+                    department = DepartmentType.valueOf(rs.getString("department"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.debug("db attribute department is illegal " + e.getMessage());
+                    department = DepartmentType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("db attribute department is null" + e.getMessage());
+                    department = DepartmentType.DEFAULT;
+                }
+                PositionType position = null;
+                try{
+                    position = PositionType.valueOf(rs.getString("jobPosition"));
+                }catch (IllegalArgumentException e) {
+                    LOGGER.debug("db attribute job position is illegal " + e);
+                    position = PositionType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("db attribute job position is null" + e);
+                    position = PositionType.DEFAULT;
+                }
+                RoomType room;
+                try{
+                    room = RoomType.valueOf(rs.getString("room"));
+                }catch (IllegalArgumentException e) {
+                    LOGGER.debug("db attribute room is illegal " + e);
+                    room = RoomType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("db attribute room is null" + e);
+                    room = RoomType.DEFAULT;
+                }
+                Account1C account1C;
+                try {
+                    account1C = Account1C.createId(tableId);
+                } catch (Account1CException e) {
+                    account1C = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+                }
+                DateStamp birthDate;
+                try {
+                    birthDate = DateStamp.create(rs.getString("birthDate"));
+                } catch (DateStampException e) {
+                    birthDate = null;
+                    LOGGER.debug("Birth Date field is invalid or empty");
+                }
+                RfidTag rfidTag = new RfidTag.Builder()
+                        .uid(uid)
+                        .build();
+                employee = new Employee.Builder()
+                        .id(id)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .birthDate(birthDate)
+                        .position(position)
+                        .department(department)
+                        .room(room)
+                        .account1C(account1C)
+                        .rfidTag(rfidTag)
+                        .build();
+                employees.add(employee);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("Select EMPLOYEES table exception: " + e.getMessage());
+            throw new DaoException("Select EMPLOYEES table exception");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return employees;
+    }
     @Override
     public List<Person> findAll() throws DaoException {
         Statement stmt = null;

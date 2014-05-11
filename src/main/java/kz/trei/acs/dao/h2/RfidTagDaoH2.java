@@ -85,6 +85,11 @@ public class RfidTagDaoH2 implements RfidTagDao {
     }
 
     @Override
+    public List<RfidTag> findInRange(long offset, long length) throws DaoException {
+        return null;
+    }
+
+    @Override
     public void delete(long id) throws DaoException {
 
     }
