@@ -21,20 +21,12 @@
                 <div class="block">
                     <div id="user-list-table" style="height:320px;">
                         <table summary="user list">
-                            <%--<colgroup>--%>
-                                <%--<col class="colA"/>--%>
-                                <%--<col class="colB"/>--%>
-                                <%--<col class="colC"/>--%>
-                                <%--<col class="colD"/>--%>
-                                <%--<col class="colE"/>--%>
-                                <%--<col class="colF"/>--%>
-                            <%--</colgroup>--%>
                             <thead>
                             <tr></tr>
-                            <th>USERNAME</th>
-                            <th>EMAIL</th>
-                            <th>TABLE ID</th>
-                            <th>ROLE</th>
+                            <th><fmt:message bundle="${msg}" key="table.user-list.username"/></th>
+                            <th>E-MAIL</th>
+                            <th><fmt:message bundle="${msg}" key="table.user-list.table-id"/></th>
+                            <th><fmt:message bundle="${msg}" key="table.user-list.role"/></th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             </tr>

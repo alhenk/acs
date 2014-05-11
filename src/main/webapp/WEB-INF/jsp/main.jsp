@@ -33,19 +33,9 @@
                                     <h3><fmt:message bundle="${msg}" key="common.welcome"/>
                                             ${sessionScope.user.username}
                                     </h3>
-                                    <%--<a href="do/dashboard"><fmt:message bundle="${msg}" key="common.dashboard"/></a>--%>
-                                    <%--<br/>--%>
-                                    <%--<a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/> </a>--%>
                                 </c:otherwise>
                             </c:choose>
                         </div>
-                        <%--<div class="grid_8">--%>
-                            <%--<p>1&nbsp;</p>--%>
-                            <%--<p>2&nbsp;</p>--%>
-                            <%--<p>3 asdfasdfasdf</p>--%>
-                            <%--<p>4&nbsp;</p>--%>
-                            <%--<p>5&nbsp;</p>--%>
-                        <%--</div>--%>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@
         <div class="grid_12">
             <div class="box">
                 <h2>
-                    <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
+                    <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
                 </h2>
 
                 <p>
@@ -22,12 +22,11 @@
                     <div id="employee-list-table" style="height:1200px;">
                         <table summary="RFID tag list">
                             <thead>
-                                <%--<th>ID</th>--%>
                             <th>UID</th>
-                            <th>TYPE</th>
-                            <th>PROTOCOL</th>
-                            <th>ISSUE DATE</th>
-                            <th>EXPIRATION DATE</th>
+                            <th><fmt:message bundle="${msg}" key="table.rfidtag.type"/></th>
+                            <th><fmt:message bundle="${msg}" key="table.rfidtag.protocol"/></th>
+                            <th><fmt:message bundle="${msg}" key="table.rfidtag.issue"/></th>
+                            <th><fmt:message bundle="${msg}" key="table.rfidtag.expiration"/></th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             </thead>
@@ -72,7 +71,6 @@
                             </tr>
                             <c:forEach var="rfidtag" items="${sessionScope.rfidtags}">
                                 <tr>
-                                        <%--<td>${rfidtag.id}</td>--%>
                                     <td>${rfidtag.uid}</td>
                                     <td>${rfidtag.type}</td>
                                     <td>${rfidtag.protocol}</td>

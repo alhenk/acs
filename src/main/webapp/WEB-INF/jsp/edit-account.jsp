@@ -9,11 +9,35 @@
         <div class="grid_8">
             <div class="box">
                 <h2>
-                    <a href="#"><fmt:message bundle="${msg}" key="edit.account"/></a>
+                    <a href="do/edit-account"><fmt:message bundle="${msg}" key="edit.account"/></a>
                 </h2>
-                <%@include file="edit-account-form.jsp" %>
-                <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
+
+                <div class="block">
+                    <div id="edit-account" style="height:320px;">
+                        <div class="grid_4">
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="grid_8">
+                            <div class="box">
+                                <div class="block">
+                                    <%@include file="edit-account-form.jsp" %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="grid_8">
+            <div class="box">
+                <h2>INFO</h2>
+                <div class="block">
+                    <div id="info-edit-account" style="height:320px;">
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </jsp:body>
 </mtag:pagetemplate>
