@@ -28,6 +28,9 @@ public class EmployeeComparator implements Comparator<Person> {
             case ROOM:
                 return ((Employee) e1).getRoom().compareTo(((Employee) e2).getRoom());
             case TABLE_ID:
+                if(((Employee) e1).getAccount1C() == null && ((Employee) e2).getAccount1C() == null) return 0;
+                if(((Employee) e1).getAccount1C() == null && ((Employee) e2).getAccount1C() != null) return -1;
+                if(((Employee) e1).getAccount1C() != null && ((Employee) e2).getAccount1C() == null) return 1;
                 return ((Employee) e1).getTableIdValue().compareTo(((Employee) e2).getTableIdValue());
             case UID:
                 return ((Employee) e1).getAccount1C().getTableId().compareTo(((Employee) e2).getAccount1C().getTableId());

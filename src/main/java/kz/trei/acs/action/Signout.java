@@ -11,6 +11,6 @@ public class Signout implements Action {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         session.removeAttribute("user");
-        return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+        return new ActionResult(ActionType.REDIRECT, ("main"));
     }
 }

@@ -5,7 +5,7 @@
 
 <div class="grid_16">
     <h1 id="branding">
-        <a href="#"><fmt:message bundle='${msg}' key='common.attendance'/></a>
+        <a><fmt:message bundle="${msg}" key="common.acs"/></a>
     </h1>
 </div>
 
@@ -32,14 +32,8 @@
                 </c:if>
             </li>
         </c:if>
-        <c:if test="${not empty sessionScope.user}">
-            <li>
-                <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/></a>
-            </li>
-        </c:if>
-        <li class="secondary">
-            <br>
 
+        <li class="secondary">
             <form action="do/set-language" method="post">
                 <select id="language" name="language" onchange="submit()">
                     <option value="en" ${locale.language == 'en' ? 'selected' : ''}>English</option>
@@ -48,6 +42,11 @@
                 </select>
             </form>
         </li>
+        <c:if test="${not empty sessionScope.user}">
+            <li class="secondary">
+                <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/></a>
+            </li>
+        </c:if>
         <li class="secondary"> &nbsp;
             <c:choose>
                 <c:when test="${empty sessionScope.user}">
@@ -56,7 +55,7 @@
                 <c:otherwise>
                     <a>
                         <fmt:message bundle='${msg}' key='user.role.${sessionScope.user.role}'/>
-                    ${sessionScope.user.username}
+                            ${sessionScope.user.username}
                     </a>
                 </c:otherwise>
             </c:choose>

@@ -4,6 +4,6 @@
 
 <div class="grid_16" id="site_info">
     <div class="box">
-       <a href="do/main">ACS</a>
+       <a href="do/main"><fmt:message bundle="${msg}" key="common.acs"/> </a>
     </div>
 </div>

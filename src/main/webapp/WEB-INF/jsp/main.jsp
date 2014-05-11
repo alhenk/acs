@@ -42,11 +42,11 @@
         </div>
         <div class="grid_8">
             <div class="box">
-                <h2><a href="#" id="specifications">ACS</a></h2>
+                <h2><a><fmt:message bundle="${msg}" key="common.info"/></a></h2>
 
                 <div class="block">
                     <div id="info" style="height:320px;">
-
+                        <p>&nbsp;</p>
                     </div>
                 </div>
             </div>
