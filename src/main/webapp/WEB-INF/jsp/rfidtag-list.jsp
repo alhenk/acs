@@ -96,7 +96,7 @@
         <div class="grid_4">
             <div class="box">
                 <h2>
-                    INFO
+                    <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.info"/></a>
                 </h2>
                 <br/>
 

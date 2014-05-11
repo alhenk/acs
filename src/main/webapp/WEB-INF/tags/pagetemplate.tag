@@ -29,7 +29,6 @@
 <div class="container_16">
     <mtag:header title="${title}"/>
     <jsp:doBody/>
-    <hr>
     <mtag:footer/>
 </div>
 </body>

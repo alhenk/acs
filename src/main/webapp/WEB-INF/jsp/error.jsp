@@ -5,32 +5,60 @@
 
 <mtag:pagetemplate title="error">
     <jsp:body>
-        <fmt:message bundle="${msg}" key="common.error"/>
-        <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
-        <br>
-        <c:if test="${not empty sessionScope.error}">
-            <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
-            <c:remove var="error" scope="session"/>
-        </c:if>
-        <br/>
-        <strong>Status Code</strong>: "${sessionScope['status-code']}"
-        <c:choose>
-            <c:when test="${sessionScope['status-code']=='401'}">
-                <h2><fmt:message bundle="${msg}" key="common.unauthorized"/></h2>
-            </c:when>
-            <c:when test="${sessionScope['status-code']=='403'}">
-                <h2><fmt:message bundle="${msg}" key="common.forbidden"/></h2>
-            </c:when>
-            <c:when test="${sessionScope['status-code']=='404'}">
-                <h2><fmt:message bundle="${msg}" key="common.not-found"/></h2>
-            </c:when>
-            <c:otherwise>
-                <h2><fmt:message bundle="${msg}" key="common.error"/></h2>
-            </c:otherwise>
-        </c:choose>
-        <br>
-        <strong>Requested URI</strong>: "${sessionScope['request-uri']}"
-        <c:remove var="request-uri" scope="session"/>
-        <br>
+        <div class="grid_16">
+        <div class="box">
+            <h2>
+                <a><fmt:message bundle="${msg}" key="common.error"/></a>
+            </h2>
+
+            <div class="block">
+                <div id="error" style="height:320px;">
+                    <div class="grid_6">
+                        <div class="box">
+                            <div class="block">
+                                &nbsp;
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid_8">
+                        <div class="box">
+                            <div class="block">
+                                <%--<h3><fmt:message bundle="${msg}" key="common.error"/></h3>--%>
+                                <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
+                                <br>
+                                <c:if test="${not empty sessionScope.error}">
+                                    <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
+                                    <c:remove var="error" scope="session"/>
+                                </c:if>
+                                <br/>
+                                <c:if test="${not empty sessionScope['status-code']}">
+                                    <strong>Status Code</strong>: "${sessionScope['status-code']}"
+                                </c:if>
+                                <c:choose>
+                                    <c:when test="${sessionScope['status-code']=='401'}">
+                                        <h3><fmt:message bundle="${msg}" key="common.unauthorized"/></h3>
+                                    </c:when>
+                                    <c:when test="${sessionScope['status-code']=='403'}">
+                                        <h3><fmt:message bundle="${msg}" key="common.forbidden"/></h3>
+                                    </c:when>
+                                    <c:when test="${sessionScope['status-code']=='404'}">
+                                        <h3><fmt:message bundle="${msg}" key="common.not-found"/></h3>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <h3><fmt:message bundle="${msg}" key="common.error"/></h3>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:remove var="status-code" scope="session"/>
+                                <br>
+                                <c:if test="${not empty sessionScope['request-uri'] && sessionScope.user.role == 'ADMINISTRATOR'}">
+                                    <strong>Requested URI</strong>: "${sessionScope['request-uri']}"
+                                    <c:remove var="request-uri" scope="session"/>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </jsp:body>
 </mtag:pagetemplate>

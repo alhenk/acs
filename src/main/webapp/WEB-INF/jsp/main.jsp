@@ -9,7 +9,7 @@
         <div class="grid_8">
             <div class="box">
                 <h2>
-                    <a href="#">Login Form</a>
+                    <a href="#"><fmt:message bundle="${msg}" key="common.sing-in"/></a>
                 </h2>
 
                 <div class="block">

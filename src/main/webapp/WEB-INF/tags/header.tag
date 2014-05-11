@@ -32,10 +32,11 @@
                 </c:if>
             </li>
         </c:if>
-        <li>
-            <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/></a>
-        </li>
-
+        <c:if test="${not empty sessionScope.user}">
+            <li>
+                <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/></a>
+            </li>
+        </c:if>
         <li class="secondary">
             <br>
 
@@ -48,11 +49,17 @@
             </form>
         </li>
         <li class="secondary"> &nbsp;
-            <c:if test="${sessionScope['user'].role == 'ADMINISTRATOR'}">
-                <a href="#">
-                    <fmt:message bundle='${msg}' key='common.user'/> &nbsp; ${sessionScope.user.username}
-                </a>
-            </c:if>
+            <c:choose>
+                <c:when test="${empty sessionScope.user}">
+                    <a><fmt:message bundle='${msg}' key='common.unauthorized'/></a>
+                </c:when>
+                <c:otherwise>
+                    <a>
+                        <fmt:message bundle='${msg}' key='user.role.${sessionScope.user.role}'/>
+                    ${sessionScope.user.username}
+                    </a>
+                </c:otherwise>
+            </c:choose>
         </li>
     </ul>
 </div>
@@ -64,13 +71,5 @@
 </div>
 <div class="clear"></div>
 <div class="grid_16">&nbsp;</div>
-<%--<c:if test="${not empty sessionScope.user}">--%>
-    <%--<div class="grid_2">--%>
-        <%--<fmt:message bundle='${msg}' key='common.user'/>--%>
-    <%--</div>--%>
-    <%--<div class="grid_1">--%>
-            <%--${sessionScope.user.username}--%>
-    <%--</div>--%>
-<%--</c:if>--%>
 <div class="clear"></div>
 

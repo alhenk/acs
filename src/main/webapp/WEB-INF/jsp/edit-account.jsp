@@ -9,11 +9,11 @@
         <div class="grid_8">
             <div class="box">
                 <h2>
-                    <a href="do/edit-account"><fmt:message bundle="${msg}" key="edit.account"/></a>
+                    <a><fmt:message bundle="${msg}" key="edit.account"/></a>
                 </h2>
 
                 <div class="block">
-                    <div id="edit-account" style="height:320px;">
+                    <div id="edit-account" style="height:420px;">
                         <div class="grid_4">
                             <p>&nbsp;</p>
                         </div>
@@ -30,9 +30,9 @@
         </div>
         <div class="grid_8">
             <div class="box">
-                <h2>INFO</h2>
+                <h2><a><fmt:message bundle="${msg}" key="common.info"/> </a></h2>
                 <div class="block">
-                    <div id="info-edit-account" style="height:320px;">
+                    <div id="info-edit-account" style="height:420px;">
                         <p>&nbsp;</p>
                     </div>
                 </div>

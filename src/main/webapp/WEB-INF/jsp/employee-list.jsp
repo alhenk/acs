@@ -26,7 +26,6 @@
                         <p>&nbsp;</p>
                         <table summary="employee list">
                             <thead>
-                                <%--<th>ID</th>--%>
                             <th><fmt:message bundle='${msg}' key='table.employee.first-name'/></th>
                             <th><fmt:message bundle='${msg}' key='table.employee.patronym'/></th>
                             <th><fmt:message bundle='${msg}' key='table.employee.last-name'/></th>
@@ -41,13 +40,6 @@
                             </tr>
                             </thead>
                             <tr>
-                                    <%--<td style='width: 20px'>--%>
-                                    <%--<form method="GET" action="do/employee-list">--%>
-                                    <%--<input type="checkbox" name="sort"--%>
-                                    <%--value="ID"  ${param.sort == 'ID' ? 'checked':''}--%>
-                                    <%--onchange="submit()"/>--%>
-                                    <%--</form>--%>
-                                    <%--</td>--%>
                                 <td>
                                     <form method="GET" action="do/employee-list">
                                         <input type="checkbox" name="sort"
