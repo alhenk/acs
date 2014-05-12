@@ -18,7 +18,6 @@
                 <h2>
                     <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
                 </h2>
-                <p>${sessionScope.offset}</p>
                 <div class="block">
                     <div id="rfidtag-list-control" style="height:30px;">
                         <div class="grid_1">
