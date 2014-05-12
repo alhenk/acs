@@ -3,23 +3,53 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:set var="offset" value="${sessionScope.offset}"/>
+<c:set var="length" value="${sessionScope.length}"/>
+<c:set var="totalNumber" value="${sessionScope['total-number']}"/>
+<c:set var="nextPage" value="${offset+length > totalNumber ? offset: offset+length}"/>
+<c:set var="previousPage" value="${offset - length <= 0 ? 0: offset-length}"/>
+<c:set var="currentPage" value="${length == 0 ? 0:offset/length+1}"/>
+<c:set var="totalPages" value="${length == 0 ? 0:totalNumber/length + 1}"/>
 <mtag:pagetemplate title="user-list">
     <jsp:body>
-        <div class="grid_12">
+        <div class="grid_16">
             <div class="box">
                 <h2>
                     <a href="do/user-list"><fmt:message bundle="${msg}" key="common.user-list"/></a>
                 </h2>
-
-                <p>
-                    <c:if test="${not empty sessionScope.status}">
-                        <fmt:message bundle="${msg}" key="${sessionScope.status}"/>
-                        <c:remove var="status" scope="session"/>
-                    </c:if>
-                </p>
-
                 <div class="block">
-                    <div id="user-list-table" style="height:320px;">
+                    <div id="user-list-control" style="height:30px;">
+                        <div class="grid_1">
+                            <form action="do/user-list" method="get">
+                                <input type="hidden" name="sort" value="${param.sort}">
+                                <input type="hidden" name="offset" value="${previousPage}">
+                                <input type="submit" value="<">
+                            </form>
+                        </div>
+                        <div class="grid_1">
+                            <p><fmt:formatNumber type="number" value="${currentPage}" maxFractionDigits="0"/>
+                                /<fmt:formatNumber type="number" value="${totalPages}" maxFractionDigits="0"/>
+                            </p>
+                        </div>
+                        <div class="grid_1">
+                            <form action="do/user-list" method="get">
+                                <input type="hidden" name="sort" value="${param.sort}">
+                                <input type="hidden" name="offset" value="${nextPage}">
+                                <input type="submit" value=">">
+                            </form>
+                        </div>
+                        <div class="grid_9">
+                            <p>&nbsp;</p>
+                        </div>
+
+                        <div class="grid_4">
+                            <form action="do/create-account" method="get">
+                                <input type="submit"
+                                       value="<fmt:message bundle='${msg}' key='create.account'/>">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
                         <table summary="user list">
                             <thead>
                             <th><fmt:message bundle="${msg}" key="table.user-list.username"/></th>
@@ -33,6 +63,7 @@
                             <tr>
                                 <td>
                                     <form method="GET" action="do/user-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="USER_NAME"  ${param.sort == 'USER_NAME' ? 'checked':''}
                                                onchange="submit()"/>
@@ -40,6 +71,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/user-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="EMAIL"  ${param.sort == 'EMAIL' ? 'checked':''}
                                                onchange="submit()"/>
@@ -47,6 +79,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/user-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="TABLE_ID"  ${param.sort == 'TABLE_ID' ? 'checked':''}
                                                onchange="submit()"/>
@@ -54,6 +87,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/user-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="ROLE"  ${param.sort == 'ROLE' ? 'checked':''}
                                                onchange="submit()"/>
@@ -83,22 +117,5 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="grid_4">
-            <div class="box">
-                <h2>
-                    <a href="do/user-list"><fmt:message bundle="${msg}" key="common.info"/></a>
-                </h2>
-                <br/>
-
-                <div class="block">
-                    <div id="user-list-control" style="height:304px;">
-                        <form action="do/create-account" method="get">
-                            <input type="submit" value="<fmt:message bundle='${msg}' key='create.account'/>">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </jsp:body>
 </mtag:pagetemplate>

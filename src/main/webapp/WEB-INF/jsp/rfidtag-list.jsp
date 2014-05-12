@@ -18,6 +18,7 @@
                 <h2>
                     <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
                 </h2>
+                <p>${sessionScope.offset}</p>
                 <div class="block">
                     <div id="rfidtag-list-control" style="height:30px;">
                         <div class="grid_1">
@@ -64,6 +65,7 @@
                             <tr>
                                 <td>
                                     <form method="GET" action="do/rfidtag-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="UID"  ${param.sort == 'UID' ? 'checked':''}
                                                onchange="submit()"/>
@@ -71,6 +73,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/rfidtag-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="TYPE"  ${param.sort == 'TYPE' ? 'checked':''}
                                                onchange="submit()"/>
@@ -78,6 +81,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/rfidtag-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="PROTOCOL"  ${param.sort == 'PROTOCOL' ? 'checked':''}
                                                onchange="submit()"/>
@@ -85,6 +89,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/rfidtag-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="ISSUE_DATE"  ${param.sort == 'ISSUE_DATE' ? 'checked':''}
                                                onchange="submit()"/>
@@ -92,6 +97,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/rfidtag-list">
+                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
                                         <input type="checkbox" name="sort"
                                                value="EXPIRATION_DATE"  ${param.sort == 'EXPIRATION_DATE' ? 'checked':''}
                                                onchange="submit()"/>

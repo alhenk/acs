@@ -184,7 +184,78 @@ public class RfidTagDaoSqlite implements RfidTagDao {
 
     @Override
     public List<RfidTag> findInRange(long offset, long length) throws DaoException {
-        return null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        RfidTag rfidTag;
+        List<RfidTag> rfidTags = new LinkedList<RfidTag>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS LIMIT " + length + " OFFSET " + offset);
+            while (rs.next()) {
+                long id = Long.valueOf(rs.getString("id"));
+                String uid = rs.getString("uid");
+                RfidType type = RfidType.valueOf(rs.getString("type"));
+                ProtocolType protocol = ProtocolType.valueOf(rs.getString("protocol"));
+                DateStamp issueDate;
+                DateStamp expirationDate;
+                String issueDateString = rs.getString("issueDate");
+                if (issueDateString == null || issueDateString.isEmpty()) {
+                    issueDate = DateStamp.createEmptyDate();
+                } else {
+                    try {
+                        issueDate = DateStamp.create(rs.getString("issueDate"));
+                    } catch (DateStampException e) {
+                        LOGGER.error("IssueDate format exception: " + e.getMessage());
+                        throw new DaoException("IssueDate format exception");
+                    }
+                }
+                String expirationDateString = rs.getString("expirationDate");
+                if (expirationDateString == null || expirationDateString.isEmpty()) {
+                    expirationDate = DateStamp.createEmptyDate();
+                } else {
+                    try {
+                        expirationDate = DateStamp.create(rs.getString("expirationDate"));
+                    } catch (DateStampException e) {
+                        LOGGER.error("ExpirationDate format exception: " + e.getMessage());
+                        throw new DaoException("ExpirationDate UID format exception");
+                    }
+                }
+                Issue issue = new Issue.Builder()
+                        .issueDate(issueDate)
+                        .expirationDate(expirationDate)
+                        .build();
+                rfidTag = new RfidTag.Builder(uid)
+                        .id(id)
+                        .uid(uid)
+                        .type(type)
+                        .protocol(protocol)
+                        .issue(issue)
+                        .build();
+                rfidTags.add(rfidTag);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } catch (UidFormatException e) {
+            LOGGER.error("RFID tag building exception: " + e.getMessage());
+            throw new DaoException("RFID tag building exception " + e.getMessage());
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return rfidTags;
     }
 
     @Override

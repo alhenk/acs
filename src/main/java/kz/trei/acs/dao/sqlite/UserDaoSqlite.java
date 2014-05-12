@@ -360,7 +360,54 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public List<User> findInRange(long offset, long length) throws DaoException {
-        return null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        User user;
+        List<User> users = new LinkedList<User>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM USERS LIMIT " + length + " OFFSET " + offset);
+            while (rs.next()) {
+                long id = Long.valueOf(rs.getString("id"));
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String email = rs.getString("email");
+                Account1C tableId;
+                try {
+                    tableId = Account1C.createId(rs.getString("tableId"));
+                } catch (Account1CException e) {
+                    tableId = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+                }
+                RoleType role = RoleType.valueOf(rs.getString("role"));
+                user = new User.Builder(username, password)
+                        .id(id)
+                        .role(role)
+                        .email(email)
+                        .tableId(tableId)
+                        .build();
+                users.add(user);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        return users;
     }
 
     @Override
