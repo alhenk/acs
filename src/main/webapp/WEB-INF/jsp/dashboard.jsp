@@ -16,7 +16,21 @@
                     <div id="sign-form" style="height:320px;">
                         <c:choose>
                             <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
-                                <p><fmt:message bundle="${msg}" key="common.administrator"/></p>
+                                <h3><fmt:message bundle="${msg}" key="common.administrator"/></h3>
+                                <p>&nbsp;</p>
+                                <form action="do/user-list" method="get">
+                                    <input type="submit" value="<fmt:message bundle="${msg}" key="common.user-list"/>" />
+                                </form>
+                                <p>&nbsp;</p>
+                                <form action="do/rfidtag-list" method="get">
+                                    <input type="submit"
+                                           value="<fmt:message bundle="${msg}" key="common.rfidtag-list"/>" />
+                                </form>
+                                <p>&nbsp;</p>
+                                <form action="do/employee-list" method="get">
+                                    <input type="submit"
+                                           value="<fmt:message bundle="${msg}" key="common.employee-list"/>" />
+                                </form>
                             </c:when>
                             <c:otherwise>
                                 <p><fmt:message bundle="${msg}" key="common.user"/></p>

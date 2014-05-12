@@ -47,7 +47,7 @@
                 <a href="do/sign-out"><fmt:message bundle="${msg}" key="common.sign-out"/></a>
             </li>
         </c:if>
-        <li class="secondary"> &nbsp;
+        <li class="secondary">
             <c:choose>
                 <c:when test="${empty sessionScope.user}">
                     <a><fmt:message bundle='${msg}' key='common.unauthorized'/></a>

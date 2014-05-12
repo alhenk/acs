@@ -49,24 +49,8 @@
                                        value="<fmt:message bundle='${msg}' key='create.employee'/>">
                             </form>
                         </div>
-                            <%--</div>--%>
-                            <%--</div>--%>
                     </div>
-                        <%--<p>Next Page: ${nextPage}</p>--%>
-                        <%--<p>Session Length: ${sessionScope.length}</p>--%>
-                        <%--<p>Length: ${length}</p>--%>
-                        <%--<p>Total Number: ${totalNumber}</p>--%>
-                        <%--<p>PreviousPage: ${previousPage}</p>--%>
-                        <%--<p>--%>
-                        <%--<c:if test="${not empty sessionScope.status}">--%>
-                        <%--<fmt:message bundle="${msg}" key="${sessionScope.status}"/>--%>
-                        <%--<c:remove var="status" scope="session"/>--%>
-                        <%--</c:if>--%>
-                        <%--</p>--%>
                     <div class="clear"></div>
-                        <%--<div class="box">--%>
-                        <%--<div class="block">--%>
-                        <%--<div id="employee-list-table" style="height:640px;">--%>
                     <table summary="employee list">
                         <thead>
                         <th><fmt:message bundle='${msg}' key='table.employee.first-name'/></th>
