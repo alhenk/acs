@@ -28,14 +28,13 @@ public class ShowEmployeeListPage implements Action {
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
-        int offset = 0;
         int length;
+        int offset = 0;
         long totalNumber = 0;
         try {
             offset = Integer.valueOf(request.getParameter("offset"));
-        } catch (NumberFormatException e) {
-            LOGGER.error("Offset is not valid");
-            offset = 0;
+        } catch (NumberFormatException e1) {
+                offset = 0;
         }
         try {
             length = Integer.valueOf(request.getParameter("length"));
