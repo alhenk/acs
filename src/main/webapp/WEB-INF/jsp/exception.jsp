@@ -14,11 +14,9 @@
                 <div class="block">
                     <div id="error" style="height:320px;">
                         <div class="grid_6">
-                                <%--<div class="box">--%>
                             <div class="block">
                                 &nbsp;
                             </div>
-                                <%--</div>--%>
                         </div>
                         <div class="grid_8">
                             <div class="box">

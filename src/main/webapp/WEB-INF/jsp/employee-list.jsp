@@ -51,6 +51,7 @@
                         </div>
                     </div>
                     <div class="clear"></div>
+
                     <table summary="employee list">
                         <thead>
                         <th><fmt:message bundle='${msg}' key='table.employee.first-name'/></th>

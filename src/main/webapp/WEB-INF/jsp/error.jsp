@@ -14,15 +14,12 @@
                 <div class="block">
                     <div id="error" style="height:320px;">
                         <div class="grid_6">
-                                <%--<div class="box">--%>
                             <div class="block">
                                 &nbsp;
                             </div>
-                                <%--</div>--%>
                         </div>
                         <div class="grid_8">
                             <div class="box">
-                                    <%--<div class="block">--%>
                                 <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
                                 <br>
                                 <c:if test="${not empty sessionScope.error}">
@@ -53,10 +50,8 @@
                                     <strong>Requested URI</strong>: "${sessionScope['request-uri']}"
                                     <c:remove var="request-uri" scope="session"/>
                                 </c:if>
-                                    <%--</div>--%>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
