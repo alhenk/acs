@@ -5,6 +5,7 @@ import kz.trei.acs.dao.EmployeeDao;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
+import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
@@ -60,7 +61,7 @@ public class EmployeeDaoH2 implements EmployeeDao {
     }
 
     @Override
-    public User findById(long id) throws DaoException {
+    public Person findById(long id) throws DaoException {
         return null;
     }
 

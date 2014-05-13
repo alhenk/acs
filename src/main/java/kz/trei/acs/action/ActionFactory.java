@@ -29,10 +29,12 @@ public class ActionFactory {
         actions.put("GET/delete-user", new DeleteUser());
         //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
+        actions.put("GET/edit-rfidtag", new ShowEditRfidTagPage());
         actions.put("GET/create-rfidtag", new ShowCreateRfidTagPage());
         actions.put("POST/create-rfidtag", new CreateRfidTag());
         //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
+        actions.put("GET/edit-employee", new ShowEditEmployeePage());
         actions.put("GET/create-employee", new ShowCreateEmployeePage());
         actions.put("POST/create-employee", new CreateEmployee());
         LOGGER.debug("Instantiated ActionFactory");

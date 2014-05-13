@@ -63,7 +63,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public User findById(long id) throws DaoException {
+    public Person findById(long id) throws DaoException {
         return null;
     }
 

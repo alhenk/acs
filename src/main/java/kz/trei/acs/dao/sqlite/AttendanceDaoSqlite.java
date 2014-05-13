@@ -60,7 +60,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public User findById(long id) throws DaoException {
+    public Attendance findById(long id) throws DaoException {
         return null;
     }
 

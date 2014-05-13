@@ -60,7 +60,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
     }
 
     @Override
-    public User findById(long id) throws DaoException {
+    public RfidTag findById(long id) throws DaoException {
         return null;
     }
 
