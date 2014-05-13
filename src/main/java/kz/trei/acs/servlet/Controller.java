@@ -28,25 +28,29 @@ public class Controller extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         Object test = request.getParameter("test");
         if (test != null) {
-            if (((String)test).equals("servlet-exception")) {
+            if (((String) test).equals("servlet-exception")) {
                 throw new ServletException("Test Servlet Exception");
-            } else if (((String)test).equals("io-exception")) {
+            } else if (((String) test).equals("io-exception")) {
                 throw new IOException("Test IO Exception");
-            } else if (((String)test).equals("404")) {
-                response.sendError(404, "Test error 404 Not Found");
+            } else if (((String) test).equals("404")) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
-            }else if (((String)test).equals("403")) {
-                response.sendError(403, "Test error 403 Forbidden");
+            } else if (((String) test).equals("403")) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
-            }else if (((String)test).equals("401")) {
-                response.sendError(401, "Test error 401 Unauthorized");
+            } else if (((String) test).equals("401")) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
         }
-        HttpSession session = request.getSession();
         String actionName = getActionName(request);
         Action action = actionFactory.getAction(actionName);
+        if (action == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
         ActionResult result = action.execute(request, response);
+
         switch (result.getMethod()) {
             case FORWARD:
                 LOGGER.debug("FORWARD -> " + result.getView());

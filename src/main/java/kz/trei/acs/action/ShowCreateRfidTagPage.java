@@ -4,10 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class ShowCreateUserPage implements Action {
+public class ShowCreateRfidTagPage implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        return new ActionResult(ActionType.FORWARD,"create-user");
+        return new ActionResult(ActionType.FORWARD,"create-rfidtag");
     }
 }

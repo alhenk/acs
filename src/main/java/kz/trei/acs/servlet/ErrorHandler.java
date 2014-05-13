@@ -19,7 +19,7 @@ public class ErrorHandler extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOGGER.debug("doGet...z");
+        LOGGER.debug("doGet...");
         processError(request, response);
         request.getRequestDispatcher(PropertyManager.getValue("jsp.view.path")+"/error.jsp").forward(request, response);
     }

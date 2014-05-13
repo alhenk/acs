@@ -29,6 +29,8 @@ public class ActionFactory {
         actions.put("GET/delete-user", new DeleteUser());
         //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
+        actions.put("GET/create-rfidtag", new ShowCreateRfidTagPage());
+        actions.put("POST/create-rfidtag", new CreateRfidTag());
         //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
         LOGGER.debug("Instantiated ActionFactory");
@@ -36,8 +38,11 @@ public class ActionFactory {
 
     public Action getAction(String actionName) {
         Action action = actions.get(actionName);
-        if (action == null) return new ShowErrorPage();
+        if (action != null){
         LOGGER.debug("created action = " + action.getClass().getName());
+        }else{
+            LOGGER.debug("created action = null");
+        }
         return action;
     }
 }
