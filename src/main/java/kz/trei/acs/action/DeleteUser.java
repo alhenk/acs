@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class DeleteAccount implements Action{
-    private static final Logger LOGGER = Logger.getLogger(DeleteAccount.class);
+public class DeleteUser implements Action{
+    private static final Logger LOGGER = Logger.getLogger(DeleteUser.class);
 
     static {
         PropertyManager.load("configure.properties");
@@ -23,16 +23,16 @@ public class DeleteAccount implements Action{
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         if (id==1){
-            session.setAttribute("status", "delete.account.fail");
+            session.setAttribute("status", "delete.user.fail");
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
         }
         try {
             userDao.delete(id);
         } catch (DaoException e) {
-            session.setAttribute("status", "delete.account.fail");
+            session.setAttribute("status", "delete.user.fail");
             return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
         }
-        session.setAttribute("status", "delete.account.success");
+        session.setAttribute("status", "delete.user.success");
         return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
     }
 }

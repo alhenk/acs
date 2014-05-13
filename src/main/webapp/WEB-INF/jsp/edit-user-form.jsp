@@ -1,4 +1,4 @@
-<form action="do/edit-account" method="post">
+<form action="do/edit-user" method="post">
     <fieldset class="edit">
         <input type="hidden" name="id" value="${sessionScope.account.id}">
         <p>&nbsp;</p>
@@ -61,7 +61,7 @@
         <p>&nbsp;</p>
         <p>
             <button type="submit">
-                <fmt:message bundle="${msg}" key="form.edit-account.submit"/>
+                <fmt:message bundle="${msg}" key="form.edit-user.submit"/>
             </button>
         </p>
     </fieldset>

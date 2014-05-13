@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class ShowEditAccountPage implements Action {
-    private static final Logger LOGGER = Logger.getLogger(ShowEditAccountPage.class);
+public class ShowEditUserPage implements Action {
+    private static final Logger LOGGER = Logger.getLogger(ShowEditUserPage.class);
     static {
         PropertyManager.load("configure.properties");
     }
@@ -36,6 +36,6 @@ public class ShowEditAccountPage implements Action {
             HttpSession session = request.getSession();
 
             session.setAttribute("account",user);
-            return new ActionResult(ActionType.FORWARD,"edit-account");
+            return new ActionResult(ActionType.FORWARD,"edit-user");
         }
 }

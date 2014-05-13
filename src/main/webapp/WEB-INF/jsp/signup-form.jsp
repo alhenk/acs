@@ -1,5 +1,3 @@
-<p> &nbsp;</p>
-
 <h3><fmt:message bundle="${msg}" key="fill-in.form"/></h3>
 
 <p> &nbsp;</p>

@@ -11,21 +11,25 @@ public class ActionFactory {
 
     public ActionFactory() {
         actions = new HashMap<String, Action>();
+        //General
         actions.put("GET/main", new ShowMainPage());
-        actions.put("POST/set-language", new SetLanguage());
-        actions.put("POST/sign-in", new Signin());
-        actions.put("POST/sign-up", new Signup());
-        actions.put("GET/sign-out", new Signout());
         actions.put("GET/dashboard", new ShowDashboard());
-        actions.put("GET/create-account", new ShowCreateAccountPage());
-        actions.put("GET/user-list", new ShowUserListPage());
+        actions.put("POST/sign-in", new Signin());
+        actions.put("GET/sign-out", new Signout());
+        actions.put("POST/set-language", new SetLanguage());
+        //Error
         actions.put("GET/error", new ShowErrorPage());
         actions.put("GET/exception", new ShowExceptionPage());
-        actions.put("GET/not-found", new ShowNotFoundPage());
-        actions.put("POST/edit-account", new EditAccount());
-        actions.put("GET/edit-account", new ShowEditAccountPage());
-        actions.put("GET/delete-account", new DeleteAccount());
+        //User
+        actions.put("GET/user-list", new ShowUserListPage());
+        actions.put("POST/edit-user", new EditUser());
+        actions.put("GET/edit-user", new ShowEditUserPage());
+        actions.put("GET/create-user", new ShowCreateUserPage());
+        actions.put("POST/sign-up", new Signup());
+        actions.put("GET/delete-user", new DeleteUser());
+        //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
+        //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
         LOGGER.debug("Instantiated ActionFactory");
     }

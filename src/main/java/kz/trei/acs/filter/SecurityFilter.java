@@ -34,10 +34,15 @@ public class SecurityFilter implements Filter {
         groups.put("POST/sign-up", administrator);
         groups.put("GET/sign-out", authorized);
         groups.put("GET/dashboard", authorized);
-        groups.put("GET/create-account", administrator);
+        groups.put("GET/create-user", administrator);
         groups.put("GET/user-list", administrator);
         groups.put("GET/not-found", all);
-        groups.put("GET/edit-account", authorized);
+        groups.put("POST/edit-user",authorized);
+        groups.put("GET/delete-user",authorized);
+        groups.put("GET/rfidtag-list",administrator);
+        groups.put("GET/user-list",administrator);
+        groups.put("GET/create-user",administrator);
+        groups.put("GET/employee-list",administrator);
     }
 
     @Override
@@ -54,7 +59,7 @@ public class SecurityFilter implements Filter {
 
         if (user != null) role = user.getRole();
         if (group == null || group.contains(role)) {
-            LOGGER.debug("all is clear");
+            LOGGER.debug("all clear");
             filterChain.doFilter(request, response);
             return;
         }

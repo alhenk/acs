@@ -16,8 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class EditAccount implements Action {
-    private static final Logger LOGGER = Logger.getLogger(EditAccount.class);
+public class EditUser implements Action {
+    private static final Logger LOGGER = Logger.getLogger(EditUser.class);
     static {
         PropertyManager.load("configure.properties");
     }
