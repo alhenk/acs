@@ -33,6 +33,8 @@ public class ActionFactory {
         actions.put("POST/create-rfidtag", new CreateRfidTag());
         //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
+        actions.put("GET/create-employee", new ShowCreateEmployeePage());
+        actions.put("POST/create-employee", new CreateEmployee());
         LOGGER.debug("Instantiated ActionFactory");
     }
 

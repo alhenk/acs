@@ -43,6 +43,8 @@ public class SecurityFilter implements Filter {
         groups.put("GET/user-list",administrator);
         groups.put("GET/create-user",administrator);
         groups.put("GET/employee-list",administrator);
+        groups.put("GET/create-employee",administrator);
+        groups.put("POST/create-employee",administrator);
     }
 
     @Override

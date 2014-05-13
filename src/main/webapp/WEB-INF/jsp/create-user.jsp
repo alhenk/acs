@@ -8,19 +8,19 @@
         <div class="grid_8">
             <div class="box">
                 <h2>
-                    <a><fmt:message bundle="${msg}" key="create.user"/></a>
+                    <a><fmt:message bundle="${msg}" key="fill-in.form"/></a>
                 </h2>
 
                 <div class="block">
                     <div id="sign-form" style="height:540px;">
-                        <div class="grid_2">
+                        <div class="grid_4">
                             <div class="box">
                                 <div class="block">
                                     <p>&nbsp;</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="grid_6">
+                        <div class="grid_8">
                             <div class="box">
                                 <div class="block">
                                     <%@ include file="signup-form.jsp" %>
