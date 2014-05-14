@@ -1,6 +1,7 @@
 package kz.trei.acs.action;
 
 import junit.framework.TestCase;
+import kz.trei.acs.action.general.ShowMainPage;
 import org.junit.Before;
 import org.junit.Test;
 

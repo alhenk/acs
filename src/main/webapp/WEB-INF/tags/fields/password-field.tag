@@ -9,7 +9,7 @@
 
 <p>
     <label><fmt:message bundle="${msg}" key="form.${clazz}.${field}"/></label>
-    <input type="text" name="${field}" value="${value}">
+    <input type="password" name="${field}" value="${value}">
 </p>
 
 <p style="color:red;">

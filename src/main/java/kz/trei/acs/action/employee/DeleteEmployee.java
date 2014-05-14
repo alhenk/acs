@@ -1,8 +1,11 @@
-package kz.trei.acs.action;
+package kz.trei.acs.action.employee;
 
+import kz.trei.acs.action.Action;
+import kz.trei.acs.action.ActionResult;
+import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
-import kz.trei.acs.dao.RfidTagDao;
+import kz.trei.acs.dao.EmployeeDao;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
@@ -10,13 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class DeleteRfidTag implements Action {
-    private static final Logger LOGGER = Logger.getLogger(DeleteRfidTag.class);
+public class DeleteEmployee implements Action {
+    private static final Logger LOGGER = Logger.getLogger(DeleteEmployee.class);
 
     static {
         PropertyManager.load("configure.properties");
     }
-
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
@@ -25,17 +27,17 @@ public class DeleteRfidTag implements Action {
             id = Long.valueOf(request.getParameter("id"));
         } catch (NumberFormatException e) {
             LOGGER.error("Wrong id parameter " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "rfidtag-list?status=id.parameter.error");
+            return new ActionResult(ActionType.REDIRECT, "employee-list?status=id.parameter.error");
         }
         DaoFactory daoFactory = DaoFactory.getFactory();
-        RfidTagDao rfidTagDao = daoFactory.getRfidTagDao();
+        EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         try {
-            rfidTagDao.delete(id);
+            employeeDao.delete(id);
         } catch (DaoException e) {
             LOGGER.error("DAO delete error " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "rfidtag-list?status=delete.rfidtag.fail");
+            return new ActionResult(ActionType.REDIRECT, "employee-list?status=delete.employee.fail");
         }
-        LOGGER.debug("The RFID tag is deleted successfully");
-        return new ActionResult(ActionType.REDIRECT, "rfidtag-list?status=delete.rfidtag.success");
+        LOGGER.debug("The employee is deleted successfully");
+        return new ActionResult(ActionType.REDIRECT, "employee-list?status=delete.employee.success");
     }
 }

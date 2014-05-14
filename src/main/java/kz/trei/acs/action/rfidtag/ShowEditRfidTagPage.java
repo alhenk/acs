@@ -1,6 +1,9 @@
-package kz.trei.acs.action;
+package kz.trei.acs.action.rfidtag;
 
 
+import kz.trei.acs.action.Action;
+import kz.trei.acs.action.ActionResult;
+import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.RfidTagDao;

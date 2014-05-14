@@ -1,5 +1,8 @@
-package kz.trei.acs.action;
+package kz.trei.acs.action.employee;
 
+import kz.trei.acs.action.Action;
+import kz.trei.acs.action.ActionResult;
+import kz.trei.acs.action.ActionType;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 

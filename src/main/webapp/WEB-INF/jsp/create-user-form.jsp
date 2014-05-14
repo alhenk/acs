@@ -1,75 +1,33 @@
-<h3><fmt:message bundle="${msg}" key="fill-in.form"/></h3>
-
-<p> &nbsp;</p>
-
+<%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
 <form action="do/create-user" method="post">
     <fieldset class="create-user">
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.name"/></label>
-            <input type="text" name="username" value="${sessionScope["username"]}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty param['username-error']}">
-                <fmt:message bundle="${msg}" key="${param['username-error']}"/>
-                <c:remove var="username-error" scope="session"/>
-            </c:if>
-        </p>
+        <ftag:string-field field="username"
+                           value="${sessionScope.username}"
+                           clazz="user"/>
 
         <p> &nbsp;</p>
 
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.password"/></label>
-            <input type="password" name="password" value="${sessionScope["password"]}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty param['password-error']}">
-                <fmt:message bundle="${msg}" key="${param['password-error']}"/>
-                <c:remove var="password-error" scope="session"/>
-            </c:if>
-        </p>
+        <ftag:password-field field="password"
+                             value="${sessionScope.password}"
+                             clazz="user"/>
 
         <p> &nbsp;</p>
 
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.confirm-password"/></label>
-            <input type="password" name="confirm-password" value="${sessionScope["confirm-password"]}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty param['confirm-password-error']}">
-                <fmt:message bundle="${msg}" key="${param['confirm-password-error']}"/>
-                <c:remove var="confirm-password-error" scope="session"/>
-            </c:if>
-        </p>
+        <ftag:password-field field="confirm-password"
+                             value="${sessionScope['confirm-password']}"
+                             clazz="user"/>
 
         <p> &nbsp;</p>
 
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.email"/></label>
-            <input type="text" name="email" value="${sessionScope['email']}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty param['email-error']}">
-                <fmt:message bundle="${msg}" key="${param['email-error']}"/>
-                <c:remove var="email-error" scope="session"/>
-            </c:if>
-        </p>
+        <ftag:string-field field="email"
+                           value="${sessionScope['email']}"
+                           clazz="user"/>
 
         <p> &nbsp;</p>
 
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.table-id"/></label>
-            <input type="text" name="table-id" value="${sessionScope["table-id"]}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty param['table-id-error']}">
-                <fmt:message bundle="${msg}" key="${param['table-id-error']}"/>
-            </c:if>
-        </p>
+        <ftag:string-field field="table-id"
+                           value="${sessionScope['table-id']}"
+                           clazz="user"/>
 
         <p> &nbsp;</p>
 

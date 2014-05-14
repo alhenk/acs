@@ -9,15 +9,15 @@
 
         <ftag:string-field field="username"
                            value="${sessionScope.account.username}"
-                           entity="user"/>
+                           clazz="user"/>
         <p>&nbsp;</p>
         <ftag:string-field field="email"
                            value="${sessionScope.account.email}"
-                           entity="user"/>
+                           clazz="user"/>
         <p>&nbsp;</p>
         <ftag:string-field field="table-id"
                            value="${sessionScope.account.account1C.tableId}"
-                           entity="user"/>
+                           clazz="user"/>
         <p>&nbsp;</p>
 
         <p>

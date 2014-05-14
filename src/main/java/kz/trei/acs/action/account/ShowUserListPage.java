@@ -1,5 +1,8 @@
-package kz.trei.acs.action;
+package kz.trei.acs.action.account;
 
+import kz.trei.acs.action.Action;
+import kz.trei.acs.action.ActionResult;
+import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
@@ -16,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class ShowUserListPage implements Action{
+public class ShowUserListPage implements Action {
     private static final Logger LOGGER = Logger.getLogger(ShowUserListPage.class);
     static {
         PropertyManager.load("configure.properties");

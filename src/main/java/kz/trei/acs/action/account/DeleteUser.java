@@ -1,5 +1,8 @@
-package kz.trei.acs.action;
+package kz.trei.acs.action.account;
 
+import kz.trei.acs.action.Action;
+import kz.trei.acs.action.ActionResult;
+import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
@@ -8,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class DeleteUser implements Action {
     private static final Logger LOGGER = Logger.getLogger(DeleteUser.class);
