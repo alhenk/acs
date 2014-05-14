@@ -22,9 +22,8 @@
                             <div class="box">
                                 <h3><fmt:message bundle="${msg}" key="common.details"/></h3>
                                 <br>
-                                <c:if test="${not empty sessionScope.error}">
-                                    <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
-                                    <c:remove var="error" scope="session"/>
+                                <c:if test="${not empty param.error}">
+                                    <fmt:message bundle="${msg}" key="${param.error}"/>
                                 </c:if>
                                 <br/>
                                 <c:if test="${not empty sessionScope['status-code']}">

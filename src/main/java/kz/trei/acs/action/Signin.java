@@ -1,17 +1,15 @@
 package kz.trei.acs.action;
 
 
+import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.user.User;
-import kz.trei.acs.util.PasswordHash;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 public class Signin implements Action {
     private static final Logger LOGGER = Logger.getLogger(Signin.class);
@@ -27,14 +25,15 @@ public class Signin implements Action {
         UserDao userDao = daoFactory.getUserDao();
         try {
             user = userDao.find(username, password);
-        } catch (Exception e) {
-            session.setAttribute("error", "form.sign-in.wrong-password");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+        } catch (DaoException e) {
+            LOGGER.error("DAO find user exception");
+            return new ActionResult(ActionType.REDIRECT, "main?error=form.sign-in.wrong-password");
         }
         if (user == null) {
-            session.setAttribute("error", "form.sign-in.wrong-password");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+            LOGGER.debug("User name or password error");
+            return new ActionResult(ActionType.REDIRECT, "main?error=form.sign-in.wrong-password");
         }
+        LOGGER.debug("The user logged successfully");
         session.setAttribute("user", user);
         return new ActionResult(ActionType.REDIRECT, "dashboard");
     }

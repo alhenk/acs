@@ -4,44 +4,22 @@
 <form action="do/edit-user" method="post">
     <fieldset class="edit">
         <input type="hidden" name="id" value="${sessionScope.account.id}">
-        <p>&nbsp;</p>
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.name"/></label>
-            <input type="text" name="username" value="${sessionScope.account.username}">
-        </p>
 
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['username-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['username-error']}"/>
-                <c:remove var="username-error" scope="session"/>
-            </c:if>
-        </p>
         <p>&nbsp;</p>
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.email"/></label>
-            <input type="text" name="email" value="${sessionScope.account.email}">
-        </p>
 
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['email-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['email-error']}"/>
-                <c:remove var="email-error" scope="session"/>
-            </c:if>
-        </p>
+        <ftag:string-field field="username"
+                           value="${sessionScope.account.username}"
+                           entity="user"/>
         <p>&nbsp;</p>
-        <ftag:string-field field="table-id"/>
-        <%--<p>--%>
-            <%--<label><fmt:message bundle="${msg}" key="form.user.table-id"/></label>--%>
-            <%--<input type="text" name="table-id" value="${sessionScope.account.account1C.tableId}">--%>
-        <%--</p>--%>
+        <ftag:string-field field="email"
+                           value="${sessionScope.account.email}"
+                           entity="user"/>
+        <p>&nbsp;</p>
+        <ftag:string-field field="table-id"
+                           value="${sessionScope.account.account1C.tableId}"
+                           entity="user"/>
+        <p>&nbsp;</p>
 
-        <%--<p style="color:red;">--%>
-            <%--<c:if test="${not empty sessionScope['table-id-error']}">--%>
-                <%--<fmt:message bundle="${msg}" key="${sessionScope['table-id-error']}"/>--%>
-                <%--<c:remove var="table-id-error" scope="session"/>--%>
-            <%--</c:if>--%>
-        <%--</p>--%>
-        <p>&nbsp;</p>
         <p>
             <label><fmt:message bundle="${msg}" key="form.user.role"/></label>
             <select id="role" name="role">
@@ -56,17 +34,17 @@
                 </option>
             </select>
         </p>
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['role-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['role-error']}"/>
-                <c:remove var="role-error" scope="session"/>
-            </c:if>
-        </p>
+
         <p>&nbsp;</p>
         <p>
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.edit-user.submit"/>
             </button>
+        </p>
+        <p style="color:red;">
+            <c:if test="${not empty param.status}">
+                <fmt:message bundle="${msg}" key="${param.status}"/>
+            </c:if>
         </p>
     </fieldset>
 </form>

@@ -40,8 +40,7 @@ public class EditUser implements Action {
             originalUser = userDao.findById(Long.valueOf(id));
         } catch (DaoException e) {
             LOGGER.error("Find by ID exception: " + e.getMessage());
-            session.setAttribute("error", "error.db.find-by-id");
-            return new ActionResult(ActionType.FORWARD, "exception");
+            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.find-by-id");
         }
         password = originalUser.getPassword();
         session.setAttribute("id", id);
@@ -71,7 +70,7 @@ public class EditUser implements Action {
             session.removeAttribute("confirm-password");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
-            request.setAttribute("status", "form.user.create.success");
+            request.setAttribute("status", "form.user.edit.success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
         }
 
@@ -88,8 +87,8 @@ public class EditUser implements Action {
         String emailError = (String) request.getAttribute("email-error");
         String roleError = (String) request.getAttribute("role-error");
         String tableIdError = (String) request.getAttribute("table-id-error");
+        String status = (String) request.getAttribute("status");
         String error = (String) request.getAttribute("error");
-        String status = (String) request.getAttribute("error");
         if (id != null) {
             parameters.append("&id=" + id);
         }
@@ -112,7 +111,7 @@ public class EditUser implements Action {
             parameters.append("&table-id-error=" + tableIdError);
         }
         if (status != null) {
-            parameters.append("&error=" + status);
+            parameters.append("&status=" + status);
         }
         if (error != null) {
             parameters.append("&error=" + error);
@@ -122,7 +121,6 @@ public class EditUser implements Action {
 
     private boolean isFormValid(HttpServletRequest request) {
         return isUserNameValid(request)
-//                & isPasswordValid(request)
                 & isEmailValid(request)
                 & isTableIdValid(request)
                 & isRoleValid(request);
@@ -181,13 +179,12 @@ public class EditUser implements Action {
 
     //EMAIL VALIDATION
     private boolean isEmailValid(HttpServletRequest request) {
-        HttpSession session = request.getSession();
         String email = request.getParameter("email");
         boolean isEmailValid = false;
         Matcher emailMatcher = null;
         if (email == null || email.isEmpty()) {
             isEmailValid = false;
-            session.setAttribute("email-error", "form.user.empty");
+            request.setAttribute("email-error", "form.user.empty");
         } else {
             String emailRegex = PropertyManager.getValue("form.user.email.regex");
             Pattern emailPattern = Pattern.compile(emailRegex,
@@ -197,7 +194,7 @@ public class EditUser implements Action {
                 isEmailValid = true;
             } else {
                 isEmailValid = false;
-                session.setAttribute("email-error", "form.user.email.malformed");
+                request.setAttribute("email-error", "form.user.email.malformed");
             }
         }
         return isEmailValid;
@@ -205,13 +202,12 @@ public class EditUser implements Action {
 
     //ROLE MATCHER
     private boolean isRoleValid(HttpServletRequest request) {
-        HttpSession session = request.getSession();
         String role = request.getParameter("role");
         boolean isRoleValid = false;
         Matcher roleMatcher = null;
         if (role == null || role.isEmpty()) {
             isRoleValid = false;
-            session.setAttribute("role-error", "form.user.empty");
+            request.setAttribute("role-error", "form.user.empty");
         } else {
             String roleRegex = PropertyManager.getValue("form.user.role.regex");
             Pattern rolePattern = Pattern.compile(roleRegex,
@@ -221,7 +217,7 @@ public class EditUser implements Action {
                 isRoleValid = true;
             } else {
                 isRoleValid = false;
-                session.setAttribute("role-error", "form.user.role.malformed");
+                request.setAttribute("role-error", "form.user.role.malformed");
             }
         }
         return isRoleValid;
@@ -231,7 +227,6 @@ public class EditUser implements Action {
      * TABLE_ID MATCHER
      */
     private boolean isTableIdValid(HttpServletRequest request) {
-        HttpSession session = request.getSession();
         String tableId = request.getParameter("table-id");
         boolean isTableIdValid = false;
         Matcher tableIdMatcher = null;
@@ -247,7 +242,7 @@ public class EditUser implements Action {
                 isTableIdValid = true;
             } else {
                 isTableIdValid = false;
-                request.setAttribute("table-id-error", "table-id.malformed");
+                request.setAttribute("table-id-error", "form.user.table-id.malformed");
             }
         }
         return isTableIdValid;

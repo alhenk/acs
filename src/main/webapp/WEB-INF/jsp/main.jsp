@@ -29,9 +29,9 @@
                             <c:choose>
                                 <c:when test="${empty sessionScope['user']}">
                                     <%@include file="signin-form.jsp" %>
-                                    <c:if test="${not empty sessionScope.error}">
+                                    <c:if test="${not empty param.error}">
                                         <p style="color:red;">
-                                            <fmt:message bundle="${msg}" key="${sessionScope.error}"/>
+                                            <fmt:message bundle="${msg}" key="${param.error}"/>
                                             <c:remove var="error" scope="session"/>
                                         </p>
                                     </c:if>
