@@ -6,38 +6,10 @@
 
 <mtag:pagetemplate title="edit-employee">
     <jsp:body>
-        <div class="grid_8">
-            <div class="box">
-                <h2>
-                    <a><fmt:message bundle="${msg}" key="edit.employee"/></a>
-                </h2>
-
-                <div class="block">
-                    <div id="edit-employee" style="height:420px;">
-                        <div class="grid_4">
-                            <p>&nbsp;</p>
-                        </div>
-                        <div class="grid_8">
-                            <div class="box">
-                                <div class="block">
-                                        <%--<%@include file="edit-employee-form.jsp" %>--%>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="grid_8">
-            <div class="box">
-                <h2><a><fmt:message bundle="${msg}" key="common.info"/> </a></h2>
-                <div class="block">
-                    <div id="info-edit-rfidtag" style="height:420px;">
-                        <p>&nbsp;</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <mtag:edit entity="employee">
+            <jsp:body>
+                <%--<%@include file="edit-employee-form.jsp" %>--%>
+            </jsp:body>
+        </mtag:edit>
     </jsp:body>
 </mtag:pagetemplate>

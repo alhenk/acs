@@ -16,8 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Signup implements Action {
-    private static final Logger LOGGER = Logger.getLogger(Signup.class);
+public class CreateUser implements Action {
+    private static final Logger LOGGER = Logger.getLogger(CreateUser.class);
     static {
         PropertyManager.load("configure.properties");
     }

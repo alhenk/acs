@@ -306,6 +306,29 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public void delete(long id) throws DaoException {
-
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.prepareStatement("DELETE FROM EMPLOYEES WHERE id = ?");
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
     }
 }

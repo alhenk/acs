@@ -25,18 +25,20 @@ public class ActionFactory {
         actions.put("POST/edit-user", new EditUser());
         actions.put("GET/edit-user", new ShowEditUserPage());
         actions.put("GET/create-user", new ShowCreateUserPage());
-        actions.put("POST/sign-up", new Signup());
+        actions.put("POST/sign-up", new CreateUser());
         actions.put("GET/delete-user", new DeleteUser());
         //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
         actions.put("GET/edit-rfidtag", new ShowEditRfidTagPage());
         actions.put("GET/create-rfidtag", new ShowCreateRfidTagPage());
         actions.put("POST/create-rfidtag", new CreateRfidTag());
+        actions.put("GET/delete-rfidtag", new DeleteRfidTag());
         //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
         actions.put("GET/edit-employee", new ShowEditEmployeePage());
         actions.put("GET/create-employee", new ShowCreateEmployeePage());
         actions.put("POST/create-employee", new CreateEmployee());
+        actions.put("GET/delete-employee", new DeleteEmployee());
         LOGGER.debug("Instantiated ActionFactory");
     }
 

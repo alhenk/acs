@@ -6,38 +6,10 @@
 
 <mtag:pagetemplate title="edit-user">
     <jsp:body>
-        <div class="grid_8">
-            <div class="box">
-                <h2>
-                    <a><fmt:message bundle="${msg}" key="edit.user"/></a>
-                </h2>
-
-                <div class="block">
-                    <div id="edit-user" style="height:420px;">
-                        <div class="grid_4">
-                            <p>&nbsp;</p>
-                        </div>
-                        <div class="grid_8">
-                            <div class="box">
-                                <div class="block">
-                                    <%@include file="edit-user-form.jsp" %>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="grid_8">
-            <div class="box">
-                <h2><a><fmt:message bundle="${msg}" key="common.info"/> </a></h2>
-                <div class="block">
-                    <div id="info-edit-user" style="height:420px;">
-                        <p>&nbsp;</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <mtag:edit entity="user">
+            <jsp:body>
+                <%@include file="edit-user-form.jsp" %>
+            </jsp:body>
+        </mtag:edit>
     </jsp:body>
 </mtag:pagetemplate>

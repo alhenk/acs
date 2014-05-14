@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,24 +26,33 @@ public class SecurityFilter implements Filter {
         EnumSet<RoleType> administrator = EnumSet.of(RoleType.ADMINISTRATOR);
         EnumSet<RoleType> supervisor = EnumSet.of(RoleType.SUPERVISOR);
         EnumSet<RoleType> employee = EnumSet.of(RoleType.EMPLOYEE);
-
+        //General
         groups.put("GET/main", all);
-        groups.put("POST/set-language", all);
         groups.put("POST/sign-in", all);
-        groups.put("POST/sign-up", administrator);
         groups.put("GET/sign-out", authorized);
         groups.put("GET/dashboard", authorized);
+        groups.put("POST/set-language", all);
+        //User
         groups.put("GET/create-user", administrator);
+        groups.put("POST/create-user", administrator);
+        groups.put("GET/edit-user", administrator);
+        groups.put("POST/edit-user", administrator);
+        groups.put("GET/delete-user", administrator);
         groups.put("GET/user-list", administrator);
-        groups.put("GET/not-found", all);
-        groups.put("POST/edit-user",authorized);
-        groups.put("GET/delete-user",authorized);
-        groups.put("GET/rfidtag-list",administrator);
-        groups.put("GET/user-list",administrator);
-        groups.put("GET/create-user",administrator);
-        groups.put("GET/employee-list",administrator);
-        groups.put("GET/create-employee",administrator);
-        groups.put("POST/create-employee",administrator);
+        //RfidTag
+        groups.put("GET/create-rfidtag", administrator);
+        groups.put("POST/create-rfidtag", administrator);
+        groups.put("GET/edit-rfidtag", administrator);
+        groups.put("POST/edit-rfidtag", administrator);
+        groups.put("GET/delete-rfidtag", administrator);
+        groups.put("GET/rfidtag-list", administrator);
+        //Employee
+        groups.put("GET/create-employee", administrator);
+        groups.put("POST/create-employee", administrator);
+        groups.put("GET/edit-employee", authorized);
+        groups.put("POST/edit-employee", authorized);
+        groups.put("GET/delete-employee", administrator);
+        groups.put("GET/employee-list", authorized);
     }
 
     @Override
