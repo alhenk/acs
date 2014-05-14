@@ -6,10 +6,15 @@
 
 <mtag:pagetemplate title="edit-user">
     <jsp:body>
-        <mtag:edit entity="user">
+        <mtag:edit entity="user" height="420">
             <jsp:body>
                 <%@include file="edit-user-form.jsp" %>
             </jsp:body>
         </mtag:edit>
+        <mtag:info height="${height}">
+            <jsp:body>
+                <fmt:message bundle="${msg}" key="lorem.ipsum"/>
+            </jsp:body>
+        </mtag:info>
     </jsp:body>
 </mtag:pagetemplate>

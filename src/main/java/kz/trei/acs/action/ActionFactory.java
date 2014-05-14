@@ -38,12 +38,14 @@ public class ActionFactory {
         //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
         actions.put("GET/edit-rfidtag", new ShowEditRfidTagPage());
+        actions.put("POST/edit-rfidtag", new EditRfidTag());
         actions.put("GET/create-rfidtag", new ShowCreateRfidTagPage());
         actions.put("POST/create-rfidtag", new CreateRfidTag());
         actions.put("GET/delete-rfidtag", new DeleteRfidTag());
         //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
         actions.put("GET/edit-employee", new ShowEditEmployeePage());
+        actions.put("POST/edit-employee", new EditEmployee());
         actions.put("GET/create-employee", new ShowCreateEmployeePage());
         actions.put("POST/create-employee", new CreateEmployee());
         actions.put("GET/delete-employee", new DeleteEmployee());

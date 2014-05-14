@@ -13,9 +13,13 @@
         </h2>
 
         <div class="block">
-            <div id="${entity}" style="height:${height}px;">
+            <div id="${entity}-form" style="height:${height}px;">
                 <div class="grid_4">
-                    <p>&nbsp;</p>
+                    <div class="box">
+                        <div class="block">
+                            <p>&nbsp;</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="grid_8">
                     <div class="box">
@@ -29,3 +33,5 @@
         </div>
     </div>
 </div>
+
+

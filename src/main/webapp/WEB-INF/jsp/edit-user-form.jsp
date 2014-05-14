@@ -1,4 +1,3 @@
-<%@page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" errorPage="error.jsp" %>
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
 
 <form action="do/edit-user" method="post">
@@ -6,7 +5,6 @@
         <input type="hidden" name="id" value="${sessionScope.account.id}">
 
         <p>&nbsp;</p>
-
         <ftag:string-field field="username"
                            value="${sessionScope.account.username}"
                            clazz="user"/>
@@ -36,6 +34,7 @@
         </p>
 
         <p>&nbsp;</p>
+
         <p>
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.edit-user.submit"/>

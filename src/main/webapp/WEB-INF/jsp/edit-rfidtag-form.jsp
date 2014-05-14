@@ -1,23 +1,11 @@
+<%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
 <form action="do/edit-rfidtag" method="post">
     <fieldset class="edit-rfidtag">
-        <p>
-            <label>UID</label>
-            <input type="text" name="uid" value="${sessionScope["uid"]}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['uid-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['uid-error']}"/>
-                <c:remove var="uid-error" scope="session"/>
-            </c:if>
-        </p>
-
         <p> &nbsp;</p>
-
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.rfidtag.type"/></label>
-            <input type="text" name="type" value="${sessionScope["type"]}">
-        </p>
+        <ftag:string-field field="uid"
+                           value="${sessionScope['uid']}"
+                           clazz="rfidtag"/>
+        <p> &nbsp;</p>
 
         <p>
             <label><fmt:message bundle="${msg}" key="form.rfidtag.type"/></label>
@@ -27,11 +15,9 @@
                 <option value="STICKER">STICKER</option>
             </select>
         </p>
-
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['type-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['type-error']}"/>
-                <c:remove var="type-error" scope="session"/>
+            <c:if test="${not empty param['type-error']}">
+                <fmt:message bundle="${msg}" key="${param['type-error']}"/>
             </c:if>
         </p>
 
@@ -44,45 +30,21 @@
                 <option value="ISO15693">ISO15693</option>
             </select>
         </p>
-
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['protocol-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['protocol-error']}"/>
-                <c:remove var="protocol-error" scope="session"/>
+            <c:if test="${not empty param['protocol-error']}">
+                <fmt:message bundle="${msg}" key="${param['protocol-error']}"/>
             </c:if>
         </p>
 
         <p> &nbsp;</p>
-
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.rfidtag.issue-date"/></label>
-            <input type="text" name="issue-date" value="${sessionScope['issue-date']}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['issue-date-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['issue-date-error']}"/>
-                <c:remove var="issue-date-error" scope="session"/>
-            </c:if>
-        </p>
-
+        <ftag:string-field field="issue-date"
+                           value="${sessionScope['issue-date']}"
+                           clazz="rfidtag"/>
         <p> &nbsp;</p>
 
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.rfidtag.expiration-date"/></label>
-            <input type="text" name="expiration-date" value="${sessionScope["expiration-date"]}">
-        </p>
-
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['expiration-date-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['expiration-date-error']}"/>
-                <c:remove var="expiration-date-error" scope="session"/>
-            </c:if>
-        </p>
-
-        <p> &nbsp;</p>
-
-
+        <ftag:string-field field="expiration-date"
+                           value="${sessionScope['issue-date']}"
+                           clazz="rfidtag"/>
         <p> &nbsp;</p>
 
         <p>
@@ -90,6 +52,5 @@
                 <fmt:message bundle="${msg}" key="form.rfidtag.submit"/>
             </button>
         </p>
-
     </fieldset>
 </form>

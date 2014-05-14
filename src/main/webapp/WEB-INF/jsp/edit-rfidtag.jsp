@@ -3,13 +3,19 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="height" value="480"/>
 
 <mtag:pagetemplate title="edit-rfidtag">
     <jsp:body>
-        <mtag:edit entity="rfidtag">
+        <mtag:edit entity="rfidtag" height="${height}">
             <jsp:body>
-                <%@include file="edit-employee-form.jsp" %>
+                <%@include file="edit-rfidtag-form.jsp" %>
             </jsp:body>
         </mtag:edit>
+        <mtag:info height="${height}">
+            <jsp:body>
+                <fmt:message bundle="${msg}" key="lorem.ipsum"/>
+            </jsp:body>
+        </mtag:info>
     </jsp:body>
 </mtag:pagetemplate>

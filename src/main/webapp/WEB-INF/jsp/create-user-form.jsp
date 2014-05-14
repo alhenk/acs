@@ -4,31 +4,23 @@
         <ftag:string-field field="username"
                            value="${sessionScope.username}"
                            clazz="user"/>
-
         <p> &nbsp;</p>
-
         <ftag:password-field field="password"
                              value="${sessionScope.password}"
                              clazz="user"/>
-
         <p> &nbsp;</p>
-
         <ftag:password-field field="confirm-password"
                              value="${sessionScope['confirm-password']}"
                              clazz="user"/>
-
         <p> &nbsp;</p>
-
         <ftag:string-field field="email"
                            value="${sessionScope['email']}"
                            clazz="user"/>
-
         <p> &nbsp;</p>
 
         <ftag:string-field field="table-id"
                            value="${sessionScope['table-id']}"
                            clazz="user"/>
-
         <p> &nbsp;</p>
 
         <p>
