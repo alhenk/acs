@@ -1,4 +1,5 @@
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
+
 <form action="do/create-user" method="post">
     <fieldset class="create-user">
         <ftag:string-field field="username"

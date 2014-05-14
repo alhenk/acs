@@ -6,7 +6,6 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:set var="error" value="${field}-error"/>
-
 <p>
     <label><fmt:message bundle="${msg}" key="form.${clazz}.${field}"/></label>
     <input type="password" name="${field}" value="${value}">

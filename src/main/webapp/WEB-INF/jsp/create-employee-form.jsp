@@ -1,4 +1,6 @@
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form action="do/create-employee" method="post">
     <fieldset class="create-employee">

@@ -1,4 +1,7 @@
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <form action="do/edit-employee" method="post">
     <fieldset class="edit-employee">
         <ftag:string-field field="first-name"
@@ -17,6 +20,7 @@
                            value="${sessionScope['birth-date']}"
                            clazz="employee"/>
         <p> &nbsp;</p>
+
         <p>
             <label><fmt:message bundle="${msg}" key="form.employee.position"/></label>
             <select id="position" name="position">
@@ -34,7 +38,9 @@
                 <c:remove var="position-error" scope="session"/>
             </c:if>
         </p>
+
         <p> &nbsp;</p>
+
         <p>
             <label><fmt:message bundle="${msg}" key="form.employee.department"/></label>
             <select id="department" name="department">
@@ -52,7 +58,9 @@
                 <c:remove var="department-error" scope="session"/>
             </c:if>
         </p>
+
         <p> &nbsp;</p>
+
         <p>
             <label><fmt:message bundle="${msg}" key="form.employee.room"/></label>
             <select id="room" name="room">
@@ -67,6 +75,7 @@
                 <c:remove var="room-error" scope="session"/>
             </c:if>
         </p>
+
         <p> &nbsp;</p>
         <ftag:string-field field="table-id"
                            value="${sessionScope['table-id']}"
@@ -76,6 +85,7 @@
                            value="${sessionScope['uid']}"
                            clazz="employee"/>
         <p> &nbsp;</p>
+
         <p>
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.employee.submit"/>
