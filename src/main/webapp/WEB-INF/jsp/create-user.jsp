@@ -23,7 +23,7 @@
                         <div class="grid_8">
                             <div class="box">
                                 <div class="block">
-                                    <%@ include file="signup-form.jsp" %>
+                                    <%@ include file="create-user-form.jsp" %>
                                     <c:if test="${not empty sessionScope.error}">
                                         <p style="color:red;">
                                             <fmt:message bundle="${msg}" key="${sessionScope.error}"/>

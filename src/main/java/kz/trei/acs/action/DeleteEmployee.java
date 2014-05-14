@@ -21,21 +21,22 @@ public class DeleteEmployee implements Action{
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
-        long id = Long.valueOf(request.getParameter("id"));
+        long id;
+        try {
+            id = Long.valueOf(request.getParameter("id"));
+        } catch (NumberFormatException e) {
+            LOGGER.error("Wrong id parameter " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "employee-list?status=id.parameter.error");
+        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
-        if (id==1){
-            session.setAttribute("status", "delete.employee.fail");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
-        }
         try {
             employeeDao.delete(id);
         } catch (DaoException e) {
-            session.setAttribute("status", "delete.employee.fail");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+            LOGGER.error("DAO delete error " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "employee-list?status=delete.employee.fail");
         }
-//        session.setAttribute("status", "delete.user.success");
-        return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+        LOGGER.debug("The employee is deleted successfully");
+        return new ActionResult(ActionType.REDIRECT, "employee-list?status=delete.employee.success");
     }
 }

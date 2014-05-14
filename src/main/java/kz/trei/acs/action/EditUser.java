@@ -18,9 +18,11 @@ import java.util.regex.Pattern;
 
 public class EditUser implements Action {
     private static final Logger LOGGER = Logger.getLogger(EditUser.class);
+
     static {
         PropertyManager.load("configure.properties");
     }
+
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
@@ -30,12 +32,6 @@ public class EditUser implements Action {
         String email = request.getParameter("email");
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
-        session.removeAttribute("status");
-        session.removeAttribute("username-error");
-        session.removeAttribute("password-error");
-        session.removeAttribute("confirm-password-error");
-        session.removeAttribute("role-error");
-        session.removeAttribute("table-id-error");
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         User originalUser;
@@ -65,8 +61,8 @@ public class EditUser implements Action {
                 LOGGER.debug("user ->" + user);
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
-                session.setAttribute("status", "form.user.create.fail");
-                return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+                request.setAttribute("status", "form.user.create.fail");
+                return new ActionResult(ActionType.REDIRECT, "edit-user" + fetchParameters(request));
             }
             session.removeAttribute("id");
             session.removeAttribute("username");
@@ -75,10 +71,53 @@ public class EditUser implements Action {
             session.removeAttribute("confirm-password");
             session.removeAttribute("user-role");
             session.removeAttribute("table-id");
-            return new ActionResult(ActionType.REDIRECT, "user-list");
+            request.setAttribute("status", "form.user.create.success");
+            return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
         }
-        session.setAttribute("error", "form.user.incomplete");
-        return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+
+        request.setAttribute("error", "form.user.incomplete");
+        return new ActionResult(ActionType.REDIRECT, "edit-user" + fetchParameters(request));
+    }
+
+    private String fetchParameters(HttpServletRequest request) {
+        StringBuilder parameters = new StringBuilder("?");
+        String id = request.getParameter("id");
+        String userNameError = (String) request.getAttribute("username-error");
+        String passwordError = (String) request.getAttribute("password-error");
+        String confirmPasswordError = (String) request.getAttribute("confirm-password-error");
+        String emailError = (String) request.getAttribute("email-error");
+        String roleError = (String) request.getAttribute("role-error");
+        String tableIdError = (String) request.getAttribute("table-id-error");
+        String error = (String) request.getAttribute("error");
+        String status = (String) request.getAttribute("error");
+        if (id != null) {
+            parameters.append("&id=" + id);
+        }
+        if (userNameError != null) {
+            parameters.append("&username-error=" + userNameError);
+        }
+        if (passwordError != null) {
+            parameters.append("&password-error=" + passwordError);
+        }
+        if (confirmPasswordError != null) {
+            parameters.append("&confirm-password-error=" + confirmPasswordError);
+        }
+        if (emailError != null) {
+            parameters.append("&email-error=" + emailError);
+        }
+        if (roleError != null) {
+            parameters.append("&role-error=" + roleError);
+        }
+        if (tableIdError != null) {
+            parameters.append("&table-id-error=" + tableIdError);
+        }
+        if (status != null) {
+            parameters.append("&error=" + status);
+        }
+        if (error != null) {
+            parameters.append("&error=" + error);
+        }
+        return parameters.toString();
     }
 
     private boolean isFormValid(HttpServletRequest request) {
@@ -91,13 +130,12 @@ public class EditUser implements Action {
 
     //USER NAME VALIDATION
     private boolean isUserNameValid(HttpServletRequest request) {
-        HttpSession session = request.getSession();
         String username = request.getParameter("username");
         boolean isUserNameValid = true;
         Matcher userNameMatcher = null;
         if (username == null || username.isEmpty()) {
             isUserNameValid = false;
-            session.setAttribute("username-error", "form.user.empty");
+            request.setAttribute("username-error", "form.user.empty");
         } else {
             String userNameRegex = PropertyManager.getValue("form.user.name.regex");
             Pattern userNamePattern = Pattern.compile(userNameRegex,
@@ -107,7 +145,7 @@ public class EditUser implements Action {
                 isUserNameValid = true;
             } else {
                 isUserNameValid = false;
-                session.setAttribute("username-error", "form.user.name.malformed");
+                request.setAttribute("username-error", "username.malformed");
             }
         }
         return isUserNameValid;
@@ -115,14 +153,13 @@ public class EditUser implements Action {
 
     //PASSWORD VALIDATION
     private boolean isPasswordValid(HttpServletRequest request) {
-        HttpSession session = request.getSession();
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
         boolean isPasswordValid = false;
         Matcher passwordMatcher = null;
         if (password == null || password.isEmpty()) {
             isPasswordValid = false;
-            session.setAttribute("password-error", "form.user.empty");
+            request.setAttribute("password-error", "form.user.empty");
         } else {
             String passwordRegex = PropertyManager.getValue("form.user.password.regex");
             Pattern passwordPattern = Pattern.compile(passwordRegex,
@@ -132,10 +169,10 @@ public class EditUser implements Action {
                 isPasswordValid = true;
             } else {
                 isPasswordValid = false;
-                session.setAttribute("password-error", "form.user.password.malformed");
+                request.setAttribute("password-error", "form.user.password.malformed");
             }
             if (isPasswordValid && !password.equals(confirmPassword)) {
-                session.setAttribute("confirm-password-error", "form.user.password.not-confirmed");
+                request.setAttribute("confirm-password-error", "form.user.password.not-confirmed");
                 isPasswordValid = false;
             }
         }
@@ -200,7 +237,7 @@ public class EditUser implements Action {
         Matcher tableIdMatcher = null;
         if (tableId == null || tableId.isEmpty()) {
             isTableIdValid = false;
-            session.setAttribute("table-id-error", "form.user.empty");
+            request.setAttribute("table-id-error", "form.user.empty");
         } else {
             String tableIdRegex = PropertyManager.getValue("form.user.table-id.regex");
             Pattern tableIdPattern = Pattern.compile(tableIdRegex,
@@ -210,7 +247,7 @@ public class EditUser implements Action {
                 isTableIdValid = true;
             } else {
                 isTableIdValid = false;
-                session.setAttribute("table-id-error", "form.user.table-id.malformed");
+                request.setAttribute("table-id-error", "table-id.malformed");
             }
         }
         return isTableIdValid;

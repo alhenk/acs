@@ -25,7 +25,7 @@ public class ActionFactory {
         actions.put("POST/edit-user", new EditUser());
         actions.put("GET/edit-user", new ShowEditUserPage());
         actions.put("GET/create-user", new ShowCreateUserPage());
-        actions.put("POST/sign-up", new CreateUser());
+        actions.put("POST/create-user", new CreateUser());
         actions.put("GET/delete-user", new DeleteUser());
         //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());

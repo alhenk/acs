@@ -65,8 +65,13 @@
 
 <div class="clear"></div>
 <div class="grid_16">&nbsp;</div>
-<div class="grid_16">
+<div class="grid_6">
     <h3 id="page-heading"><fmt:message bundle='${msg}' key='common.${title}'/><a href=""></a></h3>
+</div>
+<div class="grid_8">
+    <c:if test="${not empty param.status}">
+    <h2 id="status"><fmt:message bundle='${msg}' key='${param.status}'/><a href=""></a></h2>
+    </c:if>
 </div>
 <div class="clear"></div>
 <div class="grid_16">&nbsp;</div>

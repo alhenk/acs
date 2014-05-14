@@ -2,16 +2,16 @@
 
 <p> &nbsp;</p>
 
-<form action="do/sign-up" method="post">
-    <fieldset class="sign-up">
+<form action="do/create-user" method="post">
+    <fieldset class="create-user">
         <p>
             <label><fmt:message bundle="${msg}" key="form.user.name"/></label>
             <input type="text" name="username" value="${sessionScope["username"]}">
         </p>
 
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['username-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['username-error']}"/>
+            <c:if test="${not empty param['username-error']}">
+                <fmt:message bundle="${msg}" key="${param['username-error']}"/>
                 <c:remove var="username-error" scope="session"/>
             </c:if>
         </p>
@@ -24,8 +24,8 @@
         </p>
 
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['password-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['password-error']}"/>
+            <c:if test="${not empty param['password-error']}">
+                <fmt:message bundle="${msg}" key="${param['password-error']}"/>
                 <c:remove var="password-error" scope="session"/>
             </c:if>
         </p>
@@ -38,8 +38,8 @@
         </p>
 
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['confirm-password-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['confirm-password-error']}"/>
+            <c:if test="${not empty param['confirm-password-error']}">
+                <fmt:message bundle="${msg}" key="${param['confirm-password-error']}"/>
                 <c:remove var="confirm-password-error" scope="session"/>
             </c:if>
         </p>
@@ -52,8 +52,8 @@
         </p>
 
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['email-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['email-error']}"/>
+            <c:if test="${not empty param['email-error']}">
+                <fmt:message bundle="${msg}" key="${param['email-error']}"/>
                 <c:remove var="email-error" scope="session"/>
             </c:if>
         </p>
@@ -66,9 +66,8 @@
         </p>
 
         <p style="color:red;">
-            <c:if test="${not empty sessionScope['table-id-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['table-id-error']}"/>
-                <c:remove var="table-id-error" scope="session"/>
+            <c:if test="${not empty param['table-id-error']}">
+                <fmt:message bundle="${msg}" key="${param['table-id-error']}"/>
             </c:if>
         </p>
 
@@ -84,8 +83,7 @@
         </p>
         <p style="color:red;">
             <c:if test="${not empty sessionScope['role-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['role-error']}"/>
-                <c:remove var="role-error" scope="session"/>
+                <fmt:message bundle="${msg}" key="${param['role-error']}"/>
             </c:if>
         </p>
 

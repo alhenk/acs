@@ -1,3 +1,6 @@
+<%@page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" errorPage="error.jsp" %>
+<%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
+
 <form action="do/edit-user" method="post">
     <fieldset class="edit">
         <input type="hidden" name="id" value="${sessionScope.account.id}">
@@ -26,17 +29,18 @@
             </c:if>
         </p>
         <p>&nbsp;</p>
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.table-id"/></label>
-            <input type="text" name="table-id" value="${sessionScope.account.account1C.tableId}">
-        </p>
+        <ftag:string-field field="table-id"/>
+        <%--<p>--%>
+            <%--<label><fmt:message bundle="${msg}" key="form.user.table-id"/></label>--%>
+            <%--<input type="text" name="table-id" value="${sessionScope.account.account1C.tableId}">--%>
+        <%--</p>--%>
 
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['table-id-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['table-id-error']}"/>
-                <c:remove var="table-id-error" scope="session"/>
-            </c:if>
-        </p>
+        <%--<p style="color:red;">--%>
+            <%--<c:if test="${not empty sessionScope['table-id-error']}">--%>
+                <%--<fmt:message bundle="${msg}" key="${sessionScope['table-id-error']}"/>--%>
+                <%--<c:remove var="table-id-error" scope="session"/>--%>
+            <%--</c:if>--%>
+        <%--</p>--%>
         <p>&nbsp;</p>
         <p>
             <label><fmt:message bundle="${msg}" key="form.user.role"/></label>

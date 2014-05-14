@@ -8,10 +8,9 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
-public class DeleteRfidTag implements Action{
+public class DeleteRfidTag implements Action {
     private static final Logger LOGGER = Logger.getLogger(DeleteRfidTag.class);
 
     static {
@@ -21,21 +20,22 @@ public class DeleteRfidTag implements Action{
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
-        long id = Long.valueOf(request.getParameter("id"));
+        long id;
+        try {
+            id = Long.valueOf(request.getParameter("id"));
+        } catch (NumberFormatException e) {
+            LOGGER.error("Wrong id parameter " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "rfidtag-list?status=id.parameter.error");
+        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         RfidTagDao rfidTagDao = daoFactory.getRfidTagDao();
-        if (id==1){
-            session.setAttribute("status", "delete.user.fail");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
-        }
         try {
             rfidTagDao.delete(id);
         } catch (DaoException e) {
-            session.setAttribute("status", "delete.rfidtag.fail");
-            return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+            LOGGER.error("DAO delete error " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "rfidtag-list?status=delete.rfidtag.fail");
         }
-//        session.setAttribute("status", "delete.rfidtag.success");
-        return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
+        LOGGER.debug("The RFID tag is deleted successfully");
+        return new ActionResult(ActionType.REDIRECT, "rfidtag-list?status=delete.rfidtag.success");
     }
 }

@@ -8,7 +8,7 @@
     <jsp:body>
         <mtag:edit entity="employee">
             <jsp:body>
-                <%--<%@include file="edit-employee-form.jsp" %>--%>
+                <%@include file="edit-employee-form.jsp" %>
             </jsp:body>
         </mtag:edit>
     </jsp:body>
