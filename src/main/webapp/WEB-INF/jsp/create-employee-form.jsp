@@ -1,6 +1,4 @@
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form action="do/create-employee" method="post">
     <fieldset class="create-employee">
@@ -21,23 +19,7 @@
                            clazz="employee"/>
         <p> &nbsp;</p>
 
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.employee.position"/></label>
-            <select id="position" name="position">
-                <option value="GENERAL_DIRECTOR" selected><fmt:message bundle="${msg}"
-                                                                       key="structure.position.GENERAL_DIRECTOR"/></option>
-                <option value="COMMERCIAL_DIRECTOR"><fmt:message bundle="${msg}"
-                                                                 key="structure.position.COMMERCIAL_DIRECTOR"/></option>
-                <option value="DEPARTMENT_HEAD"><fmt:message bundle="${msg}"
-                                                             key="structure.position.DEPARTMENT_HEAD"/></option>
-            </select>
-        </p>
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['position-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['position-error']}"/>
-                <c:remove var="position-error" scope="session"/>
-            </c:if>
-        </p>
+        <ftag:job-position-field positons="${sessionScope['positions']}" value="${sessionScope['position']}"/>
 
         <p> &nbsp;</p>
 
@@ -45,11 +27,11 @@
             <label><fmt:message bundle="${msg}" key="form.employee.department"/></label>
             <select id="department" name="department">
                 <option value="RESEARCH_AND_DEVELOPMENT" selected><fmt:message bundle="${msg}"
-                                                                               key="structure.department.RESEARCH_AND_DEVELOPMENT"/></option>
+                                                                               key="employee.department.RESEARCH_AND_DEVELOPMENT"/></option>
                 <option value="ACCOUNTANCY"><fmt:message bundle="${msg}"
-                                                         key="structure.department.ACCOUNTANCY"/></option>
-                <option value="COMMERCIAL"><fmt:message bundle="${msg}" key="structure.department.COMMERCIAL"/></option>
-                <option value="DEFAULT"><fmt:message bundle="${msg}" key="structure.department.DEFAULT"/></option>
+                                                         key="employee.department.ACCOUNTANCY"/></option>
+                <option value="COMMERCIAL"><fmt:message bundle="${msg}" key="employee.department.COMMERCIAL"/></option>
+                <option value="DEFAULT"><fmt:message bundle="${msg}" key="employee.department.DEFAULT"/></option>
             </select>
         </p>
         <p style="color:red;">

@@ -106,9 +106,9 @@
                                 <td>${employee.lastName}</td>
                                 <td>${employee.birthDate.date}</td>
                                 <td><fmt:message bundle="${msg}"
-                                                 key="structure.position.${employee.position}"/></td>
+                                                 key="employee.position.${employee.position}"/></td>
                                 <td><fmt:message bundle="${msg}"
-                                                 key="structure.department.${employee.department}"/></td>
+                                                 key="employee.department.${employee.department}"/></td>
                                 <td>${employee.room.roomNumber}</td>
                                 <td>${employee.account1C.tableId}</td>
                                 <td>${employee.rfidTag.uid}</td>
