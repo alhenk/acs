@@ -1,7 +1,8 @@
 <%@tag language="java" pageEncoding="UTF-8" %>
-<%@attribute name="optionList" required="true" %>
+<%@attribute name="clazz" required="true" %>
 <%@attribute name="field" required="true" %>
-<%@attribute name="value" required="true" %>
+<%@attribute name="value" required="true"%>
+<%@attribute name="optionList" type="java.util.List" required="true" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -9,12 +10,13 @@
 
 <c:set var="regex" value="[\\[\\]\\s]"/>
 <p>
-<label><fmt:message bundle="${msg}" key="form.employee.${field}"/></label>
+<label><fmt:message bundle="${msg}" key="form.${clazz}.${field}"/></label>
 <select id="${field}" name="${field}">
     <c:forEach var="item" items="${optionList}">
-        <option value="${item}" ${value == item ? 'selected' : ''}>
+        <option value="${item}"
+        ${value == str:replaceAll(item,regex,'') ? 'selected' : ''}>
             <fmt:message bundle="${msg}"
-                         key='employee.${field}.${str:replaceAll(item,regex,"")}'/>
+                         key="${clazz}.${field}.${str:replaceAll(item,regex,'')}"/>
         </option>
     </c:forEach>
 </select>

@@ -23,21 +23,10 @@
                            value="${sessionScope['table-id']}"
                            clazz="user"/>
         <p> &nbsp;</p>
-
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.role"/></label>
-            <select id="role" name="role">
-                <option value="employee" selected><fmt:message bundle="${msg}" key="user.role.EMPLOYEE"/></option>
-                <option value="supervisor"><fmt:message bundle="${msg}" key="user.role.SUPERVISOR"/></option>
-                <option value="administrator"><fmt:message bundle="${msg}" key="user.role.ADMINISTRATOR"/></option>
-            </select>
-        </p>
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['role-error']}">
-                <fmt:message bundle="${msg}" key="${param['role-error']}"/>
-            </c:if>
-        </p>
-
+        <ftag:select-field clazz="user"
+                           field="role"
+                           optionList="${sessionScope['roles']}"
+                           value="${sessionScope['role']}"/>
         <p> &nbsp;</p>
 
         <p>

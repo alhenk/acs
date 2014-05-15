@@ -7,9 +7,15 @@
                            value="${sessionScope['uid']}"
                            clazz="rfidtag"/>
         <p> &nbsp;</p>
-        <ftag:rfidtag-type-field value="${sessionScope['type']}"/>
+        <ftag:select-field clazz="rfidtag"
+                           field="type"
+                           optionList="${sessionScope['types']}"
+                           value="${sessionScope['type']}"/>
         <p> &nbsp;</p>
-        <ftag:rfidtag-protocol-field value="${sessionScope['protocol']}"/>
+        <ftag:select-field clazz="rfidtag"
+                           field="protocol"
+                           optionList="${sessionScope['protocols']}"
+                           value="${sessionScope['protocol']}"/>
         <p> &nbsp;</p>
         <ftag:string-field field="issue-date"
                            value="${sessionScope['issue-date']}"
@@ -19,7 +25,6 @@
                            value="${sessionScope['issue-date']}"
                            clazz="rfidtag"/>
         <p> &nbsp;</p>
-
         <p>
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.rfidtag.submit"/>

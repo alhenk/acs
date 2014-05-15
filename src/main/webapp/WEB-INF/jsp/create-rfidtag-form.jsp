@@ -7,9 +7,15 @@
                            value="RFID UID"
                            clazz="rfidtag"/>
         <p> &nbsp;</p>
-        <ftag:rfidtag-type-field value="CARD"/>
+        <ftag:select-field clazz="rfidtag"
+                           field="type"
+                           optionList="${sessionScope['types']}"
+                           value="CARD"/>
         <p> &nbsp;</p>
-        <ftag:rfidtag-protocol-field value="ISO15693"/>
+        <ftag:select-field clazz="rfidtag"
+                           field="protocol"
+                           optionList="${sessionScope['protocols']}"
+                           value="ISO15693"/>
         <p> &nbsp;</p>
         <ftag:string-field field="issue-date"
                            value="YYYY-MM-DD"

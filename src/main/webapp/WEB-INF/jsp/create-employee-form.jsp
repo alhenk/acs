@@ -18,15 +18,18 @@
                            value="${sessionScope['birth-date']}"
                            clazz="employee"/>
         <p> &nbsp;</p>
-        <ftag:select-field field="position"
-                                 optionList="${sessionScope['positions']}"
-                                 value="${sessionScope['position']}"/>
+        <ftag:select-field clazz="employee"
+                           field="position"
+                           optionList="${sessionScope['positions']}"
+                           value="${sessionScope['position']}"/>
         <p> &nbsp;</p>
-        <ftag:select-field field="department"
+        <ftag:select-field clazz="employee"
+                           field="department"
                            optionList="${sessionScope['departments']}"
                            value="${sessionScope['department']}"/>
         <p> &nbsp;</p>
-        <ftag:select-field field="room"
+        <ftag:select-field clazz="employee"
+                           field="room"
                            optionList="${sessionScope['rooms']}"
                            value="${sessionScope['room']}"/>
         <p> &nbsp;</p>

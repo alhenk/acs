@@ -19,21 +19,10 @@
                            value="${sessionScope.account.account1C.tableId}"
                            clazz="user"/>
         <p>&nbsp;</p>
-
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.user.role"/></label>
-            <select id="role" name="role">
-                <option value="employee" ${sessionScope.account.role == 'EMPLOYEE' ? 'selected' : ''} >
-                    <fmt:message bundle="${msg}" key="form.sign-in.employee"/>
-                </option>
-                <option value="supervisor" ${sessionScope.account.role == 'SUPERVISOR' ? 'selected' : ''} >
-                    <fmt:message bundle="${msg}" key="form.sign-in.supervisor"/>
-                </option>
-                <option value="administrator" ${sessionScope.account.role == 'ADMINISTRATOR' ? 'selected' : ''} >
-                    <fmt:message bundle="${msg}" key="form.sign-in.administrator"/>
-                </option>
-            </select>
-        </p>
+        <ftag:select-field clazz="user"
+                           field="role"
+                           optionList="${sessionScope['roles']}"
+                           value="${sessionScope.account.role}"/>
         <p>&nbsp;</p>
 
         <p>
