@@ -8,6 +8,7 @@ import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
+import kz.trei.acs.office.rfid.UidFormatException;
 import kz.trei.acs.office.structure.*;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.DateStamp;
@@ -68,8 +69,45 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public void create(Person entity) throws DaoException {
-
+    public void create(Person employee) throws DaoException {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.prepareStatement("INSERT INTO EMPLOYEES (firstName, patronym, lastName, birthDate, jobPosition, department, room, tableId, uid) VALUES (?,?,?,?,?,?,?,?,?)");
+            stmt.setString(1, employee.getFirstName());
+            stmt.setString(2, employee.getPatronym());
+            stmt.setString(3, employee.getLastName());
+            stmt.setString(4, employee.getBirthDate().getDate().toString());
+            stmt.setString(5, ((Employee)employee).getPosition().toString());
+            stmt.setString(6, ((Employee)employee).getDepartment().toString());
+            stmt.setString(7, ((Employee)employee).getRoom().toString());
+            stmt.setString(8, ((Employee)employee).getAccount1C().getTableId());
+            stmt.setString(9, ((Employee)employee).getRfidTag().getUid());
+            stmt.execute();
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception : " + e.getMessage());
+            CharSequence obj = "is not unique";
+            String errorMessage="";
+            if(e.getMessage().contains(obj)){
+                errorMessage="error.db.not-unique";
+                LOGGER.error("error.db.not-unique");
+            }
+            throw new DaoException(errorMessage);
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("get connection exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
     }
 
     @Override
@@ -134,7 +172,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
                 String tableId = rs.getString("tableId");
-                String uid = rs.getString("uid");
+
                 DepartmentType department=null;
                 try {
                     department = DepartmentType.valueOf(rs.getString("department"));
@@ -142,7 +180,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     LOGGER.debug("db attribute department is illegal " + e.getMessage());
                     department = DepartmentType.DEFAULT;
                 } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute department is null" + e.getMessage());
+                    LOGGER.debug("db attribute department is null " + e.getMessage());
                     department = DepartmentType.DEFAULT;
                 }
                 PositionType position = null;
@@ -176,12 +214,17 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 try {
                     birthDate = DateStamp.create(rs.getString("birthDate"));
                 } catch (DateStampException e) {
-                    birthDate = null;
-                    LOGGER.debug("Birth Date field is invalid or empty");
+                    birthDate = DateStamp.createEmptyDate();
+                    LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
                 }
-                RfidTag rfidTag = new RfidTag.Builder()
-                        .uid(uid)
-                        .build();
+                String uid;
+                RfidTag rfidTag = new RfidTag();
+                try {
+                    rfidTag.setUid(rs.getString("uid"));
+                } catch (UidFormatException e){
+                    rfidTag.setEmptyUid();
+                    LOGGER.debug("Assigned empty UID date due to exception: " + e.getMessage());
+                }
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)

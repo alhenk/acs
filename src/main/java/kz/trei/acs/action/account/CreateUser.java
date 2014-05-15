@@ -29,19 +29,12 @@ public class CreateUser implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirm-password");
         String email = request.getParameter("email");
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
-        session.setAttribute("username", username);
-        session.setAttribute("password", password);
-        session.setAttribute("confirm-password", confirmPassword);
-        session.setAttribute("email", email);
-        session.setAttribute("role", role);
-        session.setAttribute("table-id", tableId);
+
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         if (isFormValid(request)) {
@@ -56,12 +49,7 @@ public class CreateUser implements Action {
                 request.setAttribute("status", "form.user.create.fail");
                 return new ActionResult(ActionType.REDIRECT, "create-user" + fetchParameters(request));
             }
-            session.removeAttribute("username");
-            session.removeAttribute("password");
-            session.removeAttribute("email");
-            session.removeAttribute("confirm-password");
-            session.removeAttribute("user-role");
-            session.removeAttribute("table-id");
+
             request.setAttribute("status", "form.user.create.success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
         }

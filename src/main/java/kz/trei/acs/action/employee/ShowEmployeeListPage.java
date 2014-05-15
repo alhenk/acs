@@ -42,7 +42,7 @@ public class ShowEmployeeListPage implements Action {
         try {
             length = Integer.valueOf(request.getParameter("length"));
         } catch (NumberFormatException e) {
-            LOGGER.error("Length is not valid");
+            LOGGER.error("GET parameter length is empty, assigned default value (20)");
             length = Integer.valueOf(PropertyManager.getValue("paging.length"));
         }
         EmployeeComparator.CompareType compareType;
@@ -56,7 +56,6 @@ public class ShowEmployeeListPage implements Action {
         }
         List<Person> employees;
         try {
-//            employees = employeeDao.findAll();
             employees = employeeDao.findInRange(offset, length);
             Collections.sort(employees, new EmployeeComparator(compareType));
             totalNumber = employeeDao.totalNumber();

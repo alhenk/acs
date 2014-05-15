@@ -2,14 +2,18 @@ package kz.trei.acs.office.rfid;
 
 
 import kz.trei.acs.util.PropertyManager;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 
 public class RfidTag implements Serializable, Comparable<RfidTag> {
     private static final long serialVersionUID = -1380395087317256237L;
+    private static final Logger LOGGER = Logger.getLogger(RfidTag.class);
+
     static {
         PropertyManager.load("configure.properties");
     }
@@ -42,6 +46,26 @@ public class RfidTag implements Serializable, Comparable<RfidTag> {
         this.type = builder.type;
         this.protocol = builder.protocol;
         this.issue = builder.issue;
+    }
+
+    public static boolean isUidValid(String uid) {
+        if(uid==null || uid.isEmpty()){
+            return false;
+        }
+        String uidRegex = PropertyManager.getValue("rfid.uidRegex");
+        Pattern uidPattern;
+        Matcher uidMatcher;
+        try {
+            uidPattern = Pattern.compile(uidRegex, Pattern.CASE_INSENSITIVE);
+            uidMatcher = uidPattern.matcher(uid);
+        } catch (PatternSyntaxException e) {
+            LOGGER.error("UID compile exception");
+            return false;
+        } catch (IllegalArgumentException e){
+            LOGGER.error("UID matcher exception");
+            return false;
+        }
+        return uidMatcher.matches();
     }
 
     public long getId() {
@@ -86,6 +110,10 @@ public class RfidTag implements Serializable, Comparable<RfidTag> {
 
     public void setIssue(Issue issue) {
         this.issue = issue;
+    }
+
+    public void setEmptyUid() {
+        this.uid = "00000000";
     }
 
     @Override
@@ -173,12 +201,5 @@ public class RfidTag implements Serializable, Comparable<RfidTag> {
         public RfidTag build() {
             return new RfidTag(this);
         }
-    }
-
-    public static boolean isUidValid(String uid) {
-        String uidRegex = PropertyManager.getValue("rfid.uidRegex");
-        Pattern uidPattern = Pattern.compile(uidRegex,Pattern.CASE_INSENSITIVE);
-        Matcher uidMatcher = uidPattern.matcher(uid);
-        return uidMatcher.matches();
     }
 }

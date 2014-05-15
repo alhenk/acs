@@ -31,8 +31,8 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 		if (isDateStampValid(date)) {
 			return new DateStamp(date);
 		}
-		LOGGER.error(date + " is not a valid timestamp");
-        throw new DateStampException(date + " is not a valid timestamp");
+		LOGGER.error(date + " is not a valid date stamp");
+        throw new DateStampException(date + " is not a valid date stamp");
 	}
     public static DateStamp createEmptyDate(){
         return new DateStamp("");
@@ -57,8 +57,8 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
         if (isDateStampValid(date)) {
             this.date = date;
         }
-        LOGGER.error(date + " is not a valid timestamp");
-        throw new DateStampException(date + " is not a valid timestamp");
+        LOGGER.error(date + " is not a valid date stamp");
+        throw new DateStampException(date + " is not a valid date stamp");
     }
 
 	public static boolean isDateStampValid(String date) {
