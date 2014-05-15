@@ -10,8 +10,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "room", namespace ="http://www.trei.kz/attendance/tns")
 @XmlEnum
 public enum RoomType {
-	@XmlEnumValue("DEFAULT")
-	DEFAULT(1,"DEFAULT"),
 	@XmlEnumValue("ROOM101")
 	ROOM101(101, "SECURITY"),
 	@XmlEnumValue("ROOM102")
@@ -43,7 +41,9 @@ public enum RoomType {
 	@XmlEnumValue("ROOM206")
 	ROOM206(206, "SERVER"),
 	@XmlEnumValue("ROOM207")
-	ROOM207(207, "PRODUCTION");
+	ROOM207(207, "PRODUCTION"),
+    @XmlEnumValue("DEFAULT")
+    DEFAULT(1,"DEFAULT");
 
 	private int roomNumber;
 	private String roomName;

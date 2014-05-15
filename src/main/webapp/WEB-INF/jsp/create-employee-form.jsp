@@ -18,62 +18,30 @@
                            value="${sessionScope['birth-date']}"
                            clazz="employee"/>
         <p> &nbsp;</p>
-
-        <ftag:job-position-field positons="${sessionScope['positions']}" value="${sessionScope['position']}"/>
-
+        <ftag:select-field field="position"
+                                 optionList="${sessionScope['positions']}"
+                                 value="${sessionScope['position']}"/>
         <p> &nbsp;</p>
-
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.employee.department"/></label>
-            <select id="department" name="department">
-                <option value="RESEARCH_AND_DEVELOPMENT" selected><fmt:message bundle="${msg}"
-                                                                               key="employee.department.RESEARCH_AND_DEVELOPMENT"/></option>
-                <option value="ACCOUNTANCY"><fmt:message bundle="${msg}"
-                                                         key="employee.department.ACCOUNTANCY"/></option>
-                <option value="COMMERCIAL"><fmt:message bundle="${msg}" key="employee.department.COMMERCIAL"/></option>
-                <option value="DEFAULT"><fmt:message bundle="${msg}" key="employee.department.DEFAULT"/></option>
-            </select>
-        </p>
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['department-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['department-error']}"/>
-                <c:remove var="department-error" scope="session"/>
-            </c:if>
-        </p>
-
+        <ftag:select-field field="department"
+                           optionList="${sessionScope['departments']}"
+                           value="${sessionScope['department']}"/>
         <p> &nbsp;</p>
-
-        <p>
-            <label><fmt:message bundle="${msg}" key="form.employee.room"/></label>
-            <select id="room" name="room">
-                <option value="101" selected>101</option>
-                <option value="102">102</option>
-                <option value="103">103</option>
-            </select>
-        </p>
-        <p style="color:red;">
-            <c:if test="${not empty sessionScope['room-error']}">
-                <fmt:message bundle="${msg}" key="${sessionScope['room-error']}"/>
-                <c:remove var="room-error" scope="session"/>
-            </c:if>
-        </p>
-
+        <ftag:select-field field="room"
+                           optionList="${sessionScope['rooms']}"
+                           value="${sessionScope['room']}"/>
         <p> &nbsp;</p>
         <ftag:string-field field="table-id"
                            value="${sessionScope['table-id']}"
                            clazz="employee"/>
         <p> &nbsp;</p>
-
         <ftag:string-field field="uid"
                            value="${sessionScope['uid']}"
                            clazz="employee"/>
         <p> &nbsp;</p>
-
         <p>
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.employee.submit"/>
             </button>
         </p>
-
     </fieldset>
 </form>

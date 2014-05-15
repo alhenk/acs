@@ -22,7 +22,6 @@ public class CreateEmployee implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session=request.getSession();
         return new ActionResult(ActionType.REDIRECT, request.getHeader("referer"));
     }
 }
