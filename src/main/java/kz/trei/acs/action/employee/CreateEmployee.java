@@ -40,9 +40,9 @@ public class CreateEmployee implements Action {
             try {
                 employeeDao.create(employee);
             } catch (DaoException e) {
-                LOGGER.error("SQL statement exception execute: " + e.getMessage());
                 request.setAttribute("error", e.getMessage());
                 request.setAttribute("status", "form.employee.create.fail");
+                LOGGER.error("SQL INSERT statement exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "create-employee" + fetchParameters(request));
             }
             killFieldAttributes(request);
@@ -239,7 +239,7 @@ public class CreateEmployee implements Action {
                 request.setAttribute("first-name-error", "form.employee.first-name.malformed");
             }
         }
-        LOGGER.debug("Is first name valid " + isFirstNameValid);
+        LOGGER.debug("Is first name valid - " + isFirstNameValid);
         return isFirstNameValid;
     }
 
@@ -263,7 +263,7 @@ public class CreateEmployee implements Action {
                 request.setAttribute("patronym-error", "form.employee.patronym.malformed");
             }
         }
-        LOGGER.debug("Is patronym valid " + isPatronymValid);
+        LOGGER.debug("Is patronym valid - " + isPatronymValid);
         return isPatronymValid;
     }
 
@@ -287,7 +287,7 @@ public class CreateEmployee implements Action {
                 request.setAttribute("last-name-error", "form.employee.last-name.malformed");
             }
         }
-        LOGGER.debug("Is last name valid " + isLastNameValid);
+        LOGGER.debug("Is last name valid - " + isLastNameValid);
         return isLastNameValid;
     }
 
@@ -296,15 +296,15 @@ public class CreateEmployee implements Action {
         String birthDate = request.getParameter("birth-date");
         if (birthDate == null || birthDate.isEmpty()){
             request.setAttribute("birth-date-error", "form.employee.empty");
-            LOGGER.debug("Birth date is invalid ");
+            LOGGER.debug("Birth date is invalid");
             return false;
         }
         if (!DateStamp.isDateStampValid(birthDate)) {
             request.setAttribute("birth-date-error", "form.employee.birth-date.malformed");
-            LOGGER.debug("Birth date is invalid ");
+            LOGGER.debug("Birth date is invalid");
             return false;
         }
-        LOGGER.debug("Birth date is valid ");
+        LOGGER.debug("Birth date is valid");
         return true;
     }
 
@@ -313,16 +313,16 @@ public class CreateEmployee implements Action {
         String position = request.getParameter("position");
         if (position == null || position.isEmpty()){
             request.setAttribute("position-error", "form.employee.empty");
-            LOGGER.debug("Position is invalid ");
+            LOGGER.debug("Position is invalid");
             return false;
         }
         PositionType positionType = PositionType.valueOf(position);
         if (positionType == null) {
             request.setAttribute("position-error", "form.employee.position.malformed");
-            LOGGER.debug("Position is invalid ");
+            LOGGER.debug("Position is invalid");
             return false;
         }
-        LOGGER.debug("Position is valid ");
+        LOGGER.debug("Position is valid");
         return true;
     }
 
@@ -340,7 +340,7 @@ public class CreateEmployee implements Action {
             LOGGER.debug("Department is invalid ");
             return false;
         }
-        LOGGER.debug("Department is valid ");
+        LOGGER.debug("Department is valid");
         return true;
     }
 
@@ -349,16 +349,16 @@ public class CreateEmployee implements Action {
         String room = request.getParameter("room");
         if (room == null || room.isEmpty()){
             request.setAttribute("room-error", "form.employee.empty");
-            LOGGER.debug("Room is invalid ");
+            LOGGER.debug("Room is invalid");
             return false;
         }
         RoomType roomType = RoomType.valueOf(room);
         if (roomType == null) {
             request.setAttribute("room-error", "form.employee.room.malformed");
-            LOGGER.debug("Room is invalid ");
+            LOGGER.debug("Room is invalid");
             return false;
         }
-        LOGGER.debug("Room is valid ");
+        LOGGER.debug("Room is valid");
         return true;
     }
 
@@ -382,7 +382,7 @@ public class CreateEmployee implements Action {
                 request.setAttribute("table-id-error", "form.employee.table-id.malformed");
             }
         }
-        LOGGER.debug("Is table ID valid " + isTableIdValid);
+        LOGGER.debug("Is table ID valid - " + isTableIdValid);
         return isTableIdValid;
     }
 
@@ -390,15 +390,15 @@ public class CreateEmployee implements Action {
         String uid = request.getParameter("uid");
         if (uid == null || uid.isEmpty()){
             request.setAttribute("uid-error", "form.employee.empty");
-            LOGGER.debug("UID is invalid ");
+            LOGGER.debug("UID is invalid");
             return false;
         }
         if (!RfidTag.isUidValid(uid)) {
             request.setAttribute("uid-error", "form.employee.uid.malformed");
-            LOGGER.debug("UID is invalid ");
+            LOGGER.debug("UID is invalid");
             return false;
         }
-        LOGGER.debug("UID is valid ");
+        LOGGER.debug("UID is valid");
         return true;
     }
 

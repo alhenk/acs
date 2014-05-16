@@ -7,14 +7,18 @@ import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.office.structure.Account1C;
+import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.PasswordHash;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,37 +33,69 @@ public class CreateUser implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String role = request.getParameter("role");
-        String tableId = request.getParameter("table-id");
         createFieldAttributes(request);
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
+        User user;
         if (isFormValid(request)) {
             try {
-                User user = new User.Builder(username, password)
-                        .email(email)
-                        .tableId(Account1C.createId(tableId))
-                        .role(RoleType.valueOf(role.toUpperCase())).build();
+                user = buildUser(request);
                 userDao.create(user);
             } catch (DaoException e) {
-                LOGGER.error("SQL statement exception execute: " + e.getMessage());
                 request.setAttribute("status", "form.user.create.fail");
+                LOGGER.error("SQL INSERT statement exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "create-user" + fetchParameters(request));
+            } catch (NoSuchAlgorithmException e) {
+                LOGGER.error("Creating secure password hash fail : " + e.getMessage());
+                return new ActionResult(ActionType.FORWARD, "error?status=error.password-hash.fail");
+            } catch (InvalidKeySpecException e) {
+                LOGGER.error("Creating secure password hash fail  : " + e.getMessage());
+                return new ActionResult(ActionType.FORWARD, "error?status=error.password-hash.fail");
             }
             killFieldAttributes(request);
             request.setAttribute("status", "form.user.create.success");
+            LOGGER.debug("Create user success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
         }
         request.setAttribute("error", "form.user.incomplete");
+        LOGGER.debug("Create user fail");
         return new ActionResult(ActionType.REDIRECT, "create-user" + fetchParameters(request));
+    }
+
+    private User buildUser(HttpServletRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String tableId = request.getParameter("table-id");
+        String securePassword = PasswordHash.createHash(password);
+        RoleType role = null;
+        try {
+            role = RoleType.valueOf(request.getParameter("role"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Assigned default user role due to illegal argument : " + e.getMessage());
+            role = RoleType.UNREGISTERED;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Assigned default user role due to null value : " + e.getMessage());
+            role = RoleType.UNREGISTERED;
+        }
+        Account1C account1C;
+        try {
+            account1C = Account1C.createId(tableId);
+        } catch (Account1CException e) {
+            account1C = Account1C.defaultId();
+            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+        }
+        return new User.Builder(username, securePassword)
+                .email(email)
+                .tableId(account1C)
+                .role(role)
+                .build();
     }
 
     /**
      * Create user form field attributes
      * for keeping filled in data
+     *
      * @param request
      */
     private void createFieldAttributes(HttpServletRequest request) {
@@ -116,6 +152,7 @@ public class CreateUser implements Action {
         if (error != null) {
             parameters.append("&error=" + error);
         }
+        LOGGER.debug("Parameters for GET request are prepared");
         return parameters.toString();
     }
 
@@ -147,6 +184,7 @@ public class CreateUser implements Action {
                 request.setAttribute("username-error", "form.user.name.malformed");
             }
         }
+        LOGGER.debug("Is user name valid - " + isUserNameValid);
         return isUserNameValid;
     }
 
@@ -175,6 +213,7 @@ public class CreateUser implements Action {
                 isPasswordValid = false;
             }
         }
+        LOGGER.debug("Is user password valid - " + isPasswordValid);
         return isPasswordValid;
     }
 
@@ -198,6 +237,7 @@ public class CreateUser implements Action {
                 request.setAttribute("email-error", "form.user.email.malformed");
             }
         }
+        LOGGER.debug("Is user e-mail valid - " + isEmailValid);
         return isEmailValid;
     }
 
@@ -221,6 +261,7 @@ public class CreateUser implements Action {
                 request.setAttribute("role-error", "form.user.role.malformed");
             }
         }
+        LOGGER.debug("Is user role valid - " + isRoleValid);
         return isRoleValid;
     }
 
@@ -244,6 +285,7 @@ public class CreateUser implements Action {
                 request.setAttribute("table-id-error", "form.user.table-id.malformed");
             }
         }
+        LOGGER.debug("Is user table ID valid - " + isTableIdValid);
         return isTableIdValid;
     }
 }
