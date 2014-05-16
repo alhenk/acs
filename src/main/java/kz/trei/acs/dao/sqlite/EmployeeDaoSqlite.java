@@ -170,37 +170,44 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             while (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 String firstName = rs.getString("firstName");
+                String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
                 String tableId = rs.getString("tableId");
-
-                DepartmentType department=null;
+                DateStamp birthDate;
                 try {
-                    department = DepartmentType.valueOf(rs.getString("department"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute department is illegal " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute department is null " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
+                    birthDate = DateStamp.create(rs.getString("birthDate"));
+                } catch (DateStampException e) {
+                    birthDate = DateStamp.createEmptyDate();
+                    LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
                 }
                 PositionType position = null;
                 try{
                     position = PositionType.valueOf(rs.getString("jobPosition"));
                 }catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute job position is illegal " + e);
+                    LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
                     position = PositionType.DEFAULT;
                 } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute job position is null" + e);
+                    LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
                     position = PositionType.DEFAULT;
+                }
+                DepartmentType department=null;
+                try {
+                    department = DepartmentType.valueOf(rs.getString("department"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.debug("Assigned default department due to illegal argument : " + e.getMessage());
+                    department = DepartmentType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
+                    department = DepartmentType.DEFAULT;
                 }
                 RoomType room;
                 try{
                     room = RoomType.valueOf(rs.getString("room"));
                 }catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute room is illegal " + e);
+                    LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
                     room = RoomType.DEFAULT;
                 } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute room is null" + e);
+                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
                     room = RoomType.DEFAULT;
                 }
                 Account1C account1C;
@@ -210,24 +217,17 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     account1C = Account1C.defaultId();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
-                DateStamp birthDate;
-                try {
-                    birthDate = DateStamp.create(rs.getString("birthDate"));
-                } catch (DateStampException e) {
-                    birthDate = DateStamp.createEmptyDate();
-                    LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
-                }
-                String uid;
                 RfidTag rfidTag = new RfidTag();
                 try {
                     rfidTag.setUid(rs.getString("uid"));
                 } catch (UidFormatException e){
                     rfidTag.setEmptyUid();
-                    LOGGER.debug("Assigned empty UID date due to exception: " + e.getMessage());
+                    LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
                 }
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
+                        .patronym(patronym)
                         .lastName(lastName)
                         .birthDate(birthDate)
                         .position(position)

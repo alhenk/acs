@@ -22,7 +22,6 @@ import javax.servlet.http.HttpSession;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class CreateEmployee implements Action {
     private static final Logger LOGGER = Logger.getLogger(CreateEmployee.class);
 
@@ -33,78 +32,12 @@ public class CreateEmployee implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        String firstName = request.getParameter("first-name");
-        String patronym = request.getParameter("patronym");
-        String lastName = request.getParameter("last-name");
-        String tableId = request.getParameter("table-id");
         createFieldAttributes(request);
-        DateStamp birthDate;
-        try {
-            birthDate = DateStamp.create(request.getParameter("birth-date"));
-        } catch (DateStampException e) {
-            birthDate = DateStamp.createEmptyDate();
-            LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
-        }
-        PositionType position = null;
-        try {
-            position = PositionType.valueOf(request.getParameter("position"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("db attribute job position is illegal " + e);
-            position = PositionType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("db attribute job position is null" + e);
-            position = PositionType.DEFAULT;
-        }
-        DepartmentType department = null;
-        try {
-            department = DepartmentType.valueOf(request.getParameter("department"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("db attribute department is illegal " + e.getMessage());
-            department = DepartmentType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("db attribute department is null" + e.getMessage());
-            department = DepartmentType.DEFAULT;
-        }
-        RoomType room;
-        try {
-            room = RoomType.valueOf(request.getParameter("room"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("db attribute room is illegal " + e);
-            room = RoomType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("db attribute room is null" + e);
-            room = RoomType.DEFAULT;
-        }
-        Account1C account1C;
-        try {
-            account1C = Account1C.createId(tableId);
-        } catch (Account1CException e) {
-            account1C = Account1C.defaultId();
-            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-        }
-        String uid = request.getParameter("uid");
-        RfidTag rfidTag = new RfidTag.Builder().build();
-        try {
-            rfidTag.setUid(uid);
-        } catch (UidFormatException e){
-            rfidTag.setEmptyUid();
-            LOGGER.debug("Assigned empty UID");
-        }
-        DaoFactory daoFactory = DaoFactory.getFactory();
-        EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         if (isFormValid(request)) {
+            Person employee = buildEmployee(request);
+            DaoFactory daoFactory = DaoFactory.getFactory();
+            EmployeeDao employeeDao = daoFactory.getEmployeeDao();
             try {
-                Person employee = new Employee.Builder()
-                        .firstName(firstName)
-                        .patronym(patronym)
-                        .lastName(lastName)
-                        .birthDate(birthDate)
-                        .position(position)
-                        .department(department)
-                        .room(room)
-                        .account1C(account1C)
-                        .rfidTag(rfidTag)
-                        .build();
                 employeeDao.create(employee);
             } catch (DaoException e) {
                 LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -120,10 +53,82 @@ public class CreateEmployee implements Action {
         return new ActionResult(ActionType.REDIRECT, "create-employee" + fetchParameters(request));
     }
 
+    private Person buildEmployee(HttpServletRequest request) {
+        String firstName = request.getParameter("first-name");
+        String patronym = request.getParameter("patronym");
+        String lastName = request.getParameter("last-name");
+        String tableId = request.getParameter("table-id");
+        String uid = request.getParameter("uid");
+        //patronym is optional
+        if(patronym == null){patronym="";}
+        DateStamp birthDate;
+        try {
+            birthDate = DateStamp.create(request.getParameter("birth-date"));
+        } catch (DateStampException e) {
+            birthDate = DateStamp.createEmptyDate();
+            LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
+        }
+        PositionType position = null;
+        try {
+            position = PositionType.valueOf(request.getParameter("position"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
+            position = PositionType.DEFAULT;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
+            position = PositionType.DEFAULT;
+        }
+        DepartmentType department = null;
+        try {
+            department = DepartmentType.valueOf(request.getParameter("department"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Assigned default department due to illegal argument : " + e.getMessage());
+            department = DepartmentType.DEFAULT;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
+            department = DepartmentType.DEFAULT;
+        }
+        RoomType room;
+        try {
+            room = RoomType.valueOf(request.getParameter("room"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
+            room = RoomType.DEFAULT;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
+            room = RoomType.DEFAULT;
+        }
+        Account1C account1C;
+        try {
+            account1C = Account1C.createId(tableId);
+        } catch (Account1CException e) {
+            account1C = Account1C.defaultId();
+            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+        }
+        RfidTag rfidTag = new RfidTag.Builder().build();
+        try {
+            rfidTag.setUid(uid);
+        } catch (UidFormatException e) {
+            rfidTag.setEmptyUid();
+            LOGGER.debug("Assigned empty UID \"00000000\" due to exception: " + e.getMessage());
+        }
+        return new Employee.Builder()
+                .firstName(firstName)
+                .patronym(patronym)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .position(position)
+                .department(department)
+                .room(room)
+                .account1C(account1C)
+                .rfidTag(rfidTag)
+                .build();
+    }
 
     /**
      * Create employee form field attributes
      * for keeping filled in data
+     *
      * @param request
      */
     private void createFieldAttributes(HttpServletRequest request) {
@@ -213,7 +218,7 @@ public class CreateEmployee implements Action {
                 & isTableIdValid(request)
                 & isUidValid(request);
     }
-    
+
     //FIRST NAME VALIDATION
     private boolean isFirstNameValid(HttpServletRequest request) {
         String firstName = request.getParameter("first-name");
@@ -244,8 +249,8 @@ public class CreateEmployee implements Action {
         boolean isPatronymValid = true;
         Matcher patronymMatcher = null;
         if (patronym == null || patronym.isEmpty()) {
-            isPatronymValid = false;
-            request.setAttribute("patronym-error", "form.employee.empty");
+            //patronym is optional
+            isPatronymValid = true;
         } else {
             String patronymRegex = PropertyManager.getValue("form.employee.patronym.regex");
             Pattern patronymPattern = Pattern.compile(patronymRegex,
@@ -286,27 +291,114 @@ public class CreateEmployee implements Action {
         return isLastNameValid;
     }
 
+    //BIRTH DATE VALIDATION
     private boolean isBirthDateValid(HttpServletRequest request) {
+        String birthDate = request.getParameter("birth-date");
+        if (birthDate == null || birthDate.isEmpty()){
+            request.setAttribute("birth-date-error", "form.employee.empty");
+            LOGGER.debug("Birth date is invalid ");
+            return false;
+        }
+        if (!DateStamp.isDateStampValid(birthDate)) {
+            request.setAttribute("birth-date-error", "form.employee.birth-date.malformed");
+            LOGGER.debug("Birth date is invalid ");
+            return false;
+        }
+        LOGGER.debug("Birth date is valid ");
         return true;
     }
 
+    //POSITION VALIDATION
     private boolean isPositionValid(HttpServletRequest request) {
+        String position = request.getParameter("position");
+        if (position == null || position.isEmpty()){
+            request.setAttribute("position-error", "form.employee.empty");
+            LOGGER.debug("Position is invalid ");
+            return false;
+        }
+        PositionType positionType = PositionType.valueOf(position);
+        if (positionType == null) {
+            request.setAttribute("position-error", "form.employee.position.malformed");
+            LOGGER.debug("Position is invalid ");
+            return false;
+        }
+        LOGGER.debug("Position is valid ");
         return true;
     }
 
+    //DEPARTMENT VALIDATION
     private boolean isDepartmentValid(HttpServletRequest request) {
+        String department = request.getParameter("department");
+        if (department == null || department.isEmpty()){
+            request.setAttribute("department-error", "form.employee.empty");
+            LOGGER.debug("Department is invalid ");
+            return false;
+        }
+        DepartmentType departmentType = DepartmentType.valueOf(department);
+        if (departmentType == null) {
+            request.setAttribute("department-error", "form.employee.department.malformed");
+            LOGGER.debug("Department is invalid ");
+            return false;
+        }
+        LOGGER.debug("Department is valid ");
         return true;
     }
 
+    //ROOM VALIDATION
     private boolean isRoomValid(HttpServletRequest request) {
+        String room = request.getParameter("room");
+        if (room == null || room.isEmpty()){
+            request.setAttribute("room-error", "form.employee.empty");
+            LOGGER.debug("Room is invalid ");
+            return false;
+        }
+        RoomType roomType = RoomType.valueOf(room);
+        if (roomType == null) {
+            request.setAttribute("room-error", "form.employee.room.malformed");
+            LOGGER.debug("Room is invalid ");
+            return false;
+        }
+        LOGGER.debug("Room is valid ");
         return true;
     }
 
+    //TABLE_ID MATCHER
     private boolean isTableIdValid(HttpServletRequest request) {
-        return true;
+        String tableId = request.getParameter("table-id");
+        boolean isTableIdValid = false;
+        Matcher tableIdMatcher = null;
+        if (tableId == null || tableId.isEmpty()) {
+            isTableIdValid = false;
+            request.setAttribute("table-id-error", "form.employee.empty");
+        } else {
+            String tableIdRegex = PropertyManager.getValue("form.employee.table-id.regex");
+            Pattern tableIdPattern = Pattern.compile(tableIdRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            tableIdMatcher = tableIdPattern.matcher(tableId);
+            if (tableIdMatcher != null && tableIdMatcher.matches()) {
+                isTableIdValid = true;
+            } else {
+                isTableIdValid = false;
+                request.setAttribute("table-id-error", "form.employee.table-id.malformed");
+            }
+        }
+        LOGGER.debug("Is table ID valid " + isTableIdValid);
+        return isTableIdValid;
     }
 
     private boolean isUidValid(HttpServletRequest request) {
+        String uid = request.getParameter("uid");
+        if (uid == null || uid.isEmpty()){
+            request.setAttribute("uid-error", "form.employee.empty");
+            LOGGER.debug("UID is invalid ");
+            return false;
+        }
+        if (!RfidTag.isUidValid(uid)) {
+            request.setAttribute("uid-error", "form.employee.uid.malformed");
+            LOGGER.debug("UID is invalid ");
+            return false;
+        }
+        LOGGER.debug("UID is valid ");
         return true;
     }
 

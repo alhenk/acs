@@ -43,7 +43,7 @@ public enum RoomType {
 	@XmlEnumValue("ROOM207")
 	ROOM207(207, "PRODUCTION"),
     @XmlEnumValue("DEFAULT")
-    DEFAULT(1,"DEFAULT");
+    DEFAULT(0,"DEFAULT");
 
 	private int roomNumber;
 	private String roomName;

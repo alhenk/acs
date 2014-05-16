@@ -50,8 +50,10 @@ public class ShowEmployeeListPage implements Action {
             compareType =
                     EmployeeComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
         } catch (NullPointerException e) {
+            LOGGER.debug("Assigned default comparator by ID");
             compareType = EmployeeComparator.CompareType.ID;
         } catch (IllegalArgumentException e) {
+            LOGGER.debug("Assigned default comparator by ID");
             compareType = EmployeeComparator.CompareType.ID;
         }
         List<Person> employees;
