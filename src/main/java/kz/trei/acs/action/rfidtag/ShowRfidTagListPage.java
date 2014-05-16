@@ -41,7 +41,7 @@ public class ShowRfidTagListPage implements Action {
         try {
             length = Integer.valueOf(request.getParameter("length"));
         } catch (NumberFormatException e) {
-            LOGGER.error("Length is not valid");
+            LOGGER.error("GET parameter length is empty, assigned configure value (20)");
             length = Integer.valueOf(PropertyManager.getValue("paging.length"));
         }
         RfidComparator.CompareType compareType;
@@ -63,10 +63,11 @@ public class ShowRfidTagListPage implements Action {
             session.setAttribute("error", "error.db.rfidtag-list");
             return new ActionResult(ActionType.FORWARD, "error");
         }
-        session.setAttribute("rfidtags", rfidtags);
         session.setAttribute("total-number", totalNumber);
         session.setAttribute("offset", offset);
         session.setAttribute("length", length);
+        session.setAttribute("rfidtags", rfidtags);
+        LOGGER.debug("..."+ rfidtags);
         return new ActionResult(ActionType.FORWARD, "rfidtag-list");
     }
 }

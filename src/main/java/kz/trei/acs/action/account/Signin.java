@@ -36,8 +36,8 @@ public class Signin implements Action {
             LOGGER.debug("User name or password error");
             return new ActionResult(ActionType.REDIRECT, "main?error=form.sign-in.wrong-password");
         }
-        LOGGER.debug("The user logged successfully");
         session.setAttribute("user", user);
+        LOGGER.debug("The user logged successfully");
         return new ActionResult(ActionType.REDIRECT, "dashboard");
     }
 }

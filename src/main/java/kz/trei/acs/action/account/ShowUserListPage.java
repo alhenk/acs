@@ -42,7 +42,7 @@ public class ShowUserListPage implements Action {
         try {
             length = Integer.valueOf(request.getParameter("length"));
         } catch (NumberFormatException e) {
-            LOGGER.error("Length is not valid");
+            LOGGER.error("GET parameter length is empty, assigned configure value (20)");
             length = Integer.valueOf(PropertyManager.getValue("paging.length"));
         }
 
@@ -71,6 +71,7 @@ public class ShowUserListPage implements Action {
         session.setAttribute("total-number", totalNumber);
         session.setAttribute("offset", offset);
         session.setAttribute("length", length);
+        LOGGER.debug("...");
         return new ActionResult(ActionType.FORWARD,"user-list");
     }
 }

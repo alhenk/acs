@@ -5,10 +5,9 @@
 <form action="do/edit-user" method="post">
     <fieldset class="edit">
         <input type="hidden" name="id" value="${sessionScope['original-user'].id}">
-
         <p>&nbsp;</p>
         <ftag:string-field field="username"
-                           value="${sessionScope['original-user']['username']}"
+                           value="${sessionScope['original-user'].username}"
                            clazz="user"/>
         <p>&nbsp;</p>
         <ftag:string-field field="email"

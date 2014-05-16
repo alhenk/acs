@@ -15,7 +15,9 @@ public class CancelCreateRfidTag implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-
+        session.removeAttribute("protocols");
+        session.removeAttribute("types");
+        session.removeAttribute("rfidtag");
         LOGGER.debug("Create RFID tag canceled");
         return new ActionResult(ActionType.FORWARD, "rfidtag-list");
     }

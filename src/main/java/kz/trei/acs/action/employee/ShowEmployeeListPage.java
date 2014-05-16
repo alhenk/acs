@@ -42,7 +42,7 @@ public class ShowEmployeeListPage implements Action {
         try {
             length = Integer.valueOf(request.getParameter("length"));
         } catch (NumberFormatException e) {
-            LOGGER.error("GET parameter length is empty, assigned default value (20)");
+            LOGGER.error("GET parameter length is empty, assigned configure value (20)");
             length = Integer.valueOf(PropertyManager.getValue("paging.length"));
         }
         EmployeeComparator.CompareType compareType;
@@ -70,6 +70,7 @@ public class ShowEmployeeListPage implements Action {
         session.setAttribute("total-number", totalNumber);
         session.setAttribute("offset", offset);
         session.setAttribute("length", length);
+        LOGGER.debug("...");
         return new ActionResult(ActionType.FORWARD, "employee-list");
     }
 }

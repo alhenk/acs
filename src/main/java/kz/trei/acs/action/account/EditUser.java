@@ -32,19 +32,27 @@ public class EditUser implements Action {
         response.setCharacterEncoding("UTF-8");
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
+        long id;
+        try {
+            id = Long.valueOf(request.getParameter("id"));
+            if (id < 0) {
+                throw new NumberFormatException("negative id = " + id);
+            }
+        } catch (NumberFormatException e) {
+            LOGGER.error("GET parameter \"id\" is not valid : " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "error?status=error.parameter.id.invalid");
+        }
         if (isFormValid(request)) {
             User user = buildUser(request);
             try {
                 userDao.update(user);
                 LOGGER.debug("user ->" + user);
             } catch (DaoException e) {
-                LOGGER.error("SQL statement exception execute: " + e.getMessage());
+                LOGGER.error("SQL UPDATE USERS exception : " + e.getMessage());
                 request.setAttribute("status", "form.user.create.fail");
                 return new ActionResult(ActionType.REDIRECT, "edit-user" + fetchParameters(request));
             }
-            HttpSession session = request.getSession();
-            session.removeAttribute("original-user");
-            session.removeAttribute("roles");
+            killFieldAttributes(request);
             request.setAttribute("status", "form.user.edit.success");
             LOGGER.debug("Form user edit success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
@@ -52,6 +60,12 @@ public class EditUser implements Action {
         request.setAttribute("error", "form.user.incomplete");
         LOGGER.error("Form user incomplete");
         return new ActionResult(ActionType.REDIRECT, "edit-user" + fetchParameters(request));
+    }
+
+    private void killFieldAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("roles");
+        session.removeAttribute("original-user");
     }
 
     private User buildUser(HttpServletRequest request) {
@@ -79,7 +93,7 @@ public class EditUser implements Action {
             account1C = Account1C.defaultId();
             LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
         }
-        LOGGER.debug("User " + username + " is created");
+        LOGGER.debug("User " + username + " is almost created");
         return new User.Builder(username, password)
                 .id(id)
                 .email(email)

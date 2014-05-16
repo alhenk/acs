@@ -31,7 +31,7 @@ public class ShowEditUserPage implements Action {
         try {
             id = Long.valueOf(request.getParameter("id"));
             if (id < 0) {
-                throw new NullPointerException("negative ID");
+                throw new NumberFormatException("negative id = " + id);
             }
         } catch (NumberFormatException e) {
             LOGGER.error("GET parameter \"id\" is not valid : " + e.getMessage());
@@ -46,10 +46,11 @@ public class ShowEditUserPage implements Action {
             LOGGER.error("DAO find by ID exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error?error=error.db.find-by-id");
         }
-        List<String> roles = RoleType.getList();
         HttpSession session = request.getSession();
-        session.setAttribute("original-user", originalUser);
+        List<String> roles = RoleType.getList();
         session.setAttribute("roles", roles);
+        session.setAttribute("original-user", originalUser);
+        LOGGER.debug("... user = " + originalUser);
         return new ActionResult(ActionType.FORWARD, "edit-user");
     }
 }

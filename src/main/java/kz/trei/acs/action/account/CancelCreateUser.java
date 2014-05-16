@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Created by Admin on 16.05.14.
- */
 public class CancelCreateUser implements Action {
     private static final Logger LOGGER = Logger.getLogger(CancelCreateUser.class);
 

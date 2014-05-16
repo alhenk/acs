@@ -10,7 +10,6 @@ import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.UidFormatException;
 import kz.trei.acs.office.structure.*;
-import kz.trei.acs.user.User;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.DateStampException;
 import kz.trei.acs.util.FileManager;
@@ -65,7 +64,107 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public Person findById(long id) throws DaoException {
-        return null;
+        PreparedStatement stmt = null;
+        ResultSet rs;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        Person employee;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
+            stmt = conn.prepareStatement("SELECT * FROM EMPLOYEES WHERE id = ?");
+            stmt.setLong(1, id);
+            rs = stmt.executeQuery();
+            LOGGER.debug("Execute Query " + rs);
+            if (rs.next()) {
+                String firstName = rs.getString("firstName");
+                String patronym = rs.getString("patronym");
+                String lastName = rs.getString("lastName");
+                String tableId = rs.getString("tableId");
+                DateStamp birthDate;
+                try {
+                    birthDate = DateStamp.create(rs.getString("birthDate"));
+                } catch (DateStampException e) {
+                    birthDate = DateStamp.createEmptyDate();
+                    LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
+                }
+                PositionType position = null;
+                try {
+                    position = PositionType.valueOf(rs.getString("jobPosition"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
+                    position = PositionType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
+                    position = PositionType.DEFAULT;
+                }
+                DepartmentType department = null;
+                try {
+                    department = DepartmentType.valueOf(rs.getString("department"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.debug("Assigned default department due to illegal argument : " + e.getMessage());
+                    department = DepartmentType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
+                    department = DepartmentType.DEFAULT;
+                }
+                RoomType room;
+                try {
+                    room = RoomType.valueOf(rs.getString("room"));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
+                    room = RoomType.DEFAULT;
+                } catch (NullPointerException e) {
+                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
+                    room = RoomType.DEFAULT;
+                }
+                Account1C account1C;
+                try {
+                    account1C = Account1C.createId(tableId);
+                } catch (Account1CException e) {
+                    account1C = Account1C.defaultId();
+                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+                }
+                RfidTag rfidTag = new RfidTag();
+                try {
+                    rfidTag.setUid(rs.getString("uid"));
+                } catch (UidFormatException e) {
+                    rfidTag.setEmptyUid();
+                    LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
+                }
+                employee = new Employee.Builder()
+                        .id(id)
+                        .firstName(firstName)
+                        .patronym(patronym)
+                        .lastName(lastName)
+                        .birthDate(birthDate)
+                        .position(position)
+                        .department(department)
+                        .room(room)
+                        .account1C(account1C)
+                        .rfidTag(rfidTag)
+                        .build();
+                LOGGER.debug("Found by id " + employee);
+                return employee;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQL SELECT exception : " + e.getMessage());
+            throw new DaoException("SQL SELECT exception" + e.getMessage());
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("get connection exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
+        LOGGER.debug("There is no such employee");
+        throw new DaoException("There is no such employee");
     }
 
     @Override
@@ -86,18 +185,18 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(2, employee.getPatronym());
             stmt.setString(3, employee.getLastName());
             stmt.setString(4, employee.getBirthDate().getDate().toString());
-            stmt.setString(5, ((Employee)employee).getPosition().toString());
-            stmt.setString(6, ((Employee)employee).getDepartment().toString());
-            stmt.setString(7, ((Employee)employee).getRoom().toString());
-            stmt.setString(8, ((Employee)employee).getAccount1C().getTableId());
-            stmt.setString(9, ((Employee)employee).getRfidTag().getUid());
+            stmt.setString(5, ((Employee) employee).getPosition().toString());
+            stmt.setString(6, ((Employee) employee).getDepartment().toString());
+            stmt.setString(7, ((Employee) employee).getRoom().toString());
+            stmt.setString(8, ((Employee) employee).getAccount1C().getTableId());
+            stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
             stmt.execute();
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception : " + e.getMessage());
             CharSequence obj = "is not unique";
-            String errorMessage="";
-            if(e.getMessage().contains(obj)){
-                errorMessage="error.db.not-unique";
+            String errorMessage = "";
+            if (e.getMessage().contains(obj)) {
+                errorMessage = "error.db.not-unique";
                 LOGGER.error("error.db.not-unique");
             }
             throw new DaoException(errorMessage);
@@ -141,7 +240,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
-        return  totalNumber;
+        return totalNumber;
     }
 
     @Override
@@ -150,7 +249,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public  List<Person> findInRange(long offset, long length) throws DaoException{
+    public List<Person> findInRange(long offset, long length) throws DaoException {
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -166,7 +265,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT "+ length + " OFFSET "+offset);
+            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT " + length + " OFFSET " + offset);
             while (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 String firstName = rs.getString("firstName");
@@ -181,16 +280,16 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
                 }
                 PositionType position = null;
-                try{
+                try {
                     position = PositionType.valueOf(rs.getString("jobPosition"));
-                }catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
                     position = PositionType.DEFAULT;
                 } catch (NullPointerException e) {
                     LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
                     position = PositionType.DEFAULT;
                 }
-                DepartmentType department=null;
+                DepartmentType department = null;
                 try {
                     department = DepartmentType.valueOf(rs.getString("department"));
                 } catch (IllegalArgumentException e) {
@@ -201,9 +300,9 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     department = DepartmentType.DEFAULT;
                 }
                 RoomType room;
-                try{
+                try {
                     room = RoomType.valueOf(rs.getString("room"));
-                }catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
                     room = RoomType.DEFAULT;
                 } catch (NullPointerException e) {
@@ -220,7 +319,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 RfidTag rfidTag = new RfidTag();
                 try {
                     rfidTag.setUid(rs.getString("uid"));
-                } catch (UidFormatException e){
+                } catch (UidFormatException e) {
                     rfidTag.setEmptyUid();
                     LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
                 }
@@ -250,6 +349,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         }
         return employees;
     }
+
     @Override
     public List<Person> findAll() throws DaoException {
         Statement stmt = null;
@@ -274,7 +374,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String lastName = rs.getString("lastName");
                 String tableId = rs.getString("tableId");
                 String uid = rs.getString("uid");
-                DepartmentType department=null;
+                DepartmentType department = null;
                 try {
                     department = DepartmentType.valueOf(rs.getString("department"));
                 } catch (IllegalArgumentException e) {
@@ -285,9 +385,9 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     department = DepartmentType.DEFAULT;
                 }
                 PositionType position = null;
-                try{
+                try {
                     position = PositionType.valueOf(rs.getString("jobPosition"));
-                }catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     LOGGER.debug("db attribute job position is illegal " + e);
                     position = PositionType.DEFAULT;
                 } catch (NullPointerException e) {
@@ -295,9 +395,9 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                     position = PositionType.DEFAULT;
                 }
                 RoomType room;
-                try{
+                try {
                     room = RoomType.valueOf(rs.getString("room"));
-                }catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     LOGGER.debug("db attribute room is illegal " + e);
                     room = RoomType.DEFAULT;
                 } catch (NullPointerException e) {

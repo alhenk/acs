@@ -47,9 +47,11 @@ public class CreateEmployee implements Action {
             }
             killFieldAttributes(request);
             request.setAttribute("status", "form.employee.create.success");
+            LOGGER.debug("Create employee success");
             return new ActionResult(ActionType.REDIRECT, "employee-list" + fetchParameters(request));
         }
         request.setAttribute("error", "form.employee.incomplete");
+        LOGGER.debug("Create employee fail");
         return new ActionResult(ActionType.REDIRECT, "create-employee" + fetchParameters(request));
     }
 

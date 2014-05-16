@@ -101,7 +101,6 @@ public class UserDaoSqlite implements UserDao {
 
     @Override
     public User findById(long id) throws DaoException {
-        String users = PropertyManager.getValue("user.table");
         PreparedStatement stmt = null;
         ResultSet rs;
         Connection conn = null;
@@ -115,7 +114,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
-            stmt = conn.prepareStatement("SELECT * FROM " + users + " WHERE id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM USERS WHERE id = ?");
             stmt.setLong(1, id);
             rs = stmt.executeQuery();
             LOGGER.debug("Execute Query " + rs);
@@ -138,7 +137,7 @@ public class UserDaoSqlite implements UserDao {
                         .email(email)
                         .tableId(tableId)
                         .build();
-                LOGGER.debug(user);
+                LOGGER.debug("Found by id " + user);
                 return user;
             }
         } catch (SQLException e) {

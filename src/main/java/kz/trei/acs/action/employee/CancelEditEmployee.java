@@ -16,7 +16,10 @@ public class CancelEditEmployee implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-
+        session.removeAttribute("positions");
+        session.removeAttribute("departments");
+        session.removeAttribute("rooms");
+        session.removeAttribute("original-employee");
         LOGGER.debug("Edit employee canceled");
         return new ActionResult(ActionType.FORWARD, "employee-list");
     }
