@@ -1,4 +1,4 @@
-package kz.trei.acs.action.account;
+package kz.trei.acs.action.employee;
 
 import kz.trei.acs.action.Action;
 import kz.trei.acs.action.ActionResult;
@@ -9,15 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class CancelEditUser implements Action {
-    private static final Logger LOGGER = Logger.getLogger(CancelEditUser.class);
+
+public class CancelEditEmployee implements Action {
+    private static final Logger LOGGER = Logger.getLogger(CancelEditEmployee.class);
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        session.removeAttribute("roles");
-        session.removeAttribute("original-user");
-        LOGGER.debug("Edit user canceled");
-        return new ActionResult(ActionType.FORWARD, "user-list");
+
+        LOGGER.debug("Edit employee canceled");
+        return new ActionResult(ActionType.FORWARD, "employee-list");
     }
 }

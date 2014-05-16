@@ -9,15 +9,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class CancelEditUser implements Action {
-    private static final Logger LOGGER = Logger.getLogger(CancelEditUser.class);
+/**
+ * Created by Admin on 16.05.14.
+ */
+public class CancelCreateUser implements Action {
+    private static final Logger LOGGER = Logger.getLogger(CancelCreateUser.class);
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        session.removeAttribute("roles");
-        session.removeAttribute("original-user");
-        LOGGER.debug("Edit user canceled");
+        session.removeAttribute("username");
+        session.removeAttribute("password");
+        session.removeAttribute("email");
+        session.removeAttribute("confirm-password");
+        session.removeAttribute("user-role");
+        session.removeAttribute("table-id");
+        LOGGER.debug("Create user canceled");
         return new ActionResult(ActionType.FORWARD, "user-list");
     }
 }

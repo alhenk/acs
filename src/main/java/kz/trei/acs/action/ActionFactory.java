@@ -30,25 +30,30 @@ public class ActionFactory {
         actions.put("GET/exception", new ShowExceptionPage());
         //User Account
         actions.put("GET/user-list", new ShowUserListPage());
-        actions.put("POST/edit-user", new EditUser());
         actions.put("GET/edit-user", new ShowEditUserPage());
-        actions.put("GET/edit-user-cancel", new CancelEditUser());
+        actions.put("POST/edit-user", new EditUser());
+        actions.put("GET/cancel-edit-user", new CancelEditUser());
         actions.put("GET/create-user", new ShowCreateUserPage());
         actions.put("POST/create-user", new CreateUser());
+        actions.put("GET/cancel-create-user", new CancelCreateUser());
         actions.put("GET/delete-user", new DeleteUser());
         //RfidTag
         actions.put("GET/rfidtag-list", new ShowRfidTagListPage());
         actions.put("GET/edit-rfidtag", new ShowEditRfidTagPage());
         actions.put("POST/edit-rfidtag", new EditRfidTag());
+        actions.put("GET/cancel-edit-rfidtag", new CancelEditRfidTag());
         actions.put("GET/create-rfidtag", new ShowCreateRfidTagPage());
         actions.put("POST/create-rfidtag", new CreateRfidTag());
+        actions.put("GET/cancel-create-rfidtag", new CancelCreateRfidTag());
         actions.put("GET/delete-rfidtag", new DeleteRfidTag());
         //Employee
         actions.put("GET/employee-list", new ShowEmployeeListPage());
         actions.put("GET/edit-employee", new ShowEditEmployeePage());
         actions.put("POST/edit-employee", new EditEmployee());
+        actions.put("GET/cancel-edit-employee", new CancelEditEmployee());
         actions.put("GET/create-employee", new ShowCreateEmployeePage());
         actions.put("POST/create-employee", new CreateEmployee());
+        actions.put("GET/cancel-create-employee", new CancelCreateEmployee());
         actions.put("GET/delete-employee", new DeleteEmployee());
         LOGGER.debug("Instantiated ActionFactory");
     }
