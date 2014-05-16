@@ -34,7 +34,7 @@ public class CreateUser implements Action {
         String email = request.getParameter("email");
         String role = request.getParameter("role");
         String tableId = request.getParameter("table-id");
-
+        createFieldAttributes(request);
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         if (isFormValid(request)) {
@@ -49,12 +49,37 @@ public class CreateUser implements Action {
                 request.setAttribute("status", "form.user.create.fail");
                 return new ActionResult(ActionType.REDIRECT, "create-user" + fetchParameters(request));
             }
-
+            killFieldAttributes(request);
             request.setAttribute("status", "form.user.create.success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
         }
         request.setAttribute("error", "form.user.incomplete");
         return new ActionResult(ActionType.REDIRECT, "create-user" + fetchParameters(request));
+    }
+
+    /**
+     * Create user form field attributes
+     * for keeping filled in data
+     * @param request
+     */
+    private void createFieldAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("username", request.getParameter("username"));
+        session.setAttribute("password", request.getParameter("password"));
+        session.setAttribute("confirm-password", request.getParameter("confirm-password"));
+        session.setAttribute("email", request.getParameter("email"));
+        session.setAttribute("role", request.getParameter("role"));
+        session.setAttribute("table-id", request.getParameter("table-id"));
+    }
+
+    private void killFieldAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("username");
+        session.removeAttribute("password");
+        session.removeAttribute("email");
+        session.removeAttribute("confirm-password");
+        session.removeAttribute("user-role");
+        session.removeAttribute("table-id");
     }
 
     private String fetchParameters(HttpServletRequest request) {

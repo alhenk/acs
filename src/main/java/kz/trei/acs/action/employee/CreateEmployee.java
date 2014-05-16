@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class CreateEmployee implements Action {
@@ -34,6 +37,7 @@ public class CreateEmployee implements Action {
         String patronym = request.getParameter("patronym");
         String lastName = request.getParameter("last-name");
         String tableId = request.getParameter("table-id");
+        createFieldAttributes(request);
         DateStamp birthDate;
         try {
             birthDate = DateStamp.create(request.getParameter("birth-date"));
@@ -108,6 +112,7 @@ public class CreateEmployee implements Action {
                 request.setAttribute("status", "form.employee.create.fail");
                 return new ActionResult(ActionType.REDIRECT, "create-employee" + fetchParameters(request));
             }
+            killFieldAttributes(request);
             request.setAttribute("status", "form.employee.create.success");
             return new ActionResult(ActionType.REDIRECT, "employee-list" + fetchParameters(request));
         }
@@ -115,11 +120,43 @@ public class CreateEmployee implements Action {
         return new ActionResult(ActionType.REDIRECT, "create-employee" + fetchParameters(request));
     }
 
+
+    /**
+     * Create employee form field attributes
+     * for keeping filled in data
+     * @param request
+     */
+    private void createFieldAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("first-name", request.getParameter("first-name"));
+        session.setAttribute("patronym", request.getParameter("patronym"));
+        session.setAttribute("last-name", request.getParameter("last-name"));
+        session.setAttribute("birth-date", request.getParameter("birth-date"));
+        session.setAttribute("position", request.getParameter("position"));
+        session.setAttribute("department", request.getParameter("department"));
+        session.setAttribute("room", request.getParameter("room"));
+        session.setAttribute("table-id", request.getParameter("table-id"));
+        session.setAttribute("uid", request.getParameter("uid"));
+    }
+
+    private void killFieldAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("first-name");
+        session.removeAttribute("patronym");
+        session.removeAttribute("last-name");
+        session.removeAttribute("birth-date");
+        session.removeAttribute("position");
+        session.removeAttribute("department");
+        session.removeAttribute("room");
+        session.removeAttribute("table-id");
+        session.removeAttribute("uid");
+    }
+
     private String fetchParameters(HttpServletRequest request) {
         StringBuilder parameters = new StringBuilder("?");
-        String firstNameError = (String) request.getAttribute("firstName-error");
+        String firstNameError = (String) request.getAttribute("first-name-error");
         String patronymError = (String) request.getAttribute("patronym-error");
-        String lastNameError = (String) request.getAttribute("lastName-error");
+        String lastNameError = (String) request.getAttribute("last-name-error");
         String birthDateError = (String) request.getAttribute("birth-date-error");
         String positionError = (String) request.getAttribute("position-error");
         String departmentError = (String) request.getAttribute("department-error");
@@ -166,12 +203,111 @@ public class CreateEmployee implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
-//        return isFirstNameValid(request)
-//                & isPatronymValid(request)
-//                & isLastNameValid(request)
-//                & isEmailValid(request)
-//                & isTableIdValid(request)
-//                & isRoleValid(request);
+        return isFirstNameValid(request)
+                & isPatronymValid(request)
+                & isLastNameValid(request)
+                & isBirthDateValid(request)
+                & isPositionValid(request)
+                & isDepartmentValid(request)
+                & isRoomValid(request)
+                & isTableIdValid(request)
+                & isUidValid(request);
+    }
+    
+    //FIRST NAME VALIDATION
+    private boolean isFirstNameValid(HttpServletRequest request) {
+        String firstName = request.getParameter("first-name");
+        boolean isFirstNameValid = true;
+        Matcher firstNameMatcher = null;
+        if (firstName == null || firstName.isEmpty()) {
+            isFirstNameValid = false;
+            request.setAttribute("first-name-error", "form.employee.empty");
+        } else {
+            String firstNameRegex = PropertyManager.getValue("form.employee.first-name.regex");
+            Pattern firstNamePattern = Pattern.compile(firstNameRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            firstNameMatcher = firstNamePattern.matcher(firstName);
+            if (firstNameMatcher != null && firstNameMatcher.matches()) {
+                isFirstNameValid = true;
+            } else {
+                isFirstNameValid = false;
+                request.setAttribute("first-name-error", "form.employee.first-name.malformed");
+            }
+        }
+        LOGGER.debug("Is first name valid " + isFirstNameValid);
+        return isFirstNameValid;
+    }
+
+    //PATRONYM VALIDATION
+    private boolean isPatronymValid(HttpServletRequest request) {
+        String patronym = request.getParameter("patronym");
+        boolean isPatronymValid = true;
+        Matcher patronymMatcher = null;
+        if (patronym == null || patronym.isEmpty()) {
+            isPatronymValid = false;
+            request.setAttribute("patronym-error", "form.employee.empty");
+        } else {
+            String patronymRegex = PropertyManager.getValue("form.employee.patronym.regex");
+            Pattern patronymPattern = Pattern.compile(patronymRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            patronymMatcher = patronymPattern.matcher(patronym);
+            if (patronymMatcher != null && patronymMatcher.matches()) {
+                isPatronymValid = true;
+            } else {
+                isPatronymValid = false;
+                request.setAttribute("patronym-error", "form.employee.patronym.malformed");
+            }
+        }
+        LOGGER.debug("Is patronym valid " + isPatronymValid);
+        return isPatronymValid;
+    }
+
+    //LAST NAME VALIDATION
+    private boolean isLastNameValid(HttpServletRequest request) {
+        String lastName = request.getParameter("last-name");
+        boolean isLastNameValid = true;
+        Matcher lastNameMatcher = null;
+        if (lastName == null || lastName.isEmpty()) {
+            isLastNameValid = false;
+            request.setAttribute("last-name-error", "form.employee.empty");
+        } else {
+            String lastNameRegex = PropertyManager.getValue("form.employee.last-name.regex");
+            Pattern lastNamePattern = Pattern.compile(lastNameRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            lastNameMatcher = lastNamePattern.matcher(lastName);
+            if (lastNameMatcher != null && lastNameMatcher.matches()) {
+                isLastNameValid = true;
+            } else {
+                isLastNameValid = false;
+                request.setAttribute("last-name-error", "form.employee.last-name.malformed");
+            }
+        }
+        LOGGER.debug("Is last name valid " + isLastNameValid);
+        return isLastNameValid;
+    }
+
+    private boolean isBirthDateValid(HttpServletRequest request) {
         return true;
     }
+
+    private boolean isPositionValid(HttpServletRequest request) {
+        return true;
+    }
+
+    private boolean isDepartmentValid(HttpServletRequest request) {
+        return true;
+    }
+
+    private boolean isRoomValid(HttpServletRequest request) {
+        return true;
+    }
+
+    private boolean isTableIdValid(HttpServletRequest request) {
+        return true;
+    }
+
+    private boolean isUidValid(HttpServletRequest request) {
+        return true;
+    }
+
 }
