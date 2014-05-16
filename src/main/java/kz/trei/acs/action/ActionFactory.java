@@ -28,10 +28,11 @@ public class ActionFactory {
         //Error
         actions.put("GET/error", new ShowErrorPage());
         actions.put("GET/exception", new ShowExceptionPage());
-        //User
+        //User Account
         actions.put("GET/user-list", new ShowUserListPage());
         actions.put("POST/edit-user", new EditUser());
         actions.put("GET/edit-user", new ShowEditUserPage());
+        actions.put("GET/edit-user-cancel", new CancelEditUser());
         actions.put("GET/create-user", new ShowCreateUserPage());
         actions.put("POST/create-user", new CreateUser());
         actions.put("GET/delete-user", new DeleteUser());

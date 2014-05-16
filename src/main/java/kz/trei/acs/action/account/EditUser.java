@@ -7,6 +7,7 @@ import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.office.structure.Account1C;
+import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
@@ -29,36 +30,11 @@ public class EditUser implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
-        String id = request.getParameter("id");
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        String role = request.getParameter("role");
-        String tableId = request.getParameter("table-id");
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
-        User originalUser;
-        String password = null;
-        try {
-            originalUser = userDao.findById(Long.valueOf(id));
-        } catch (DaoException e) {
-            LOGGER.error("Find by ID exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.find-by-id");
-        }
-        password = originalUser.getPassword();
-        session.setAttribute("id", id);
-        session.setAttribute("username", username);
-        session.setAttribute("password", password);
-        session.setAttribute("email", email);
-        session.setAttribute("role", role);
-        session.setAttribute("table-id", tableId);
         if (isFormValid(request)) {
+            User user = buildUser(request);
             try {
-                User user = new User.Builder(username, password)
-                        .id(Long.valueOf(id))
-                        .email(email)
-                        .tableId(Account1C.createId(tableId))
-                        .role(RoleType.valueOf(role.toUpperCase())).build();
                 userDao.update(user);
                 LOGGER.debug("user ->" + user);
             } catch (DaoException e) {
@@ -66,19 +42,50 @@ public class EditUser implements Action {
                 request.setAttribute("status", "form.user.create.fail");
                 return new ActionResult(ActionType.REDIRECT, "edit-user" + fetchParameters(request));
             }
-            session.removeAttribute("id");
-            session.removeAttribute("username");
-            session.removeAttribute("password");
-            session.removeAttribute("email");
-            session.removeAttribute("confirm-password");
-            session.removeAttribute("user-role");
-            session.removeAttribute("table-id");
+            HttpSession session = request.getSession();
+            session.removeAttribute("original-user");
+            session.removeAttribute("roles");
             request.setAttribute("status", "form.user.edit.success");
+            LOGGER.debug("Form user edit success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + fetchParameters(request));
         }
-
         request.setAttribute("error", "form.user.incomplete");
+        LOGGER.error("Form user incomplete");
         return new ActionResult(ActionType.REDIRECT, "edit-user" + fetchParameters(request));
+    }
+
+    private User buildUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User originalUser = (User) session.getAttribute("original-user");
+        long id = Long.valueOf((String) request.getParameter("id"));
+        String username = (String) request.getParameter("username");
+        String password = originalUser.getPassword();
+        String email = (String) request.getParameter("email");
+        String tableId = (String) request.getParameter("table-id");
+        RoleType role = null;
+        try {
+            role = RoleType.valueOf(request.getParameter("role"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Assigned default user role due to illegal argument : " + e.getMessage());
+            role = RoleType.UNREGISTERED;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Assigned default user role due to null value : " + e.getMessage());
+            role = RoleType.UNREGISTERED;
+        }
+        Account1C account1C;
+        try {
+            account1C = Account1C.createId(tableId);
+        } catch (Account1CException e) {
+            account1C = Account1C.defaultId();
+            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+        }
+        LOGGER.debug("User " + username + " is created");
+        return new User.Builder(username, password)
+                .id(id)
+                .email(email)
+                .tableId(account1C)
+                .role(role)
+                .build();
     }
 
     private String fetchParameters(HttpServletRequest request) {
@@ -119,6 +126,7 @@ public class EditUser implements Action {
         if (error != null) {
             parameters.append("&error=" + error);
         }
+        LOGGER.debug("Get parameters are fetched");
         return parameters.toString();
     }
 
@@ -149,35 +157,8 @@ public class EditUser implements Action {
                 request.setAttribute("username-error", "username.malformed");
             }
         }
+        LOGGER.debug("Is user name valid - " + isUserNameValid);
         return isUserNameValid;
-    }
-
-    //PASSWORD VALIDATION
-    private boolean isPasswordValid(HttpServletRequest request) {
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirm-password");
-        boolean isPasswordValid = false;
-        Matcher passwordMatcher = null;
-        if (password == null || password.isEmpty()) {
-            isPasswordValid = false;
-            request.setAttribute("password-error", "form.user.empty");
-        } else {
-            String passwordRegex = PropertyManager.getValue("form.user.password.regex");
-            Pattern passwordPattern = Pattern.compile(passwordRegex,
-                    Pattern.UNICODE_CHARACTER_CLASS);
-            passwordMatcher = passwordPattern.matcher(password);
-            if (passwordMatcher != null && passwordMatcher.matches()) {
-                isPasswordValid = true;
-            } else {
-                isPasswordValid = false;
-                request.setAttribute("password-error", "form.user.password.malformed");
-            }
-            if (isPasswordValid && !password.equals(confirmPassword)) {
-                request.setAttribute("confirm-password-error", "form.user.password.not-confirmed");
-                isPasswordValid = false;
-            }
-        }
-        return isPasswordValid;
     }
 
     //EMAIL VALIDATION
@@ -200,6 +181,7 @@ public class EditUser implements Action {
                 request.setAttribute("email-error", "form.user.email.malformed");
             }
         }
+        LOGGER.debug("Is user e-mail valid - " + isEmailValid);
         return isEmailValid;
     }
 
@@ -223,6 +205,7 @@ public class EditUser implements Action {
                 request.setAttribute("role-error", "form.user.role.malformed");
             }
         }
+        LOGGER.debug("Is user role valid - " + isRoleValid);
         return isRoleValid;
     }
 
@@ -248,6 +231,7 @@ public class EditUser implements Action {
                 request.setAttribute("table-id-error", "form.user.table-id.malformed");
             }
         }
+        LOGGER.debug("Is table ID valid - " + isTableIdValid);
         return isTableIdValid;
     }
 }

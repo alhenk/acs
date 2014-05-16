@@ -26,6 +26,8 @@
                         <div class="block">
                             <jsp:doBody/>
                             <mtag:status/>
+                            <p>&nbsp;</p>
+                            <mtag:cancel form="create-${entity}"/>
                         </div>
                     </div>
                 </div>

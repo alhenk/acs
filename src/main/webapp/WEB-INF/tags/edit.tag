@@ -9,7 +9,7 @@
 <div class="grid_8">
     <div class="box">
         <h2>
-            <a><fmt:message bundle="${msg}" key="fill-in.form"/></a>
+            <a><fmt:message bundle="${msg}" key="edit.form"/></a>
         </h2>
 
         <div class="block">
@@ -22,6 +22,8 @@
                         <div class="block">
                             <jsp:doBody/>
                             <mtag:status/>
+                            <p>&nbsp;</p>
+                            <mtag:cancel form="edit-${entity}"/>
                         </div>
                     </div>
                 </div>

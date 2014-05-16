@@ -200,7 +200,6 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
-        String securePassword;
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
@@ -247,16 +246,19 @@ public class UserDaoSqlite implements UserDao {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM USERS");
-            while (rs.next()) {
+            if (rs.next()) {
                 totalNumber = Long.valueOf(rs.getString("TotalNumber"));
-                LOGGER.debug("Total number of ROWS = " + totalNumber);
+                LOGGER.debug("Total number of ROWS in USERS = " + totalNumber);
+            }else{
+                LOGGER.error("Failed to count ROWS in USERS");
+                throw new DaoException("Failed to count ROWS in USERS");
             }
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception execute: " + e.getMessage());
-            throw new DaoException("SQL statement exception execute");
+            LOGGER.error("SQL SELECT query exception : " + e.getMessage());
+            throw new DaoException("SQL SELECT query exception");
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -289,7 +291,6 @@ public class UserDaoSqlite implements UserDao {
             stmt.execute();
             LOGGER.debug("id :" + user.getId());
             LOGGER.debug("username :" + user.getUsername());
-            LOGGER.debug("password :" + user.getPassword());
             LOGGER.debug("Email :" + user.getEmail());
             LOGGER.debug("Role :" + user.getRole());
             LOGGER.debug("Table ID :" + user.getAccount1C().getTableId());

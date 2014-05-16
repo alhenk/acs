@@ -46,11 +46,13 @@ public class CreateUser implements Action {
                 LOGGER.error("SQL INSERT statement exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "create-user" + fetchParameters(request));
             } catch (NoSuchAlgorithmException e) {
+                killFieldAttributes(request);
                 LOGGER.error("Creating secure password hash fail : " + e.getMessage());
-                return new ActionResult(ActionType.FORWARD, "error?status=error.password-hash.fail");
+                return new ActionResult(ActionType.REDIRECT, "error?status=error.password-hash.fail");
             } catch (InvalidKeySpecException e) {
+                killFieldAttributes(request);
                 LOGGER.error("Creating secure password hash fail  : " + e.getMessage());
-                return new ActionResult(ActionType.FORWARD, "error?status=error.password-hash.fail");
+                return new ActionResult(ActionType.REDIRECT, "error?status=error.password-hash.fail");
             }
             killFieldAttributes(request);
             request.setAttribute("status", "form.user.create.success");

@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShowEditUserPage implements Action {
@@ -28,26 +27,29 @@ public class ShowEditUserPage implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        long id = Long.valueOf(request.getParameter("id"));
+        long id;
+        try {
+            id = Long.valueOf(request.getParameter("id"));
+            if (id < 0) {
+                throw new NullPointerException("negative ID");
+            }
+        } catch (NumberFormatException e) {
+            LOGGER.error("GET parameter \"id\" is not valid : " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "error?status=error.parameter.id.invalid");
+        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
-        User user;
+        User originalUser;
         try {
-            user = userDao.findById(id);
+            originalUser = userDao.findById(id);
         } catch (DaoException e) {
-            LOGGER.error("Getting user list exception: " + e.getMessage());
-            return new ActionResult(ActionType.FORWARD, "error");
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Getting user list exception: " + e.getMessage());
-            return new ActionResult(ActionType.FORWARD, "error");
+            LOGGER.error("DAO find by ID exception: " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.find-by-id");
         }
+        List<String> roles = RoleType.getList();
         HttpSession session = request.getSession();
-        List<String> roles = new ArrayList<String>();
-        for (RoleType type : RoleType.values()) {
-            roles.add(type.toString());
-        }
+        session.setAttribute("original-user", originalUser);
         session.setAttribute("roles", roles);
-        session.setAttribute("account", user);
         return new ActionResult(ActionType.FORWARD, "edit-user");
     }
 }

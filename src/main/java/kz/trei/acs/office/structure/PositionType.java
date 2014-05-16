@@ -3,6 +3,8 @@ package kz.trei.acs.office.structure;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * List of job positions
@@ -81,6 +83,14 @@ public enum PositionType {
     private PositionType(int hierarchy, String position) {
         this.hierarchy = hierarchy;
         this.position = position;
+    }
+
+    public static List<String> getList() {
+        List<String> types = new ArrayList<String>();
+        for (PositionType type : PositionType.values()) {
+            types.add(type.toString());
+        }
+        return types;
     }
 
     public String getPosition() {
