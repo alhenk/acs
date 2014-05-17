@@ -44,11 +44,12 @@ public class ShowUserListPage implements Action {
         } catch (DaoException e) {
             killUserListAttributes(request);
             LOGGER.error("Getting user list exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.user-list");
+            request.setAttribute("error", "error=error.db.user-list");
+            return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         } catch (RuntimeException e) {
             killUserListAttributes(request);
-            LOGGER.error("Getting user list exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.user-list");
+            request.setAttribute("error", "error=error.db.user-list");
+            return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         }
         session.setAttribute("users", users);
         session.setAttribute("total-number", totalNumber);
@@ -64,7 +65,6 @@ public class ShowUserListPage implements Action {
         session.removeAttribute("total-number");
         session.removeAttribute("offset");
         session.removeAttribute("length");
-        LOGGER.debug("Kill User list attributes");
     }
 
     private long takeLengthFromRequest(HttpServletRequest request) {

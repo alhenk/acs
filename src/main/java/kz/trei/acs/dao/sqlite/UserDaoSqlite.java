@@ -175,8 +175,14 @@ public class UserDaoSqlite implements UserDao {
             stmt.setString(5, user.getRole().toString());
             stmt.execute();
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception execute: " + e.getMessage());
-            throw new DaoException("SQL statement exception execute");
+            CharSequence obj = "is not unique";
+            String errorMessage = "";
+            if (e.getMessage().contains(obj)) {
+                errorMessage = "error.db.not-unique";
+                LOGGER.error("ROW NOT UNIQUE");
+            }
+            LOGGER.error("SQL INSERT into USERS exception : " + e.getMessage());
+            throw new DaoException(errorMessage);
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");

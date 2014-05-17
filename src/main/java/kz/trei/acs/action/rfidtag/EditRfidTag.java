@@ -7,9 +7,7 @@ import kz.trei.acs.action.ActionType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by Admin on 14.05.14.
- */
+
 public class EditRfidTag implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {

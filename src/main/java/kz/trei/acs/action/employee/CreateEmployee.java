@@ -6,28 +6,14 @@ import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.EmployeeDao;
-import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
-import kz.trei.acs.office.rfid.RfidTag;
-import kz.trei.acs.office.rfid.UidFormatException;
-import kz.trei.acs.office.structure.*;
-import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.DateStampException;
-import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CreateEmployee implements Action {
     private static final Logger LOGGER = Logger.getLogger(CreateEmployee.class);
-
-    static {
-        PropertyManager.load("configure.properties");
-    }
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {

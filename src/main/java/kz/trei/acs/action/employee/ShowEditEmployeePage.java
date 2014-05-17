@@ -11,7 +11,7 @@ import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.util.PropertyManager;
+import kz.trei.acs.util.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,31 +23,27 @@ import java.util.List;
 public class ShowEditEmployeePage implements Action {
     private static final Logger LOGGER = Logger.getLogger(ShowEditRfidTagPage.class);
 
-    static {
-        PropertyManager.load("configure.properties");
-    }
-
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("...");
         response.setCharacterEncoding("UTF-8");
         long id;
-        try {
-            id = Long.valueOf(request.getParameter("id"));
-            if (id < 0) {
-                throw new NumberFormatException("negative id = " + id);
-            }
-        } catch (NumberFormatException e) {
-            LOGGER.error("GET parameter \"id\" is not valid : " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?status=error.parameter.id.invalid");
-        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         Person originalEmployee;
         try {
+            id = EmployeeUtil.takeIdFromRequest(request);
             originalEmployee = employeeDao.findById(id);
         } catch (DaoException e) {
+            EmployeeUtil.killFieldAttributes(request);
+            request.setAttribute("error", "error.db.find-by-id");
             LOGGER.error("DAO find by ID exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.find-by-id");
+            return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
+        }catch (GetParameterException e) {
+            EmployeeUtil.killFieldAttributes(request);
+            request.setAttribute("status", "error.parameter.id.invalid");
+            LOGGER.error(e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
         }
         HttpSession session = request.getSession();
         List<String> positions = PositionType.getList();

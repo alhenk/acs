@@ -6,7 +6,7 @@ import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.EmployeeDao;
-import kz.trei.acs.util.PropertyManager;
+import kz.trei.acs.util.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,28 +16,30 @@ import javax.servlet.http.HttpServletResponse;
 public class DeleteEmployee implements Action {
     private static final Logger LOGGER = Logger.getLogger(DeleteEmployee.class);
 
-    static {
-        PropertyManager.load("configure.properties");
-    }
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("...");
         response.setCharacterEncoding("UTF-8");
         long id;
-        try {
-            id = Long.valueOf(request.getParameter("id"));
-        } catch (NumberFormatException e) {
-            LOGGER.error("Wrong id parameter " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "employee-list?status=id.parameter.error");
-        }
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         try {
+            id = EmployeeUtil.takeIdFromRequest(request);
+            if (id == 0 || id == 1) {
+                throw new GetParameterException("trying to delete the read-only record");
+            }
             employeeDao.delete(id);
         } catch (DaoException e) {
+            request.setAttribute("status", "delete.employee.fail");
             LOGGER.error("DAO delete error " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "employee-list?status=delete.employee.fail");
+            return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
+        } catch (GetParameterException e) {
+            request.setAttribute("status", "error.parameter.id.invalid");
+            LOGGER.error(e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
         }
+        request.setAttribute("status", "delete.employee.success");
         LOGGER.debug("The employee is deleted successfully");
-        return new ActionResult(ActionType.REDIRECT, "employee-list?status=delete.employee.success");
+        return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
     }
 }

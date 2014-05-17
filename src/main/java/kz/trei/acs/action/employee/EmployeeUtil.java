@@ -132,8 +132,7 @@ public final class EmployeeUtil {
         RoomType room = takeRoomFromRequest(request);
         Account1C account1C = takeAccount1CFromRequest(request);
         RfidTag rfidTag = takeRfidTagFromRequest(request);
-        LOGGER.debug("Employee " + firstName + " is almost created");
-        return new Employee.Builder()
+        Person employee = new Employee.Builder()
                 .id(id)
                 .firstName(firstName)
                 .patronym(patronym)
@@ -145,7 +144,10 @@ public final class EmployeeUtil {
                 .account1C(account1C)
                 .rfidTag(rfidTag)
                 .build();
+        LOGGER.debug("Employee " + employee + " is built");
+        return employee;
     }
+
     public static Person buildNewEmployeeFromRequest(HttpServletRequest request) {
         LOGGER.debug("buildNewEmployeeFromRequest ...");
         String firstName = request.getParameter("first-name");
@@ -162,7 +164,7 @@ public final class EmployeeUtil {
         Account1C account1C = takeAccount1CFromRequest(request);
         RfidTag rfidTag = takeRfidTagFromRequest(request);
         LOGGER.debug("Employee " + firstName + " is almost created");
-        return new Employee.Builder()
+        Person employee = new Employee.Builder()
                 .firstName(firstName)
                 .patronym(patronym)
                 .lastName(lastName)
@@ -173,6 +175,8 @@ public final class EmployeeUtil {
                 .account1C(account1C)
                 .rfidTag(rfidTag)
                 .build();
+        LOGGER.debug("Employee " + employee + " is built");
+        return employee;
     }
 
     public static long takeIdFromRequest(HttpServletRequest request) {

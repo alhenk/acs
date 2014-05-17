@@ -44,12 +44,14 @@ public class ShowRfidTagListPage implements Action {
             totalNumber = rfidTagDao.totalNumber();
         } catch (DaoException e) {
             killRfidTagListAttribute(request);
+            request.setAttribute("error", "error.db.rfidtag-list");
             LOGGER.error("Getting rfidtag list exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.rfidtag-list");
+            return new ActionResult(ActionType.REDIRECT, "error" + RfidTagUtil.fetchParameters(request));
         } catch (RuntimeException e) {
             killRfidTagListAttribute(request);
+            request.setAttribute("error", "error.db.rfidtag-list");
             LOGGER.error("Getting rfidtag list exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.rfidtag-list");
+            return new ActionResult(ActionType.REDIRECT, "error" + RfidTagUtil.fetchParameters(request));
         }
         session.setAttribute("total-number", totalNumber);
         session.setAttribute("offset", offset);
@@ -61,9 +63,9 @@ public class ShowRfidTagListPage implements Action {
 
     private void killRfidTagListAttribute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.removeAttribute("total-number");
         session.removeAttribute("offset");
         session.removeAttribute("length");
+        session.removeAttribute("total-number");
         session.removeAttribute("rfidtags");
     }
 

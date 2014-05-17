@@ -71,6 +71,7 @@ public final class UserUtil {
      * for keeping filled in data
      */
     public static void createFieldAttributes(HttpServletRequest request) {
+        LOGGER.debug("createFieldAttributes ...");
         HttpSession session = request.getSession();
         session.setAttribute("username", request.getParameter("username"));
         session.setAttribute("password", request.getParameter("password"));
@@ -81,6 +82,7 @@ public final class UserUtil {
     }
 
     public static void killFieldAttributes(HttpServletRequest request) {
+        LOGGER.debug("killFieldAttributes ...");
         HttpSession session = request.getSession();
         session.removeAttribute("username");
         session.removeAttribute("password");
@@ -93,26 +95,27 @@ public final class UserUtil {
     }
 
     public static User buildEditedUserFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildEditedUserFromRequest ...");
         HttpSession session = request.getSession();
         User originalUser = (User) session.getAttribute("original-user");
         String securePassword = originalUser.getPassword();
         long id = takeIdFromRequest(request);
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-        String tableId = request.getParameter("table-id");
         RoleType role = takeRoleFromRequest(request);
-
         Account1C account1C = takeAccount1CFromRequest(request);
-        LOGGER.debug("User " + username + " is almost created");
-        return new User.Builder(username, securePassword)
+        User user = new User.Builder(username, securePassword)
                 .id(id)
                 .email(email)
                 .tableId(account1C)
                 .role(role)
                 .build();
+        LOGGER.debug("The user - " + user + " is built");
+        return user;
     }
 
     public static User buildNewUserFromRequest(HttpServletRequest request) throws SecurePasswordException {
+        LOGGER.debug("buildNewUserFromRequest ...");
         String password = request.getParameter("password");
         String securePassword = null;
         try {
@@ -128,14 +131,17 @@ public final class UserUtil {
         String email = request.getParameter("email");
         RoleType role = takeRoleFromRequest(request);
         Account1C account1C = takeAccount1CFromRequest(request);
-        return new User.Builder(username, securePassword)
+        User user = new User.Builder(username, securePassword)
                 .email(email)
                 .tableId(account1C)
                 .role(role)
                 .build();
+        LOGGER.debug("The user - " + user + " is built");
+        return user;
     }
 
     private static Account1C takeAccount1CFromRequest(HttpServletRequest request) {
+        LOGGER.debug("takeAccount1CFromRequest ...");
         Account1C account1C;
         String tableId = request.getParameter("table-id");
         try {
@@ -148,6 +154,7 @@ public final class UserUtil {
     }
 
     private static RoleType takeRoleFromRequest(HttpServletRequest request) {
+        LOGGER.debug("takeRoleFromRequest ...");
         RoleType role;
         try {
             role = RoleType.valueOf(request.getParameter("role"));
@@ -162,6 +169,7 @@ public final class UserUtil {
     }
 
     public static long takeIdFromRequest(HttpServletRequest request) {
+        LOGGER.debug("takeIdFromRequest ...");
         long id;
         try {
             id = Long.valueOf(request.getParameter("id"));
@@ -176,6 +184,7 @@ public final class UserUtil {
 
     //USER NAME VALIDATION
     public static boolean isUserNameValid(HttpServletRequest request) {
+        LOGGER.debug("isUserNameValid ...");
         String username = request.getParameter("username");
         boolean isUserNameValid = true;
         Matcher userNameMatcher = null;
@@ -194,12 +203,13 @@ public final class UserUtil {
                 request.setAttribute("username-error", "username.malformed");
             }
         }
-        LOGGER.debug("Is user name valid - " + isUserNameValid);
+        LOGGER.debug(isUserNameValid);
         return isUserNameValid;
     }
 
     //PASSWORD VALIDATION
     public static boolean isPasswordValid(HttpServletRequest request) {
+        LOGGER.debug("isPasswordValid ...");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
         boolean isPasswordValid = false;
@@ -223,12 +233,13 @@ public final class UserUtil {
                 isPasswordValid = false;
             }
         }
-        LOGGER.debug("Is user password valid - " + isPasswordValid);
+        LOGGER.debug(isPasswordValid);
         return isPasswordValid;
     }
 
     //EMAIL VALIDATION
     public static boolean isEmailValid(HttpServletRequest request) {
+        LOGGER.debug("isEmailValid ...");
         String email = request.getParameter("email");
         boolean isEmailValid = false;
         Matcher emailMatcher = null;
@@ -247,12 +258,13 @@ public final class UserUtil {
                 request.setAttribute("email-error", "form.user.email.malformed");
             }
         }
-        LOGGER.debug("Is user e-mail valid - " + isEmailValid);
+        LOGGER.debug(isEmailValid);
         return isEmailValid;
     }
 
     //ROLE MATCHER
     public static boolean isRoleValid(HttpServletRequest request) {
+        LOGGER.debug("isRoleValid ...");
         String role = request.getParameter("role");
         boolean isRoleValid = false;
         Matcher roleMatcher = null;
@@ -271,7 +283,7 @@ public final class UserUtil {
                 request.setAttribute("role-error", "form.user.role.malformed");
             }
         }
-        LOGGER.debug("Is user role valid - " + isRoleValid);
+        LOGGER.debug(isRoleValid);
         return isRoleValid;
     }
 
@@ -279,6 +291,7 @@ public final class UserUtil {
      * TABLE_ID MATCHER
      */
     public static boolean isTableIdValid(HttpServletRequest request) {
+        LOGGER.debug("isTableIdValid ...");
         String tableId = request.getParameter("table-id");
         boolean isTableIdValid = false;
         Matcher tableIdMatcher = null;
@@ -297,7 +310,7 @@ public final class UserUtil {
                 request.setAttribute("table-id-error", "form.user.table-id.malformed");
             }
         }
-        LOGGER.debug("Is table ID valid - " + isTableIdValid);
+        LOGGER.debug(isTableIdValid);
         return isTableIdValid;
     }
 }

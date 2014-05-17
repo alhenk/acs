@@ -32,9 +32,9 @@ public class ShowEmployeeListPage implements Action {
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
-        long length = takeLengthFromRequest(request);
         long totalNumber;
         long offset = takeOffsetFromRequest(request);
+        long length = takeLengthFromRequest(request);
         EmployeeComparator.CompareType employeeComparator
                 = takeEmployeeComparatorFromRequest(request);
         List<Person> employees;
@@ -44,12 +44,14 @@ public class ShowEmployeeListPage implements Action {
             totalNumber = employeeDao.totalNumber();
         } catch (DaoException e) {
             killEmployeeListAttributes(request);
+            request.setAttribute("error","error.db.employee-list");
             LOGGER.error("Getting employee list exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.employee-list");
+            return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
         } catch (RuntimeException e) {
             killEmployeeListAttributes(request);
+            request.setAttribute("error","error.db.employee-list");
             LOGGER.error("Getting employee list exception: " + e.getMessage());
-            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.employee-list");
+            return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
         }
         session.setAttribute("employees", employees);
         session.setAttribute("total-number", totalNumber);

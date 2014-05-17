@@ -148,13 +148,13 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
             stmt.execute();
         } catch (SQLException e) {
-            LOGGER.error("SQL INSERT into EMPLOYEES exception : " + e.getMessage());
             CharSequence obj = "is not unique";
             String errorMessage = "";
             if (e.getMessage().contains(obj)) {
                 errorMessage = "error.db.not-unique";
-                LOGGER.error("error.db.not-unique");
+                LOGGER.error("ROW NOT UNIQUE");
             }
+            LOGGER.error("SQL INSERT into EMPLOYEES exception : " + e.getMessage());
             throw new DaoException(errorMessage);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection exception: " + e.getMessage());

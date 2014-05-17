@@ -6,30 +6,15 @@ import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
-import kz.trei.acs.office.structure.Account1C;
-import kz.trei.acs.office.structure.Account1CException;
-import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
-import kz.trei.acs.util.PasswordHash;
-import kz.trei.acs.util.PropertyManager;
 import kz.trei.acs.util.SecurePasswordException;
 import org.apache.log4j.Logger;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class CreateUser implements Action {
     private static final Logger LOGGER = Logger.getLogger(CreateUser.class);
-
-    static {
-        PropertyManager.load("configure.properties");
-    }
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
@@ -43,13 +28,15 @@ public class CreateUser implements Action {
                 user =  UserUtil.buildNewUserFromRequest(request);
                 userDao.create(user);
             } catch (DaoException e) {
+                request.setAttribute("error", e.getMessage());
                 request.setAttribute("status", "form.user.create.fail");
                 LOGGER.error("SQL INSERT statement exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "create-user" + UserUtil.fetchParameters(request));
             } catch (SecurePasswordException e) {
                 UserUtil.killFieldAttributes(request);
+                request.setAttribute("error", "error.password-hash.fail");
                 LOGGER.error(e);
-                return new ActionResult(ActionType.REDIRECT, "error?status=error.password-hash.fail");
+                return new ActionResult(ActionType.REDIRECT, "error"+UserUtil.fetchParameters(request));
             }
             UserUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.user.create.success");
