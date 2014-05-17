@@ -277,10 +277,9 @@ public class UserDaoSqlite implements UserDao {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
-        String users = PropertyManager.getValue("user.table");
         try {
             conn = connectionPool.getConnection();
-            stmt = conn.prepareStatement("UPDATE " + users + " SET username = ?, password = ?, email = ?, tableId = ?, role = ? WHERE id = ?");
+            stmt = conn.prepareStatement("UPDATE USERS SET username = ?, password = ?, email = ?, tableId = ?, role = ? WHERE id = ?");
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getEmail());

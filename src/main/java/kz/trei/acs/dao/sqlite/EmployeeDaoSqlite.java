@@ -33,7 +33,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
-            throw new DaoException("Get connection pool instance exception");
+            throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
             conn = connectionPool.getConnection();
@@ -51,11 +51,11 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            LOGGER.error("SQL CREATE table EMPLOYEES or SELECT from it exception : " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
+            throw new DaoException("Connection pool exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -73,7 +73,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
-            throw new DaoException("Get connection pool instance exception");
+            throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
             conn = connectionPool.getConnection();
@@ -86,58 +86,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
-                String tableId = rs.getString("tableId");
-                DateStamp birthDate;
-                try {
-                    birthDate = DateStamp.create(rs.getString("birthDate"));
-                } catch (DateStampException e) {
-                    birthDate = DateStamp.createEmptyDate();
-                    LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
-                }
-                PositionType position = null;
-                try {
-                    position = PositionType.valueOf(rs.getString("jobPosition"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
-                    position = PositionType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
-                    position = PositionType.DEFAULT;
-                }
-                DepartmentType department = null;
-                try {
-                    department = DepartmentType.valueOf(rs.getString("department"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("Assigned default department due to illegal argument : " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                }
-                RoomType room;
-                try {
-                    room = RoomType.valueOf(rs.getString("room"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
-                    room = RoomType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
-                    room = RoomType.DEFAULT;
-                }
-                Account1C account1C;
-                try {
-                    account1C = Account1C.createId(tableId);
-                } catch (Account1CException e) {
-                    account1C = Account1C.defaultId();
-                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-                }
-                RfidTag rfidTag = new RfidTag();
-                try {
-                    rfidTag.setUid(rs.getString("uid"));
-                } catch (UidFormatException e) {
-                    rfidTag.setEmptyUid();
-                    LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
-                }
+                DateStamp birthDate = takeBirthDate(rs);
+                PositionType position = takePosition(rs);
+                DepartmentType department = takeDepartment(rs);
+                RoomType room = takeRoom(rs);
+                Account1C account1C = takeAccount1C(rs);
+                RfidTag rfidTag = takeRfidTag(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -154,11 +108,11 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 return employee;
             }
         } catch (SQLException e) {
-            LOGGER.error("SQL SELECT exception : " + e.getMessage());
-            throw new DaoException("SQL SELECT exception" + e.getMessage());
+            LOGGER.error("SQL SELECT by ID exception : " + e.getMessage());
+            throw new DaoException("SQL SELECT by ID exception" + e.getMessage());
         } catch (ConnectionPoolException e) {
-            LOGGER.error("get connection exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
+            LOGGER.error("Get connection exception: " + e.getMessage());
+            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -184,7 +138,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(1, employee.getFirstName());
             stmt.setString(2, employee.getPatronym());
             stmt.setString(3, employee.getLastName());
-            stmt.setString(4, employee.getBirthDate().getDate().toString());
+            stmt.setString(4, employee.getBirthDate().getDate());
             stmt.setString(5, ((Employee) employee).getPosition().toString());
             stmt.setString(6, ((Employee) employee).getDepartment().toString());
             stmt.setString(7, ((Employee) employee).getRoom().toString());
@@ -192,7 +146,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
             stmt.execute();
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception : " + e.getMessage());
+            LOGGER.error("SQL INSERT into EMPLOYEES exception : " + e.getMessage());
             CharSequence obj = "is not unique";
             String errorMessage = "";
             if (e.getMessage().contains(obj)) {
@@ -201,8 +155,8 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             }
             throw new DaoException(errorMessage);
         } catch (ConnectionPoolException e) {
-            LOGGER.error("get connection exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
+            LOGGER.error("Get connection exception: " + e.getMessage());
+            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -234,8 +188,8 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception execute: " + e.getMessage());
-            throw new DaoException("SQL statement exception execute");
+            LOGGER.error("SQL SELECT count(*) exception : " + e.getMessage());
+            throw new DaoException("SQL SELECT count(*) exception : " + e.getMessage());
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -244,7 +198,45 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public void update(Person entity) throws DaoException {
+    public void update(Person employee) throws DaoException {
+        PreparedStatement stmt = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception " + e.getMessage());
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.prepareStatement("UPDATE EMPLOYEES SET firstName=?, patronym=?, lastName=?, birthDate=?, jobPosition=?, department=?, room=?, tableId=?, uid=? WHERE id = ?");
+            stmt.setString(1, employee.getFirstName());
+            stmt.setString(2, employee.getPatronym());
+            stmt.setString(3, employee.getLastName());
+            stmt.setString(4, employee.getBirthDate().getDate());
+            stmt.setString(5, ((Employee) employee).getPosition().toString());
+            stmt.setString(6, ((Employee) employee).getDepartment().toString());
+            stmt.setString(7, ((Employee) employee).getRoom().toString());
+            stmt.setString(8, ((Employee) employee).getAccount1C().getTableId());
+            stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
+            stmt.setString(10,Long.toString(((Employee) employee).getId()));
+            stmt.executeUpdate();
+            LOGGER.debug("id :" + ((Employee) employee).getId());
+            LOGGER.debug("First name :" + employee.getFirstName());
+            LOGGER.debug("Last name :" + employee.getLastName());
+            LOGGER.debug("Job position :" + ((Employee) employee).getPosition());
+            LOGGER.debug("Table ID :" + ((Employee) employee).getAccount1C().getTableId());
+        } catch (SQLException e) {
+            LOGGER.error("SQL UPDATE EMPLOYEES exception: " + e.getMessage());
+            throw new DaoException("SQL UPDATE EMPLOYEES exception: " + e.getMessage());
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection exception: " + e.getMessage());
+            throw new DaoException("Get connection exception: " + e.getMessage());
+        } finally {
+            DbUtil.close(stmt);
+            connectionPool.returnConnection(conn);
+        }
 
     }
 
@@ -260,7 +252,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
-            throw new DaoException("Get connection pool instance exception");
+            throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
             conn = connectionPool.getConnection();
@@ -271,58 +263,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
-                String tableId = rs.getString("tableId");
-                DateStamp birthDate;
-                try {
-                    birthDate = DateStamp.create(rs.getString("birthDate"));
-                } catch (DateStampException e) {
-                    birthDate = DateStamp.createEmptyDate();
-                    LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
-                }
-                PositionType position = null;
-                try {
-                    position = PositionType.valueOf(rs.getString("jobPosition"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
-                    position = PositionType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
-                    position = PositionType.DEFAULT;
-                }
-                DepartmentType department = null;
-                try {
-                    department = DepartmentType.valueOf(rs.getString("department"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("Assigned default department due to illegal argument : " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                }
-                RoomType room;
-                try {
-                    room = RoomType.valueOf(rs.getString("room"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
-                    room = RoomType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
-                    room = RoomType.DEFAULT;
-                }
-                Account1C account1C;
-                try {
-                    account1C = Account1C.createId(tableId);
-                } catch (Account1CException e) {
-                    account1C = Account1C.defaultId();
-                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-                }
-                RfidTag rfidTag = new RfidTag();
-                try {
-                    rfidTag.setUid(rs.getString("uid"));
-                } catch (UidFormatException e) {
-                    rfidTag.setEmptyUid();
-                    LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
-                }
+                DateStamp birthDate = takeBirthDate(rs);
+                PositionType position = takePosition(rs);
+                DepartmentType department = takeDepartment(rs);
+                RoomType room = takeRoom(rs);
+                Account1C account1C = takeAccount1C(rs);
+                RfidTag rfidTag = takeRfidTag(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -342,7 +288,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("Select EMPLOYEES table exception: " + e.getMessage());
-            throw new DaoException("Select EMPLOYEES table exception");
+            throw new DaoException("Select EMPLOYEES table exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -362,7 +308,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
-            throw new DaoException("Get connection pool instance exception");
+            throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
             conn = connectionPool.getConnection();
@@ -372,55 +318,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
-                String tableId = rs.getString("tableId");
-                String uid = rs.getString("uid");
-                DepartmentType department = null;
-                try {
-                    department = DepartmentType.valueOf(rs.getString("department"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute department is illegal " + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute department is null" + e.getMessage());
-                    department = DepartmentType.DEFAULT;
-                }
-                PositionType position = null;
-                try {
-                    position = PositionType.valueOf(rs.getString("jobPosition"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute job position is illegal " + e);
-                    position = PositionType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute job position is null" + e);
-                    position = PositionType.DEFAULT;
-                }
-                RoomType room;
-                try {
-                    room = RoomType.valueOf(rs.getString("room"));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.debug("db attribute room is illegal " + e);
-                    room = RoomType.DEFAULT;
-                } catch (NullPointerException e) {
-                    LOGGER.debug("db attribute room is null" + e);
-                    room = RoomType.DEFAULT;
-                }
-                Account1C account1C;
-                try {
-                    account1C = Account1C.createId(tableId);
-                } catch (Account1CException e) {
-                    account1C = Account1C.defaultId();
-                    LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-                }
-                DateStamp birthDate;
-                try {
-                    birthDate = DateStamp.create(rs.getString("birthDate"));
-                } catch (DateStampException e) {
-                    birthDate = null;
-                    LOGGER.debug("Birth Date field is invalid or empty");
-                }
-                RfidTag rfidTag = new RfidTag.Builder()
-                        .uid(uid)
-                        .build();
+                DepartmentType department = takeDepartment(rs);
+                PositionType position = takePosition(rs);
+                RoomType room = takeRoom(rs);
+                Account1C account1C = takeAccount1C(rs);
+                DateStamp birthDate = takeBirthDate(rs);
+                RfidTag rfidTag = takeRfidTag(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -439,7 +342,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("Select EMPLOYEES table exception: " + e.getMessage());
-            throw new DaoException("Select EMPLOYEES table exception");
+            throw new DaoException("Select EMPLOYEES table exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -456,7 +359,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
-            throw new DaoException("Get connection pool instance exception");
+            throw new DaoException("Get connection pool instance exception" + e.getMessage());
         }
         try {
             conn = connectionPool.getConnection();
@@ -467,11 +370,99 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
-            LOGGER.error("SQL statement exception execute: " + e.getMessage());
-            throw new DaoException("SQL statement exception execute");
+            LOGGER.error("SQL DELETE form EMPLOYEES exception: " + e.getMessage());
+            throw new DaoException("SQL DELETE form EMPLOYEES exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
         }
     }
+
+    private RfidTag takeRfidTag(ResultSet rs) throws SQLException {
+        RfidTag rfidTag = new RfidTag();
+        String id = null;
+        try {
+            id = rs.getString("id");
+            rfidTag.setUid(rs.getString("uid"));
+        } catch (UidFormatException e) {
+            rfidTag.setEmptyUid();
+            LOGGER.debug("Employee id=" + id + " : assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
+        }
+        return rfidTag;
+    }
+
+    private Account1C takeAccount1C(ResultSet rs) throws SQLException {
+        Account1C account1C;
+        String id = null;
+        try {
+            id = rs.getString("id");
+            account1C = Account1C.createId(rs.getString("tableId"));
+        } catch (Account1CException e) {
+            account1C = Account1C.defaultId();
+            LOGGER.debug("Employee id=" + id + " : assigned default table ID due to exception: " + e.getMessage());
+        }
+        return account1C;
+    }
+
+    private DateStamp takeBirthDate(ResultSet rs) throws SQLException {
+        DateStamp birthDate;
+        String id = null;
+        try {
+            id = rs.getString("id");
+            birthDate = DateStamp.create(rs.getString("birthDate"));
+        } catch (DateStampException e) {
+            birthDate = DateStamp.createEmptyDate();
+            LOGGER.debug("Employee id=" + id + " : assigned empty birth date due to exception: " + e.getMessage());
+        }
+        return birthDate;
+    }
+
+    private PositionType takePosition(ResultSet rs) throws SQLException {
+        PositionType position;
+        String id = null;
+        try {
+            id = rs.getString("id");
+            position = PositionType.valueOf(rs.getString("jobPosition"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Employee id=" + id + " : assigned default position due to illegal argument : " + e.getMessage());
+            position = PositionType.DEFAULT;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Employee id=" + id + " : assigned default position due to null value : " + e.getMessage());
+            position = PositionType.DEFAULT;
+        }
+        return position;
+    }
+
+    private DepartmentType takeDepartment(ResultSet rs) throws SQLException {
+        DepartmentType department;
+        String id = null;
+        try {
+            id = rs.getString("id");
+            department = DepartmentType.valueOf(rs.getString("department"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Employee id=" + id + " : assigned default department due to illegal argument : " + e.getMessage());
+            department = DepartmentType.DEFAULT;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Employee id=" + id + " : assigned default department due to null value : " + e.getMessage());
+            department = DepartmentType.DEFAULT;
+        }
+        return department;
+    }
+
+    private RoomType takeRoom(ResultSet rs) throws SQLException {
+        RoomType room;
+        String id = null;
+        try {
+            id = rs.getString("id");
+            room = RoomType.valueOf(rs.getString("room"));
+        } catch (IllegalArgumentException e) {
+            LOGGER.debug("Employee id=" + id + " : assigned default room due to illegal argument : " + e.getMessage());
+            room = RoomType.DEFAULT;
+        } catch (NullPointerException e) {
+            LOGGER.debug("Employee id=" + id + " : assigned default room due to null value : " + e.getMessage());
+            room = RoomType.DEFAULT;
+        }
+        return room;
+    }
+
 }

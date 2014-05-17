@@ -1,8 +1,10 @@
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form action="do/edit-employee" method="post">
     <fieldset class="edit-employee">
         <input type="hidden" name="id" value="${sessionScope['original-employee'].id}">
+
         <p>&nbsp;</p>
         <ftag:string-field field="first-name"
                            value="${sessionScope['original-employee'].firstName}"
@@ -43,6 +45,7 @@
                            value="${sessionScope['original-employee'].rfidTag.uid}"
                            clazz="employee"/>
         <p> &nbsp;</p>
+
         <p>
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.employee.submit"/>

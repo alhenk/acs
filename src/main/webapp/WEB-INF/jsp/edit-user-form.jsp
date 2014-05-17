@@ -1,10 +1,10 @@
 <%@taglib prefix="ftag" tagdir="/WEB-INF/tags/fields" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form action="do/edit-user" method="post">
     <fieldset class="edit">
         <input type="hidden" name="id" value="${sessionScope['original-user'].id}">
+
         <p>&nbsp;</p>
         <ftag:string-field field="username"
                            value="${sessionScope['original-user'].username}"
@@ -28,11 +28,6 @@
             <button type="submit">
                 <fmt:message bundle="${msg}" key="form.edit-user.submit"/>
             </button>
-        </p>
-        <p style="color:red;">
-            <c:if test="${not empty param.status}">
-                <fmt:message bundle="${msg}" key="${param.status}"/>
-            </c:if>
         </p>
     </fieldset>
 </form>

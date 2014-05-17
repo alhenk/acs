@@ -30,6 +30,7 @@ public class EditEmployee implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
+        LOGGER.debug("...");
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         long id;
@@ -42,6 +43,7 @@ public class EditEmployee implements Action {
             LOGGER.error("GET parameter \"id\" is not valid : " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error?status=error.parameter.id.invalid");
         }
+        LOGGER.debug("id - " + id);
         if (isFormValid(request)) {
             Person employee = buildEmployee(request);
             try {
@@ -72,10 +74,10 @@ public class EditEmployee implements Action {
 
     private Person buildEmployee(HttpServletRequest request) {
         long id = Long.valueOf((String) request.getParameter("id"));
-        String firstName = (String) request.getParameter("firstName");
+        String firstName = (String) request.getParameter("first-name");
         String patronym = (String) request.getParameter("patronym");
-        String lastName = (String) request.getParameter("lastName");
-        String tableId = (String) request.getParameter("tableId");
+        String lastName = (String) request.getParameter("last-name");
+        String tableId = (String) request.getParameter("table-id");
         DateStamp birthDate;
         try {
             birthDate = DateStamp.create((String) request.getParameter("birth-date"));

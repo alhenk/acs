@@ -53,7 +53,6 @@ public class Controller extends HttpServlet {
 
         switch (result.getMethod()) {
             case FORWARD:
-                LOGGER.debug("FORWARD -> " + result.getView());
                 String path = PropertyManager.getValue("jsp.view.path") + result.getView() + ".jsp";
                 LOGGER.debug("FORWARD -> path =" + path);
                 request.getRequestDispatcher(path).forward(request, response);
