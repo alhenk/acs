@@ -5,11 +5,11 @@ import org.apache.log4j.Logger;
 
 import java.util.Comparator;
 
-public class RfidComparator implements Comparator<RfidTag> {
-    private static final Logger LOGGER = Logger.getLogger(RfidComparator.class);
+public class RfidTagComparator implements Comparator<RfidTag> {
+    private static final Logger LOGGER = Logger.getLogger(RfidTagComparator.class);
     private CompareType type;
 
-    public RfidComparator(CompareType type) {
+    public RfidTagComparator(CompareType type) {
         this.type = type;
     }
 

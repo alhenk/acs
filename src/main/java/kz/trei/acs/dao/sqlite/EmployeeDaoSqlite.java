@@ -9,7 +9,10 @@ import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
-import kz.trei.acs.office.structure.*;
+import kz.trei.acs.office.structure.Account1C;
+import kz.trei.acs.office.structure.DepartmentType;
+import kz.trei.acs.office.structure.PositionType;
+import kz.trei.acs.office.structure.RoomType;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
@@ -219,7 +222,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(7, ((Employee) employee).getRoom().toString());
             stmt.setString(8, ((Employee) employee).getAccount1C().getTableId());
             stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
-            stmt.setString(10,Long.toString(((Employee) employee).getId()));
+            stmt.setString(10, Long.toString(((Employee) employee).getId()));
             stmt.executeUpdate();
             LOGGER.debug("id :" + ((Employee) employee).getId());
             LOGGER.debug("First name :" + employee.getFirstName());
@@ -236,7 +239,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
         }
-
     }
 
     @Override
@@ -244,7 +246,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
-        ConnectionPool connectionPool = null;
+        ConnectionPool connectionPool;
         Person employee;
         List<Person> employees = new LinkedList<Person>();
         try {

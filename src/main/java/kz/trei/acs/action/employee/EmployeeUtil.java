@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Util class for CRUD operations
+ * Util class for Create and Edit employee actions
  */
 public final class EmployeeUtil {
     private static final Logger LOGGER = Logger.getLogger(EmployeeUtil.class);

@@ -10,7 +10,9 @@ import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+/**
+ * Util class for Create and Update Employee DAO methods
+ */
 public final class EmployeeDaoUtil {
     private static final Logger LOGGER = Logger.getLogger(EmployeeDaoUtil.class);
     private EmployeeDaoUtil(){}

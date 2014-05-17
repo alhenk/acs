@@ -27,50 +27,79 @@ public class ShowEmployeeListPage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
-        int length;
-        int offset = 0;
-        long totalNumber = 0;
-        try {
-            offset = Integer.valueOf(request.getParameter("offset"));
-        } catch (NumberFormatException e1) {
-                offset = 0;
-        }
-        try {
-            length = Integer.valueOf(request.getParameter("length"));
-        } catch (NumberFormatException e) {
-            LOGGER.error("GET parameter length is empty, assigned configure value (20)");
-            length = Integer.valueOf(PropertyManager.getValue("paging.length"));
-        }
-        EmployeeComparator.CompareType compareType;
-        try {
-            compareType =
-                    EmployeeComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
-        } catch (NullPointerException e) {
-            LOGGER.debug("Assigned default comparator by ID");
-            compareType = EmployeeComparator.CompareType.ID;
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Assigned default comparator by ID");
-            compareType = EmployeeComparator.CompareType.ID;
-        }
+        long length = takeLengthFromRequest(request);
+        long totalNumber;
+        long offset = takeOffsetFromRequest(request);
+        EmployeeComparator.CompareType employeeComparator
+                = takeEmployeeComparatorFromRequest(request);
         List<Person> employees;
         try {
             employees = employeeDao.findInRange(offset, length);
-            Collections.sort(employees, new EmployeeComparator(compareType));
+            Collections.sort(employees, new EmployeeComparator(employeeComparator));
             totalNumber = employeeDao.totalNumber();
         } catch (DaoException e) {
+            killEmployeeListAttributes(request);
             LOGGER.error("Getting employee list exception: " + e.getMessage());
-            session.setAttribute("error", "error.db.employee-list");
-            return new ActionResult(ActionType.FORWARD, "error");
+            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.employee-list");
+        } catch (RuntimeException e) {
+            killEmployeeListAttributes(request);
+            LOGGER.error("Getting employee list exception: " + e.getMessage());
+            return new ActionResult(ActionType.REDIRECT, "error?error=error.db.employee-list");
         }
         session.setAttribute("employees", employees);
         session.setAttribute("total-number", totalNumber);
         session.setAttribute("offset", offset);
         session.setAttribute("length", length);
-        LOGGER.debug("...");
+        LOGGER.debug("..." + employees);
         return new ActionResult(ActionType.FORWARD, "employee-list");
+    }
+
+    private void killEmployeeListAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("employees");
+        session.removeAttribute("total-number");
+        session.removeAttribute("offset");
+        session.removeAttribute("length");
+    }
+
+    private EmployeeComparator.CompareType takeEmployeeComparatorFromRequest(HttpServletRequest request) {
+        EmployeeComparator.CompareType employeeComparator;
+        try {
+            employeeComparator =
+                    EmployeeComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
+        } catch (NullPointerException e) {
+            employeeComparator = EmployeeComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        } catch (IllegalArgumentException e) {
+            employeeComparator = EmployeeComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        }
+        return employeeComparator;
+    }
+
+    private long takeLengthFromRequest(HttpServletRequest request) {
+        long length;
+        try {
+            length = Integer.valueOf(request.getParameter("length"));
+        } catch (NumberFormatException e) {
+            length = Integer.valueOf(PropertyManager.getValue("paging.length"));
+            LOGGER.error("GET parameter length is empty, assigned configure value (" + length + ")");
+        }
+        return length;
+    }
+
+    private long takeOffsetFromRequest(HttpServletRequest request) {
+        long offset;
+        try {
+            offset = Long.valueOf(request.getParameter("offset"));
+        } catch (NumberFormatException e1) {
+            offset = 0;
+        }
+        return offset;
     }
 }
