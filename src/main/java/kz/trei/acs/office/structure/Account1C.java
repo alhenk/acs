@@ -44,9 +44,9 @@ public final class Account1C {
      * regex id verification
      */
     public static boolean isValid(String tableId) {
-        boolean isValid = false;
-        Matcher tableIdMatcher = null;
-        Pattern tableIdPattern = null;
+        boolean isValid;
+        Matcher tableIdMatcher;
+        Pattern tableIdPattern;
         if (tableId == null || tableId.isEmpty()) {
             isValid = false;
         } else {

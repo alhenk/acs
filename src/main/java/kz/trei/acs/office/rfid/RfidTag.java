@@ -49,23 +49,19 @@ public class RfidTag implements Serializable, Comparable<RfidTag> {
     }
 
     public static boolean isUidValid(String uid) {
-        if(uid==null || uid.isEmpty()){
-            return false;
-        }
-        String uidRegex = PropertyManager.getValue("rfid.uidRegex");
-        Pattern uidPattern;
+        boolean isValid;
         Matcher uidMatcher;
-        try {
-            uidPattern = Pattern.compile(uidRegex, Pattern.CASE_INSENSITIVE);
+        Pattern uidPattern;
+        if (uid == null || uid.isEmpty()) {
+            isValid = false;
+        } else {
+            String uidRegex = PropertyManager.getValue("rfid.uidRegex");
+            uidPattern = Pattern.compile(uidRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             uidMatcher = uidPattern.matcher(uid);
-        } catch (PatternSyntaxException e) {
-            LOGGER.error("UID compile exception");
-            return false;
-        } catch (IllegalArgumentException e){
-            LOGGER.error("UID matcher exception");
-            return false;
+            isValid = uidMatcher.matches();
         }
-        return uidMatcher.matches();
+        return isValid;
     }
 
     public long getId() {
@@ -81,10 +77,18 @@ public class RfidTag implements Serializable, Comparable<RfidTag> {
     }
 
     public void setUid(String uid) {
-        if (isUidValid(uid)) {
-            this.uid = uid;
+        boolean isIdValid;
+        try {
+            isIdValid = isUidValid(uid);
+        } catch (PatternSyntaxException e) {
+            throw new UidFormatException("Pattern expression syntax is invalid");
+        } catch (IllegalArgumentException e) {
+            throw new UidFormatException("Regex pattern flags doesn't corresponds to the defined ones");
+        }
+        if (isIdValid) {
+            this.uid = uid;;
         } else {
-            throw new UidFormatException("UID format is not valid");
+            throw new UidFormatException("Does not match uidRegex ");
         }
     }
 

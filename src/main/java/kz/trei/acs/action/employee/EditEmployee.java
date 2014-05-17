@@ -6,19 +6,13 @@ import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.EmployeeDao;
-import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
-import kz.trei.acs.office.rfid.RfidTag;
-import kz.trei.acs.office.rfid.UidFormatException;
-import kz.trei.acs.office.structure.*;
-import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.DateStampException;
+import kz.trei.acs.util.GetParameterException;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class EditEmployee implements Action {
     private static final Logger LOGGER = Logger.getLogger(EditEmployee.class);
@@ -35,120 +29,41 @@ public class EditEmployee implements Action {
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         long id;
         try {
-            id = Long.valueOf(request.getParameter("id"));
-            if (id < 0) {
-                throw new NumberFormatException("negative id = " + id);
-            }
-        } catch (NumberFormatException e) {
-            LOGGER.error("GET parameter \"id\" is not valid : " + e.getMessage());
+            id = EmployeeUtil.takeIdFromRequest(request);
+        } catch (GetParameterException e) {
+            LOGGER.error(e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error?status=error.parameter.id.invalid");
         }
         LOGGER.debug("id - " + id);
         if (isFormValid(request)) {
-            Person employee = buildEmployee(request);
+            Person employee = EmployeeUtil.buildEditedEmployeeFromRequest(request);
             try {
                 employeeDao.update(employee);
                 LOGGER.debug("employee -> " + employee);
             } catch (DaoException e) {
                 LOGGER.error("SQL UPDATE EMPLOYEES exception : " + e.getMessage());
                 request.setAttribute("status", "form.employee.create.fail");
-                return new ActionResult(ActionType.REDIRECT, "edit-employee" + fetchParameters(request));
+                return new ActionResult(ActionType.REDIRECT, "edit-employee" + EmployeeUtil.fetchParameters(request));
             }
-            killFieldAttributes(request);
+            EmployeeUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.employee.edit.success");
             LOGGER.debug("Form employee edit success");
-            return new ActionResult(ActionType.REDIRECT, "employee-list" + fetchParameters(request));
+            return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
         }
         request.setAttribute("error", "form.employee.incomplete");
         LOGGER.error("Form employee incomplete");
-        return new ActionResult(ActionType.REDIRECT, "edit-employee" + fetchParameters(request));
-    }
-
-    private void killFieldAttributes(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.removeAttribute("positions");
-        session.removeAttribute("departments");
-        session.removeAttribute("rooms");
-        session.removeAttribute("original-employee");
-    }
-
-    private Person buildEmployee(HttpServletRequest request) {
-        long id = Long.valueOf((String) request.getParameter("id"));
-        String firstName = (String) request.getParameter("first-name");
-        String patronym = (String) request.getParameter("patronym");
-        String lastName = (String) request.getParameter("last-name");
-        String tableId = (String) request.getParameter("table-id");
-        DateStamp birthDate;
-        try {
-            birthDate = DateStamp.create((String) request.getParameter("birth-date"));
-        } catch (DateStampException e) {
-            birthDate = DateStamp.createEmptyDate();
-            LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
-        }
-        PositionType position = null;
-        try {
-            position = PositionType.valueOf((String) request.getParameter("position"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
-            position = PositionType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("Assigned default position due to null value : " + e.getMessage());
-            position = PositionType.DEFAULT;
-        }
-        DepartmentType department = null;
-        try {
-            department = DepartmentType.valueOf(request.getParameter("department"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Assigned default department due to illegal argument : " + e.getMessage());
-            department = DepartmentType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
-            department = DepartmentType.DEFAULT;
-        }
-        RoomType room;
-        try {
-            room = RoomType.valueOf(request.getParameter("room"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Assigned default room due to illegal argument : " + e.getMessage());
-            room = RoomType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("Assigned default department due to null value : " + e.getMessage());
-            room = RoomType.DEFAULT;
-        }
-        Account1C account1C;
-        try {
-            account1C = Account1C.createId(tableId);
-        } catch (Account1CException e) {
-            account1C = Account1C.defaultId();
-            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-        }
-        RfidTag rfidTag = new RfidTag();
-        try {
-            rfidTag.setUid(request.getParameter("uid"));
-        } catch (UidFormatException e) {
-            rfidTag.setEmptyUid();
-            LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
-        }
-        LOGGER.debug("Employee " + firstName + " is almost created");
-        return new Employee.Builder()
-                .id(id)
-                .firstName(firstName)
-                .patronym(patronym)
-                .lastName(lastName)
-                .birthDate(birthDate)
-                .position(position)
-                .department(department)
-                .room(room)
-                .account1C(account1C)
-                .rfidTag(rfidTag)
-                .build();
-    }
-
-    private String fetchParameters(HttpServletRequest request) {
-        return "";
+        return new ActionResult(ActionType.REDIRECT, "edit-employee" + EmployeeUtil.fetchParameters(request));
     }
 
     private boolean isFormValid(HttpServletRequest request) {
-        return true;
+        return EmployeeUtil.isFirstNameValid(request)
+                & EmployeeUtil.isPatronymValid(request)
+                & EmployeeUtil.isLastNameValid(request)
+                & EmployeeUtil.isBirthDateValid(request)
+                & EmployeeUtil.isPositionValid(request)
+                & EmployeeUtil.isDepartmentValid(request)
+                & EmployeeUtil.isRoomValid(request)
+                & EmployeeUtil.isTableIdValid(request)
+                & EmployeeUtil.isUidValid(request);
     }
 }

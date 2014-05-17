@@ -2,16 +2,15 @@ package kz.trei.acs.dao.sqlite;
 
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.EmployeeDao;
+import kz.trei.acs.dao.EmployeeDaoUtil;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
-import kz.trei.acs.office.rfid.UidFormatException;
 import kz.trei.acs.office.structure.*;
 import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.DateStampException;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
@@ -86,12 +85,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
-                DateStamp birthDate = takeBirthDate(rs);
-                PositionType position = takePosition(rs);
-                DepartmentType department = takeDepartment(rs);
-                RoomType room = takeRoom(rs);
-                Account1C account1C = takeAccount1C(rs);
-                RfidTag rfidTag = takeRfidTag(rs);
+                DateStamp birthDate = EmployeeDaoUtil.takeBirthDateFromResult(rs);
+                PositionType position = EmployeeDaoUtil.takePositionFromResult(rs);
+                DepartmentType department = EmployeeDaoUtil.takeDepartmentFromResult(rs);
+                RoomType room = EmployeeDaoUtil.takeRoomFromResult(rs);
+                Account1C account1C = EmployeeDaoUtil.takeAccount1CFromResult(rs);
+                RfidTag rfidTag = EmployeeDaoUtil.takeRfidTagFromResult(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -263,12 +262,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
-                DateStamp birthDate = takeBirthDate(rs);
-                PositionType position = takePosition(rs);
-                DepartmentType department = takeDepartment(rs);
-                RoomType room = takeRoom(rs);
-                Account1C account1C = takeAccount1C(rs);
-                RfidTag rfidTag = takeRfidTag(rs);
+                DateStamp birthDate = EmployeeDaoUtil.takeBirthDateFromResult(rs);
+                PositionType position = EmployeeDaoUtil.takePositionFromResult(rs);
+                DepartmentType department = EmployeeDaoUtil.takeDepartmentFromResult(rs);
+                RoomType room = EmployeeDaoUtil.takeRoomFromResult(rs);
+                Account1C account1C = EmployeeDaoUtil.takeAccount1CFromResult(rs);
+                RfidTag rfidTag = EmployeeDaoUtil.takeRfidTagFromResult(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -318,12 +317,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
-                DepartmentType department = takeDepartment(rs);
-                PositionType position = takePosition(rs);
-                RoomType room = takeRoom(rs);
-                Account1C account1C = takeAccount1C(rs);
-                DateStamp birthDate = takeBirthDate(rs);
-                RfidTag rfidTag = takeRfidTag(rs);
+                DepartmentType department = EmployeeDaoUtil.takeDepartmentFromResult(rs);
+                PositionType position = EmployeeDaoUtil.takePositionFromResult(rs);
+                RoomType room = EmployeeDaoUtil.takeRoomFromResult(rs);
+                Account1C account1C = EmployeeDaoUtil.takeAccount1CFromResult(rs);
+                DateStamp birthDate = EmployeeDaoUtil.takeBirthDateFromResult(rs);
+                RfidTag rfidTag = EmployeeDaoUtil.takeRfidTagFromResult(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -378,91 +377,5 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         }
     }
 
-    private RfidTag takeRfidTag(ResultSet rs) throws SQLException {
-        RfidTag rfidTag = new RfidTag();
-        String id = null;
-        try {
-            id = rs.getString("id");
-            rfidTag.setUid(rs.getString("uid"));
-        } catch (UidFormatException e) {
-            rfidTag.setEmptyUid();
-            LOGGER.debug("Employee id=" + id + " : assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
-        }
-        return rfidTag;
-    }
-
-    private Account1C takeAccount1C(ResultSet rs) throws SQLException {
-        Account1C account1C;
-        String id = null;
-        try {
-            id = rs.getString("id");
-            account1C = Account1C.createId(rs.getString("tableId"));
-        } catch (Account1CException e) {
-            account1C = Account1C.defaultId();
-            LOGGER.debug("Employee id=" + id + " : assigned default table ID due to exception: " + e.getMessage());
-        }
-        return account1C;
-    }
-
-    private DateStamp takeBirthDate(ResultSet rs) throws SQLException {
-        DateStamp birthDate;
-        String id = null;
-        try {
-            id = rs.getString("id");
-            birthDate = DateStamp.create(rs.getString("birthDate"));
-        } catch (DateStampException e) {
-            birthDate = DateStamp.createEmptyDate();
-            LOGGER.debug("Employee id=" + id + " : assigned empty birth date due to exception: " + e.getMessage());
-        }
-        return birthDate;
-    }
-
-    private PositionType takePosition(ResultSet rs) throws SQLException {
-        PositionType position;
-        String id = null;
-        try {
-            id = rs.getString("id");
-            position = PositionType.valueOf(rs.getString("jobPosition"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default position due to illegal argument : " + e.getMessage());
-            position = PositionType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default position due to null value : " + e.getMessage());
-            position = PositionType.DEFAULT;
-        }
-        return position;
-    }
-
-    private DepartmentType takeDepartment(ResultSet rs) throws SQLException {
-        DepartmentType department;
-        String id = null;
-        try {
-            id = rs.getString("id");
-            department = DepartmentType.valueOf(rs.getString("department"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default department due to illegal argument : " + e.getMessage());
-            department = DepartmentType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default department due to null value : " + e.getMessage());
-            department = DepartmentType.DEFAULT;
-        }
-        return department;
-    }
-
-    private RoomType takeRoom(ResultSet rs) throws SQLException {
-        RoomType room;
-        String id = null;
-        try {
-            id = rs.getString("id");
-            room = RoomType.valueOf(rs.getString("room"));
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default room due to illegal argument : " + e.getMessage());
-            room = RoomType.DEFAULT;
-        } catch (NullPointerException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default room due to null value : " + e.getMessage());
-            room = RoomType.DEFAULT;
-        }
-        return room;
-    }
 
 }
