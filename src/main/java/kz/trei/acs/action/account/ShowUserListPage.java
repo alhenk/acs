@@ -60,6 +60,7 @@ public class ShowUserListPage implements Action {
     }
 
     private void killUserListAttributes(HttpServletRequest request) {
+        LOGGER.debug("killUserListAttributes ...");
         HttpSession session = request.getSession();
         session.removeAttribute("users");
         session.removeAttribute("total-number");

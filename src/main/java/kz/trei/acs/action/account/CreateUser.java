@@ -49,6 +49,7 @@ public class CreateUser implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
+        LOGGER.debug("isFormValid ...");
         return UserUtil.isUserNameValid(request)
                 & UserUtil.isPasswordValid(request)
                 & UserUtil.isEmailValid(request)

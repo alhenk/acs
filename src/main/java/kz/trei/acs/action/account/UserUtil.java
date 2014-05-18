@@ -36,31 +36,31 @@ public final class UserUtil {
         String status = (String) request.getAttribute("status");
         String error = (String) request.getAttribute("error");
         if (id != null) {
-            parameters.append("&id=" + id);
+            parameters.append("&id=").append(id);
         }
         if (userNameError != null) {
-            parameters.append("&username-error=" + userNameError);
+            parameters.append("&username-error=").append(userNameError);
         }
         if (passwordError != null) {
-            parameters.append("&password-error=" + passwordError);
+            parameters.append("&password-error=").append(passwordError);
         }
         if (confirmPasswordError != null) {
-            parameters.append("&confirm-password-error=" + confirmPasswordError);
+            parameters.append("&confirm-password-error=").append(confirmPasswordError);
         }
         if (emailError != null) {
-            parameters.append("&email-error=" + emailError);
+            parameters.append("&email-error=").append(emailError);
         }
         if (roleError != null) {
-            parameters.append("&role-error=" + roleError);
+            parameters.append("&role-error=").append(roleError);
         }
         if (tableIdError != null) {
-            parameters.append("&table-id-error=" + tableIdError);
+            parameters.append("&table-id-error=").append(tableIdError);
         }
         if (status != null) {
-            parameters.append("&status=" + status);
+            parameters.append("&status=").append(status);
         }
         if (error != null) {
-            parameters.append("&error=" + error);
+            parameters.append("&error=").append(error);
         }
         LOGGER.debug("Get parameters are fetched");
         return parameters.toString();
@@ -150,6 +150,7 @@ public final class UserUtil {
             account1C = Account1C.defaultId();
             LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
         }
+        LOGGER.debug("Table ID = " + account1C.getTableId());
         return account1C;
     }
 
@@ -165,6 +166,7 @@ public final class UserUtil {
             LOGGER.debug("Assigned default user role due to null value : " + e.getMessage());
             role = RoleType.UNREGISTERED;
         }
+        LOGGER.debug("role = " + role);
         return role;
     }
 
@@ -179,6 +181,7 @@ public final class UserUtil {
         } catch (NumberFormatException e) {
             throw new GetParameterException("GET parameter \"id\" is not valid : " + e.getMessage());
         }
+        LOGGER.debug(id);
         return id;
     }
 
@@ -186,8 +189,8 @@ public final class UserUtil {
     public static boolean isUserNameValid(HttpServletRequest request) {
         LOGGER.debug("isUserNameValid ...");
         String username = request.getParameter("username");
-        boolean isUserNameValid = true;
-        Matcher userNameMatcher = null;
+        boolean isUserNameValid;
+        Matcher userNameMatcher;
         if (username == null || username.isEmpty()) {
             isUserNameValid = false;
             request.setAttribute("username-error", "form.user.empty");
@@ -196,14 +199,11 @@ public final class UserUtil {
             Pattern userNamePattern = Pattern.compile(userNameRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             userNameMatcher = userNamePattern.matcher(username);
-            if (userNameMatcher != null && userNameMatcher.matches()) {
-                isUserNameValid = true;
-            } else {
-                isUserNameValid = false;
+            if (!(isUserNameValid = userNameMatcher.matches())) {
                 request.setAttribute("username-error", "username.malformed");
             }
         }
-        LOGGER.debug(isUserNameValid);
+        LOGGER.debug("... valid -> " + isUserNameValid);
         return isUserNameValid;
     }
 
@@ -212,8 +212,8 @@ public final class UserUtil {
         LOGGER.debug("isPasswordValid ...");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
-        boolean isPasswordValid = false;
-        Matcher passwordMatcher = null;
+        boolean isPasswordValid;
+        Matcher passwordMatcher;
         if (password == null || password.isEmpty()) {
             isPasswordValid = false;
             request.setAttribute("password-error", "form.user.empty");
@@ -222,10 +222,7 @@ public final class UserUtil {
             Pattern passwordPattern = Pattern.compile(passwordRegex,
                     Pattern.UNICODE_CHARACTER_CLASS);
             passwordMatcher = passwordPattern.matcher(password);
-            if (passwordMatcher != null && passwordMatcher.matches()) {
-                isPasswordValid = true;
-            } else {
-                isPasswordValid = false;
+            if (!(isPasswordValid = passwordMatcher.matches())) {
                 request.setAttribute("password-error", "form.user.password.malformed");
             }
             if (isPasswordValid && !password.equals(confirmPassword)) {
@@ -233,7 +230,7 @@ public final class UserUtil {
                 isPasswordValid = false;
             }
         }
-        LOGGER.debug(isPasswordValid);
+        LOGGER.debug("... valid -> " + isPasswordValid);
         return isPasswordValid;
     }
 
@@ -241,8 +238,8 @@ public final class UserUtil {
     public static boolean isEmailValid(HttpServletRequest request) {
         LOGGER.debug("isEmailValid ...");
         String email = request.getParameter("email");
-        boolean isEmailValid = false;
-        Matcher emailMatcher = null;
+        boolean isEmailValid;
+        Matcher emailMatcher;
         if (email == null || email.isEmpty()) {
             isEmailValid = false;
             request.setAttribute("email-error", "form.user.empty");
@@ -251,14 +248,11 @@ public final class UserUtil {
             Pattern emailPattern = Pattern.compile(emailRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             emailMatcher = emailPattern.matcher(email);
-            if (emailMatcher != null && emailMatcher.matches()) {
-                isEmailValid = true;
-            } else {
-                isEmailValid = false;
+            if (!(isEmailValid = emailMatcher.matches())) {
                 request.setAttribute("email-error", "form.user.email.malformed");
             }
         }
-        LOGGER.debug(isEmailValid);
+        LOGGER.debug("... valid -> " + isEmailValid);
         return isEmailValid;
     }
 
@@ -266,8 +260,8 @@ public final class UserUtil {
     public static boolean isRoleValid(HttpServletRequest request) {
         LOGGER.debug("isRoleValid ...");
         String role = request.getParameter("role");
-        boolean isRoleValid = false;
-        Matcher roleMatcher = null;
+        boolean isRoleValid;
+        Matcher roleMatcher;
         if (role == null || role.isEmpty()) {
             isRoleValid = false;
             request.setAttribute("role-error", "form.user.empty");
@@ -276,14 +270,11 @@ public final class UserUtil {
             Pattern rolePattern = Pattern.compile(roleRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             roleMatcher = rolePattern.matcher(role);
-            if (roleMatcher != null && roleMatcher.matches()) {
-                isRoleValid = true;
-            } else {
-                isRoleValid = false;
+            if (!(isRoleValid = roleMatcher.matches())) {
                 request.setAttribute("role-error", "form.user.role.malformed");
             }
         }
-        LOGGER.debug(isRoleValid);
+        LOGGER.debug("... valid -> " + isRoleValid);
         return isRoleValid;
     }
 
@@ -293,8 +284,8 @@ public final class UserUtil {
     public static boolean isTableIdValid(HttpServletRequest request) {
         LOGGER.debug("isTableIdValid ...");
         String tableId = request.getParameter("table-id");
-        boolean isTableIdValid = false;
-        Matcher tableIdMatcher = null;
+        boolean isTableIdValid;
+        Matcher tableIdMatcher;
         if (tableId == null || tableId.isEmpty()) {
             isTableIdValid = false;
             request.setAttribute("table-id-error", "form.user.empty");
@@ -303,14 +294,11 @@ public final class UserUtil {
             Pattern tableIdPattern = Pattern.compile(tableIdRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             tableIdMatcher = tableIdPattern.matcher(tableId);
-            if (tableIdMatcher != null && tableIdMatcher.matches()) {
-                isTableIdValid = true;
-            } else {
-                isTableIdValid = false;
+            if (!(isTableIdValid = tableIdMatcher.matches())) {
                 request.setAttribute("table-id-error", "form.user.table-id.malformed");
             }
         }
-        LOGGER.debug(isTableIdValid);
+        LOGGER.debug("... valid -> " + isTableIdValid);
         return isTableIdValid;
     }
 }

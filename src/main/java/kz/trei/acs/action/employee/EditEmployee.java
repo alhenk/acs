@@ -49,6 +49,7 @@ public class EditEmployee implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
+        LOGGER.debug("isFormValid ...");
         return EmployeeUtil.isFirstNameValid(request)
                 & EmployeeUtil.isPatronymValid(request)
                 & EmployeeUtil.isLastNameValid(request)

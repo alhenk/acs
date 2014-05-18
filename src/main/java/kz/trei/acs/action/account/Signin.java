@@ -29,15 +29,18 @@ public class Signin implements Action {
         try {
             user = userDao.find(username, password);
         } catch (DaoException e) {
-            LOGGER.error("DAO find user exception");
-            return new ActionResult(ActionType.REDIRECT, "main?error=form.sign-in.wrong-password");
+            request.setAttribute("error", "form.sign-in.wrong-password");
+            LOGGER.error("DAO find user " + username + " exception");
+            return new ActionResult(ActionType.REDIRECT, "main" + UserUtil.fetchParameters(request));
         }
         if (user == null) {
+            request.setAttribute("error", "form.sign-in.wrong-password");
             LOGGER.debug("User name or password error");
-            return new ActionResult(ActionType.REDIRECT, "main?error=form.sign-in.wrong-password");
+            return new ActionResult(ActionType.REDIRECT, "main" + UserUtil.fetchParameters(request));
         }
         session.setAttribute("user", user);
+        request.setAttribute("status", "form.sign-in.success");
         LOGGER.debug("The user logged successfully");
-        return new ActionResult(ActionType.REDIRECT, "dashboard");
+        return new ActionResult(ActionType.REDIRECT, "dashboard" + UserUtil.fetchParameters(request));
     }
 }

@@ -41,40 +41,40 @@ public final class EmployeeUtil {
         String status = (String) request.getAttribute("status");
         String error = (String) request.getAttribute("error");
         if (id != null) {
-            parameters.append("&id=" + id);
+            parameters.append("&id=").append(id);
         }
         if (firstNameError != null) {
-            parameters.append("&first-name-error=" + firstNameError);
+            parameters.append("&first-name-error=").append(firstNameError);
         }
         if (patronymError != null) {
-            parameters.append("&patronym-error=" + patronymError);
+            parameters.append("&patronym-error=").append(patronymError);
         }
         if (lastNameError != null) {
-            parameters.append("&last-name-error=" + lastNameError);
+            parameters.append("&last-name-error=").append(lastNameError);
         }
         if (birthDateError != null) {
-            parameters.append("&birth-date-error=" + birthDateError);
+            parameters.append("&birth-date-error=").append(birthDateError);
         }
         if (positionError != null) {
-            parameters.append("&position-error=" + positionError);
+            parameters.append("&position-error=").append(positionError);
         }
         if (departmentError != null) {
-            parameters.append("&department-error=" + departmentError);
+            parameters.append("&department-error=").append(departmentError);
         }
         if (roomError != null) {
-            parameters.append("&room-error=" + roomError);
+            parameters.append("&room-error=").append(roomError);
         }
         if (tableIdError != null) {
-            parameters.append("&table-id-error=" + tableIdError);
+            parameters.append("&table-id-error=").append(tableIdError);
         }
         if (uidError != null) {
-            parameters.append("&uid-error=" + uidError);
+            parameters.append("&uid-error=").append(uidError);
         }
         if (status != null) {
-            parameters.append("&status=" + status);
+            parameters.append("&status=").append(status);
         }
         if (error != null) {
-            parameters.append("&error=" + error);
+            parameters.append("&error=").append(error);
         }
         LOGGER.debug("Get parameters are fetched");
         return parameters.toString();
@@ -210,7 +210,7 @@ public final class EmployeeUtil {
     public static Account1C takeAccount1CFromRequest(HttpServletRequest request) {
         LOGGER.debug("takeAccount1CFromRequest ...");
         Account1C account1C;
-        String tableId = (String) request.getParameter("table-id");
+        String tableId = request.getParameter("table-id");
         try {
             account1C = Account1C.createId(tableId);
         } catch (Account1CException e) {
@@ -257,7 +257,7 @@ public final class EmployeeUtil {
         LOGGER.debug(" takePositionFromRequest ...");
         PositionType position;
         try {
-            position = PositionType.valueOf((String) request.getParameter("position"));
+            position = PositionType.valueOf(request.getParameter("position"));
         } catch (IllegalArgumentException e) {
             LOGGER.debug("Assigned default position due to illegal argument : " + e.getMessage());
             position = PositionType.DEFAULT;
@@ -273,7 +273,7 @@ public final class EmployeeUtil {
         LOGGER.debug("takeBirthDateFromRequest ...");
         DateStamp birthDate;
         try {
-            birthDate = DateStamp.create((String) request.getParameter("birth-date"));
+            birthDate = DateStamp.create(request.getParameter("birth-date"));
         } catch (DateStampException e) {
             birthDate = DateStamp.createEmptyDate();
             LOGGER.debug("Assigned empty birth date due to exception: " + e.getMessage());
@@ -296,14 +296,11 @@ public final class EmployeeUtil {
             Pattern firstNamePattern = Pattern.compile(firstNameRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             firstNameMatcher = firstNamePattern.matcher(firstName);
-            if (firstNameMatcher != null && firstNameMatcher.matches()) {
-                isFirstNameValid = true;
-            } else {
-                isFirstNameValid = false;
+            if (isFirstNameValid = firstNameMatcher.matches()) {
                 request.setAttribute("first-name-error", "form.employee.first-name.malformed");
             }
         }
-        LOGGER.debug(isFirstNameValid);
+        LOGGER.debug("... valid -> " + isFirstNameValid);
         return isFirstNameValid;
     }
 
@@ -311,8 +308,8 @@ public final class EmployeeUtil {
     public static boolean isPatronymValid(HttpServletRequest request) {
         LOGGER.debug("isPatronymValid ...");
         String patronym = request.getParameter("patronym");
-        boolean isPatronymValid = true;
-        Matcher patronymMatcher = null;
+        boolean isPatronymValid;
+        Matcher patronymMatcher;
         if (patronym == null || patronym.isEmpty()) {
             //patronym is optional
             isPatronymValid = true;
@@ -321,14 +318,11 @@ public final class EmployeeUtil {
             Pattern patronymPattern = Pattern.compile(patronymRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             patronymMatcher = patronymPattern.matcher(patronym);
-            if (patronymMatcher != null && patronymMatcher.matches()) {
-                isPatronymValid = true;
-            } else {
-                isPatronymValid = false;
+            if (!(isPatronymValid = patronymMatcher.matches())) {
                 request.setAttribute("patronym-error", "form.employee.patronym.malformed");
             }
         }
-        LOGGER.debug(isPatronymValid);
+        LOGGER.debug("... valid -> " + isPatronymValid);
         return isPatronymValid;
     }
 
@@ -336,8 +330,8 @@ public final class EmployeeUtil {
     public static boolean isLastNameValid(HttpServletRequest request) {
         LOGGER.debug("isLastNameValid ...");
         String lastName = request.getParameter("last-name");
-        boolean isLastNameValid = true;
-        Matcher lastNameMatcher = null;
+        boolean isLastNameValid;
+        Matcher lastNameMatcher;
         if (lastName == null || lastName.isEmpty()) {
             isLastNameValid = false;
             request.setAttribute("last-name-error", "form.employee.empty");
@@ -346,14 +340,11 @@ public final class EmployeeUtil {
             Pattern lastNamePattern = Pattern.compile(lastNameRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             lastNameMatcher = lastNamePattern.matcher(lastName);
-            if (lastNameMatcher != null && lastNameMatcher.matches()) {
-                isLastNameValid = true;
-            } else {
-                isLastNameValid = false;
+            if (!(isLastNameValid = lastNameMatcher.matches())) {
                 request.setAttribute("last-name-error", "form.employee.last-name.malformed");
             }
         }
-        LOGGER.debug(isLastNameValid);
+        LOGGER.debug("... valid -> " + isLastNameValid);
         return isLastNameValid;
     }
 
@@ -436,8 +427,8 @@ public final class EmployeeUtil {
     public static boolean isTableIdValid(HttpServletRequest request) {
         LOGGER.debug("isTableIdValid ...");
         String tableId = request.getParameter("table-id");
-        boolean isTableIdValid = false;
-        Matcher tableIdMatcher = null;
+        boolean isTableIdValid;
+        Matcher tableIdMatcher;
         if (tableId == null || tableId.isEmpty()) {
             isTableIdValid = false;
             request.setAttribute("table-id-error", "form.employee.empty");
@@ -446,18 +437,15 @@ public final class EmployeeUtil {
             Pattern tableIdPattern = Pattern.compile(tableIdRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             tableIdMatcher = tableIdPattern.matcher(tableId);
-            if (tableIdMatcher != null && tableIdMatcher.matches()) {
-                isTableIdValid = true;
-            } else {
-                isTableIdValid = false;
+            if (!(isTableIdValid = tableIdMatcher.matches())) {
                 request.setAttribute("table-id-error", "form.employee.table-id.malformed");
             }
         }
-        LOGGER.debug(isTableIdValid);
+        LOGGER.debug("... valid -> " + isTableIdValid);
         return isTableIdValid;
     }
 
-    //UID MATCHER
+    //UID VALIDATION
     public static boolean isUidValid(HttpServletRequest request) {
         LOGGER.debug("isUidValid ...");
         String uid = request.getParameter("uid");

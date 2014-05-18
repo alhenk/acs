@@ -49,6 +49,7 @@ public class EditUser implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
+        LOGGER.debug("isFormValid ...");
         return UserUtil.isUserNameValid(request)
                 & UserUtil.isEmailValid(request)
                 & UserUtil.isTableIdValid(request)

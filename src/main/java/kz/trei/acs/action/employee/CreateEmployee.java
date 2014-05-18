@@ -45,7 +45,7 @@ public class CreateEmployee implements Action {
     }
 
     private boolean isFormValid(HttpServletRequest request) {
-        LOGGER.debug("...");
+        LOGGER.debug("isFormValid...");
         return EmployeeUtil.isFirstNameValid(request)
                 & EmployeeUtil.isPatronymValid(request)
                 & EmployeeUtil.isLastNameValid(request)

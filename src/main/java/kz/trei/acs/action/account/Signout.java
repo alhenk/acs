@@ -12,12 +12,14 @@ import javax.servlet.http.HttpSession;
 
 public class Signout implements Action {
     private static final Logger LOGGER = Logger.getLogger(Signout.class);
+
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         session.removeAttribute("user");
+        request.setAttribute("status", "common.user.good-by");
         LOGGER.debug("The user signed out");
-        return new ActionResult(ActionType.REDIRECT, "main");
+        return new ActionResult(ActionType.REDIRECT, "main" + UserUtil.fetchParameters(request));
     }
 }
