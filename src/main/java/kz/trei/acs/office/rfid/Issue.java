@@ -8,21 +8,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import kz.trei.acs.user.User;
+import kz.trei.acs.util.DateStamp;
+import kz.trei.acs.util.PropertyManager;
 
-import kz.trei.acs.office.util.DateStamp;
-import kz.trei.acs.office.util.PropertyManager;
-
-//@XmlRootElement(name = "issue", namespace ="http://www.trei.kz/attendance/tns")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "issueDate", "expirationDate"})
 public class Issue implements Serializable, Comparable<Issue> {
 	private static final long serialVersionUID = -7410469239152467286L;
 	static {
 		PropertyManager.load("configure.properties");
 	}
-	@XmlElement(required = true)
 	private DateStamp issueDate;
-	@XmlElement(required = true)
 	private DateStamp expirationDate;
 
 	/**
@@ -40,6 +35,11 @@ public class Issue implements Serializable, Comparable<Issue> {
 		this.expirationDate = DateStamp.create(calendar.getTime());
 	}
 
+    public Issue(Builder builder){
+        this.issueDate = builder.issueDate;
+        this.expirationDate = builder.expirationDate;
+    }
+
 	public Issue(DateStamp issueDate, DateStamp expirationDate) {
 		this.issueDate = issueDate;
 		this.expirationDate = expirationDate;
@@ -49,18 +49,18 @@ public class Issue implements Serializable, Comparable<Issue> {
 		private DateStamp issueDate;
 		private DateStamp expirationDate;
 
-		public Builder setIssueDate(DateStamp issueDate) {
+		public Builder issueDate(DateStamp issueDate) {
 			this.issueDate = issueDate;
 			return this;
 		}
 
-		public Builder setExpirationDate(DateStamp experationDate) {
+		public Builder expirationDate(DateStamp experationDate) {
 			this.expirationDate = experationDate;
 			return this;
 		}
 
 		public Issue build() {
-			return new Issue(issueDate, expirationDate);
+			return new Issue(this);
 		}
 	}
 
@@ -68,7 +68,6 @@ public class Issue implements Serializable, Comparable<Issue> {
 		return issueDate;
 	}
 
-	
 	public void setIssueDate(DateStamp issueDate) {
 		this.issueDate = issueDate;
 	}
@@ -77,7 +76,6 @@ public class Issue implements Serializable, Comparable<Issue> {
 		return expirationDate;
 	}
 
-	
 	public void setExpirationDate(DateStamp expirationDate) {
 		this.expirationDate = expirationDate;
 	}

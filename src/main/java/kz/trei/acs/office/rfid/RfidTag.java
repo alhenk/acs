@@ -1,151 +1,210 @@
 package kz.trei.acs.office.rfid;
 
+
+import kz.trei.acs.util.PropertyManager;
+import org.apache.log4j.Logger;
+
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement (name = "rfidTag", namespace ="http://www.trei.kz/attendance/tns")
-@XmlType(name = "", propOrder = { "type", "protocol", "issue"})
 public class RfidTag implements Serializable, Comparable<RfidTag> {
-	private static final long serialVersionUID = -1380395087317256237L;
-	
-	@XmlAttribute(name = "uid") private RfidUID rfidUID;
-	private RfidType type;
-	private ProtocolType protocol;
-	private Issue issue;
+    private static final long serialVersionUID = -1380395087317256237L;
+    private static final Logger LOGGER = Logger.getLogger(RfidTag.class);
 
-	public RfidTag() {
-	}
+    static {
+        PropertyManager.load("configure.properties");
+    }
 
-	private RfidTag(RfidUID uid, RfidType type, ProtocolType protocol,
-			Issue issue) {
-		super();
-		this.rfidUID = uid;
-		this.type = type;
-		this.protocol = protocol;
-		this.issue = issue;
-	}
+    private long id;
+    private String uid;
+    private RfidType type;
+    private ProtocolType protocol;
+    private Issue issue;
 
-	public static class Builder {
-		private RfidUID uid;
-		private RfidType type;
-		private ProtocolType protocol;
-		private Issue issue;
+    public RfidTag() {
+        this.id = 1L;
+        this.uid = "00000000";
+        this.type = RfidType.DEFAULT;
+        this.protocol = ProtocolType.DEFAULT;
+    }
 
-		public Builder setRfidUID(RfidUID uid) {
-			this.uid = uid;
-			return this;
-		}
+    private RfidTag(String uid, RfidType type, ProtocolType protocol,
+                    Issue issue) {
+        this.id = 1L;
+        this.uid = uid;
+        this.type = type;
+        this.protocol = protocol;
+        this.issue = issue;
+    }
 
-		public Builder setRfidType(RfidType type) {
-			this.type = type;
-			return this;
-		}
+    private RfidTag(Builder builder) {
+        this.id = builder.id;
+        this.uid = builder.uid;
+        this.type = builder.type;
+        this.protocol = builder.protocol;
+        this.issue = builder.issue;
+    }
 
-		public Builder setProtocol(ProtocolType protocol) {
-			this.protocol = protocol;
-			return this;
-		}
+    public static boolean isUidValid(String uid) {
+        boolean isValid;
+        Matcher uidMatcher;
+        Pattern uidPattern;
+        if (uid == null || uid.isEmpty()) {
+            isValid = false;
+        } else {
+            String uidRegex = PropertyManager.getValue("rfid.uidRegex");
+            uidPattern = Pattern.compile(uidRegex,
+                    Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
+            uidMatcher = uidPattern.matcher(uid);
+            isValid = uidMatcher.matches();
+        }
+        return isValid;
+    }
 
-		public Builder setIssue(Issue issue) {
-			this.issue = issue;
-			return this;
-		}
+    public long getId() {
+        return id;
+    }
 
-		public RfidTag build() {
-			return new RfidTag(uid, type, protocol, issue);
-		}
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public RfidUID getRfidUid() {
-		return rfidUID;
-	}
+    public String getUid() {
+        return uid;
+    }
 
-	public String getUidValue() {
-		return rfidUID.getRfidUID();
-	}
+    public void setUid(String uid) {
+        boolean isIdValid;
+        try {
+            isIdValid = isUidValid(uid);
+        } catch (PatternSyntaxException e) {
+            throw new UidFormatException("Pattern expression syntax is invalid");
+        } catch (IllegalArgumentException e) {
+            throw new UidFormatException("Regex pattern flags doesn't corresponds to the defined ones");
+        }
+        if (isIdValid) {
+            this.uid = uid;
+            ;
+        } else {
+            throw new UidFormatException("Does not match uidRegex ");
+        }
+    }
 
-	public void setUid(RfidUID uid) {
-		this.rfidUID = uid;
-	}
+    public RfidType getType() {
+        return type;
+    }
 
-	@XmlElement (name = "tagtype", required = true)
-	public RfidType getType() {
-		return type;
-	}
+    public void setType(RfidType type) {
+        this.type = type;
+    }
 
-	public void setType(RfidType type) {
-		this.type = type;
-	}
+    public ProtocolType getProtocol() {
+        return protocol;
+    }
 
-	@XmlElement(name = "protocol", required = true)
-	public ProtocolType getProtocol() {
-		return protocol;
-	}
+    public void setProtocol(ProtocolType protocol) {
+        this.protocol = protocol;
+    }
 
-	public void setProtocol(ProtocolType protocol) {
-		this.protocol = protocol;
-	}
+    public Issue getIssue() {
+        return issue;
+    }
 
-	@XmlElement(name = "issue", required = true)
-	public Issue getIssue() {
-		return issue;
-	}
+    public void setIssue(Issue issue) {
+        this.issue = issue;
+    }
 
-	public void setIssue(Issue issue) {
-		this.issue = issue;
-	}
+    public void setEmptyUid() {
+        this.uid = "00000000";
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((issue == null) ? 0 : issue.hashCode());
-		result = prime * result
-				+ ((protocol == null) ? 0 : protocol.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((rfidUID == null) ? 0 : rfidUID.hashCode());
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RfidTag)) return false;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RfidTag other = (RfidTag) obj;
-		if (issue == null) {
-			if (other.issue != null)
-				return false;
-		} else if (!issue.equals(other.issue))
-			return false;
-		if (protocol != other.protocol)
-			return false;
-		if (type != other.type)
-			return false;
-		if (rfidUID == null) {
-			if (other.rfidUID != null)
-				return false;
-		} else if (!rfidUID.equals(other.rfidUID))
-			return false;
-		return true;
-	}
+        RfidTag rfidTag = (RfidTag) o;
 
-	@Override
-	public String toString() {
-		return "RfidTag [uid=" + rfidUID.getRfidUID() + ", type=" + type + "]";
-	}
+        if (id != rfidTag.id) return false;
+        if (!issue.equals(rfidTag.issue)) return false;
+        if (protocol != rfidTag.protocol) return false;
+        if (type != rfidTag.type) return false;
+        if (!uid.equals(rfidTag.uid)) return false;
 
-	@Override
-	public int compareTo(RfidTag anotherTag) {
-		String anotherUid = anotherTag.getRfidUid().getRfidUID();
-		String thisUid = this.rfidUID.getRfidUID();
-		return thisUid.compareTo(anotherUid);
-	}
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + uid.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + protocol.hashCode();
+        result = 31 * result + issue.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RfidTag [uid=" + uid + ", type=" + type + "]";
+    }
+
+    @Override
+    public int compareTo(RfidTag anotherTag) {
+        String anotherUid = anotherTag.uid;
+        String thisUid = this.uid;
+        return thisUid.compareTo(anotherUid);
+    }
+
+    public static class Builder {
+        private long id;
+        private String uid;
+        private RfidType type;
+        private ProtocolType protocol;
+        private Issue issue;
+
+        public Builder() {
+            this.id = 1L;
+        }
+
+        public Builder(String uid) {
+            this.uid = uid;
+        }
+
+        public Builder id(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder uid(String uid) {
+            if (isUidValid(uid)) {
+                this.uid = uid;
+            } else {
+                throw new UidFormatException("UID format is not valid");
+            }
+            return this;
+        }
+
+        public Builder type(RfidType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder protocol(ProtocolType protocol) {
+            this.protocol = protocol;
+            return this;
+        }
+
+        public Builder issue(Issue issue) {
+            this.issue = issue;
+            return this;
+        }
+
+        public RfidTag build() {
+            return new RfidTag(this);
+        }
+    }
 }

@@ -42,6 +42,8 @@ public class ErrorHandler extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("status-code", statusCode);
         session.setAttribute("request-uri", requestUri);
+        LOGGER.debug("Status Code "+ statusCode);
+        LOGGER.debug("Request Uri "+ requestUri);
         return;
     }
 }

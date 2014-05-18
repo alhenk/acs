@@ -5,15 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
-
+import kz.trei.acs.exception.DateStampException;
 import org.apache.log4j.Logger;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dateStamp", namespace ="http://www.trei.kz/attendance/tns")
 public class DateStamp implements Serializable, Comparable<DateStamp> {
 	private static final long serialVersionUID = -8961625269572879384L;
 	private static final Logger LOGGER = Logger.getLogger(DateStamp.class);
@@ -21,7 +15,6 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 	static {
 		PropertyManager.load("configure.properties");
 	}
-	@XmlValue
 	private String date;
 
 	private static String toDateStampString(Date date) {
@@ -36,12 +29,15 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 	}
 
 	public static DateStamp create(String date) {
-		if (isValid(date)) {
+		if (isDateStampValid(date)) {
 			return new DateStamp(date);
 		}
-		LOGGER.error(date + " is not a valid timestamp");
-		return null;
+		LOGGER.error(date + " is not a valid date stamp");
+        throw new DateStampException(date + " is not a valid date stamp");
 	}
+    public static DateStamp createEmptyDate(){
+        return new DateStamp("");
+    }
 
 	/**
 	 * Default constructor gets the current Date
@@ -58,9 +54,20 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 		return date;
 	}
 
-	public static boolean isValid(String date) {
+    public void setDate(String date){
+        if (isDateStampValid(date)) {
+            this.date = date;
+        }
+        LOGGER.error(date + " is not a valid date stamp");
+        throw new DateStampException(date + " is not a valid date stamp");
+    }
+
+	public static boolean isDateStampValid(String date) {
 		String pattern = PropertyManager
 				.getValue("util.datetime.dateStampFormat");
+        if(date == null || date.isEmpty()){
+            return false;
+        }
 		try {
 			format = new SimpleDateFormat(pattern);
 			format.setLenient(false);
@@ -78,7 +85,6 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
 		return true;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "DateStamp [" + date + "]";

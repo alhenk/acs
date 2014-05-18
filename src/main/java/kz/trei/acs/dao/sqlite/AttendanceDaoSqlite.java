@@ -5,6 +5,7 @@ import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
+import kz.trei.acs.office.attendance.Attendance;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
@@ -12,6 +13,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 
 public class AttendanceDaoSqlite implements AttendanceDao {
@@ -19,6 +21,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
 
     @Override
     public void createTable() throws DaoException {
+        LOGGER.debug("createTable ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -54,5 +57,40 @@ public class AttendanceDaoSqlite implements AttendanceDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+    }
+
+    @Override
+    public Attendance findById(long id) throws DaoException {
+        return null;
+    }
+
+    @Override
+    public void create(Attendance entity) throws DaoException {
+
+    }
+
+    @Override
+    public long totalNumber() throws DaoException {
+        return 0;
+    }
+
+    @Override
+    public void update(Attendance entity) throws DaoException {
+
+    }
+
+    @Override
+    public List<Attendance> findAll() throws DaoException {
+        return null;
+    }
+
+    @Override
+    public List<Attendance> findInRange(long offset, long length) throws DaoException {
+        return null;
+    }
+
+    @Override
+    public void delete(long id) throws DaoException {
+
     }
 }

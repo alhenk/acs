@@ -19,7 +19,7 @@ public class User implements Serializable {
         this.username = "stranger";
         this.password = "123";
         this.email = "user@example.com";
-        this.account1C = Account1C.createRandomId();
+        this.account1C = Account1C.buildAccount1CWithRandomId();
         this.role = RoleType.UNREGISTERED;
     }
 
@@ -29,7 +29,7 @@ public class User implements Serializable {
         this.password = builder.password;
         this.email = builder.email;
         this.role = builder.role;
-        this.account1C = builder.tableId;
+        this.account1C = builder.account1C;
     }
 
     public static long getSerialVersionUID() {
@@ -117,7 +117,7 @@ public class User implements Serializable {
         private String password;
         private String email;
         private RoleType role;
-        private Account1C tableId;
+        private Account1C account1C;
 
         public Builder(String username, String password) {
             this.username = username;
@@ -139,8 +139,8 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder tableId(Account1C tableId) {
-            this.tableId = tableId;
+        public Builder account1C(Account1C tableId) {
+            this.account1C = tableId;
             return this;
         }
 

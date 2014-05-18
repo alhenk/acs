@@ -11,10 +11,7 @@ import kz.trei.acs.user.User;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,12 +44,12 @@ public class UserDaoH2 implements UserDao {
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
-                RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                RoleType role = RoleType.valueOf(rs.getString("role"));
+                Account1C tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
-                        .role(userRole)
-                        .tableId(tableId)
+                        .role(role)
+                        .account1C(tableId)
                         .build();
                 LOGGER.debug(user);
                 return user;
@@ -94,12 +91,12 @@ public class UserDaoH2 implements UserDao {
             if (rs.next()) {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                RoleType userRole = RoleType.valueOf(rs.getString("userRole"));
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                RoleType role = RoleType.valueOf(rs.getString("role"));
+                Account1C tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
-                        .role(userRole)
-                        .tableId(tableId)
+                        .role(role)
+                        .account1C(tableId)
                         .build();
                 LOGGER.debug(user);
                 return user;
@@ -120,7 +117,7 @@ public class UserDaoH2 implements UserDao {
 
     @Override
     public void create(User user) throws DaoException {
-        Statement stat = null;
+        PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
         try {
@@ -129,24 +126,26 @@ public class UserDaoH2 implements UserDao {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
-        String users = PropertyManager.getValue("user.table");
         String username = user.getUsername();
         String password = user.getPassword();
         String role = user.getRole().toString();
         String tableId = user.getAccount1C().getTableId();
         try {
             conn = connectionPool.getConnection();
-            stat = conn.createStatement();
-            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('" + username
-                    + "', '" + password + "', '" + tableId + "', '" + role + "')");
-        } catch (SQLException e) {
+            stmt = conn.prepareStatement("INSERT INTO USERS (username, password, email, tableId, userRole) VALUES (?,?,?,?,?)");
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getAccount1C().getTableId());
+            stmt.setString(5, user.getRole().toString());
+            stmt.execute();        } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
         } catch (ConnectionPoolException e) {
             LOGGER.error("get connection exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");
         } finally {
-            DbUtil.close(stat);
+            DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
         }
     }
@@ -167,12 +166,12 @@ public class UserDaoH2 implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stat = conn.createStatement();
-            stat.execute("CREATE TABLE " + users + " (id bigint auto_increment, username varchar(20), password varchar(32), tableId varchar(32), userRole varchar(20) )");
-            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
-            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
-            stat.execute("INSERT INTO " + users + "(username, password, tableId, userRole) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
+            stat.execute("CREATE TABLE USERS (id bigint auto_increment, username varchar(20), password varchar(32), tableId varchar(32), role varchar(20) )");
+            stat.execute("INSERT INTO USERS (username, password, tableId, role) VALUES ('admin', '123', 'KK00000001', 'ADMINISTRATOR')");
+            stat.execute("INSERT INTO USERS (username, password, tableId, role) VALUES ('Alhen', '123', 'KK00000002', 'SUPERVISOR')");
+            stat.execute("INSERT INTO USERS (username, password, tableId, role) VALUES ('Bob', '123', 'KK00000003', 'EMPLOYEE')");
 
-            rs = stat.executeQuery("SELECT * FROM " + users);
+            rs = stat.executeQuery("SELECT * FROM USERS");
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t");
                 LOGGER.debug(rs.getString("username"));
@@ -227,12 +226,12 @@ public class UserDaoH2 implements UserDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
-                RoleType role = RoleType.valueOf(rs.getString("userRole"));
+                Account1C tableId = Account1C.buildAccount1C(rs.getString("tableId"));
+                RoleType role = RoleType.valueOf(rs.getString("role"));
                 user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
-                        .tableId(tableId)
+                        .account1C(tableId)
                         .build();
                 users.add(user);
             }
@@ -247,6 +246,11 @@ public class UserDaoH2 implements UserDao {
             connectionPool.returnConnection(conn);
         }
         return users;
+    }
+
+    @Override
+    public List<User> findInRange(long offset, long length) throws DaoException {
+        return null;
     }
 
     @Override
