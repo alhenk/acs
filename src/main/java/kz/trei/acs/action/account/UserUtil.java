@@ -200,7 +200,7 @@ public final class UserUtil {
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             userNameMatcher = userNamePattern.matcher(username);
             if (!(isUserNameValid = userNameMatcher.matches())) {
-                request.setAttribute("username-error", "username.malformed");
+                request.setAttribute("username-error", "form.user.name.malformed");
             }
         }
         LOGGER.debug("... valid -> " + isUserNameValid);

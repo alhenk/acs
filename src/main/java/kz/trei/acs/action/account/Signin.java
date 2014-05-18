@@ -30,7 +30,7 @@ public class Signin implements Action {
             user = userDao.find(username, password);
         } catch (DaoException e) {
             request.setAttribute("error", "form.sign-in.wrong-password");
-            LOGGER.error("DAO find user " + username + " exception");
+            LOGGER.error("DAO find user \"" + username + "\" exception");
             return new ActionResult(ActionType.REDIRECT, "main" + UserUtil.fetchParameters(request));
         }
         if (user == null) {

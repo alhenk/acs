@@ -296,7 +296,7 @@ public final class EmployeeUtil {
             Pattern firstNamePattern = Pattern.compile(firstNameRegex,
                     Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE);
             firstNameMatcher = firstNamePattern.matcher(firstName);
-            if (isFirstNameValid = firstNameMatcher.matches()) {
+            if (!(isFirstNameValid = firstNameMatcher.matches())) {
                 request.setAttribute("first-name-error", "form.employee.first-name.malformed");
             }
         }
