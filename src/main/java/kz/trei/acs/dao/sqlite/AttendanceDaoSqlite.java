@@ -6,7 +6,6 @@ import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.attendance.Attendance;
-import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
@@ -22,6 +21,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
 
     @Override
     public void createTable() throws DaoException {
+        LOGGER.debug("createTable ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;

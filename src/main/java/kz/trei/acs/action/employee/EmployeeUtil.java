@@ -207,7 +207,7 @@ public final class EmployeeUtil {
     }
 
     public static long takeIdFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeIdFromRequest ...");
+        LOGGER.debug("takeId ...");
         long id;
         try {
             id = Long.valueOf(request.getParameter("id"));

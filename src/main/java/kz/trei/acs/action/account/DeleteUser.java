@@ -23,7 +23,7 @@ public class DeleteUser implements Action {
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
         try {
-            id = UserUtil.takeIdFromRequest(request);
+            id = UserUtil.takeId(request);
             if (id == 0 || id == 1) {
                 throw new GetParameterException("trying to delete the read-only record");
             }

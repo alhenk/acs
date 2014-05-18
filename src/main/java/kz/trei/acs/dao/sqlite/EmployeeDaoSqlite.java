@@ -2,7 +2,7 @@ package kz.trei.acs.dao.sqlite;
 
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.EmployeeDao;
-import kz.trei.acs.dao.EmployeeDaoUtil;
+import kz.trei.acs.dao.util.DaoUtil;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
@@ -26,6 +26,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public void createTable() throws DaoException {
+        LOGGER.debug("createTable ... ");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -66,6 +67,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public Person findById(long id) throws DaoException {
+        LOGGER.debug("findById ... ");
         PreparedStatement stmt = null;
         ResultSet rs;
         Connection conn = null;
@@ -88,12 +90,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
-                DateStamp birthDate = EmployeeDaoUtil.takeBirthDateFromResult(rs);
-                PositionType position = EmployeeDaoUtil.takePositionFromResult(rs);
-                DepartmentType department = EmployeeDaoUtil.takeDepartmentFromResult(rs);
-                RoomType room = EmployeeDaoUtil.takeRoomFromResult(rs);
-                Account1C account1C = EmployeeDaoUtil.takeAccount1CFromResult(rs);
-                RfidTag rfidTag = EmployeeDaoUtil.takeRfidTagFromResult(rs);
+                DateStamp birthDate = DaoUtil.takeBirthDate(rs);
+                PositionType position = DaoUtil.takePosition(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                RoomType room = DaoUtil.takeRoom(rs);
+                Account1C account1C = DaoUtil.takeAccount1C(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -125,6 +127,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public void create(Person employee) throws DaoException {
+        LOGGER.debug("create ... ");
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -147,6 +150,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(8, ((Employee) employee).getAccount1C().getTableId());
             stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
             stmt.execute();
+            LOGGER.debug("... the employee is created");
         } catch (SQLException e) {
             CharSequence obj = "is not unique";
             String errorMessage = "";
@@ -167,6 +171,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public long totalNumber() throws DaoException {
+        LOGGER.debug("totalNumber ... ");
         long totalNumber = 0;
         Statement stmt = null;
         ResultSet rs = null;
@@ -196,11 +201,13 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+        LOGGER.debug("... " + totalNumber);
         return totalNumber;
     }
 
     @Override
     public void update(Person employee) throws DaoException {
+        LOGGER.debug("update ... ");
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -243,6 +250,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
 
     @Override
     public List<Person> findInRange(long offset, long length) throws DaoException {
+        LOGGER.debug("findInRange ... ");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -260,16 +268,16 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT " + length + " OFFSET " + offset);
             while (rs.next()) {
-                long id = EmployeeDaoUtil.takeIdFromResult(rs);
+                long id = DaoUtil.takeId(rs);
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");
-                DateStamp birthDate = EmployeeDaoUtil.takeBirthDateFromResult(rs);
-                PositionType position = EmployeeDaoUtil.takePositionFromResult(rs);
-                DepartmentType department = EmployeeDaoUtil.takeDepartmentFromResult(rs);
-                RoomType room = EmployeeDaoUtil.takeRoomFromResult(rs);
-                Account1C account1C = EmployeeDaoUtil.takeAccount1CFromResult(rs);
-                RfidTag rfidTag = EmployeeDaoUtil.takeRfidTagFromResult(rs);
+                DateStamp birthDate = DaoUtil.takeBirthDate(rs);
+                PositionType position = DaoUtil.takePosition(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                RoomType room = DaoUtil.takeRoom(rs);
+                Account1C account1C = DaoUtil.takeAccount1C(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -294,11 +302,13 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+        LOGGER.debug(" ... " + employees.size() + " employees");
         return employees;
     }
 
     @Override
     public List<Person> findAll() throws DaoException {
+        LOGGER.debug("findAll ... ");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -319,12 +329,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
-                DepartmentType department = EmployeeDaoUtil.takeDepartmentFromResult(rs);
-                PositionType position = EmployeeDaoUtil.takePositionFromResult(rs);
-                RoomType room = EmployeeDaoUtil.takeRoomFromResult(rs);
-                Account1C account1C = EmployeeDaoUtil.takeAccount1CFromResult(rs);
-                DateStamp birthDate = EmployeeDaoUtil.takeBirthDateFromResult(rs);
-                RfidTag rfidTag = EmployeeDaoUtil.takeRfidTagFromResult(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                PositionType position = DaoUtil.takePosition(rs);
+                RoomType room = DaoUtil.takeRoom(rs);
+                Account1C account1C = DaoUtil.takeAccount1C(rs);
+                DateStamp birthDate = DaoUtil.takeBirthDate(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
                 employee = new Employee.Builder()
                         .id(id)
                         .firstName(firstName)
@@ -348,11 +358,13 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+        LOGGER.debug(" ... " + employees.size() + " employees");
         return employees;
     }
 
     @Override
     public void delete(long id) throws DaoException {
+        LOGGER.debug("delete ... ");
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -367,6 +379,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt = conn.prepareStatement("DELETE FROM EMPLOYEES WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
+            LOGGER.debug("... id=" + id + "is deleted");
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");

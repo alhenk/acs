@@ -1,14 +1,14 @@
 package kz.trei.acs.action.account;
 
 
+import kz.trei.acs.exception.GetParameterException;
+import kz.trei.acs.exception.SecurePasswordException;
 import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
-import kz.trei.acs.exception.GetParameterException;
 import kz.trei.acs.util.PasswordHash;
 import kz.trei.acs.util.PropertyManager;
-import kz.trei.acs.exception.SecurePasswordException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ public final class UserUtil {
     private UserUtil() {
     }
 
-    public static User buildNewUserFromRequest(HttpServletRequest request) throws SecurePasswordException {
-        LOGGER.debug("buildNewUserFromRequest ...");
+    public static User buildNewUser(HttpServletRequest request) throws SecurePasswordException {
+        LOGGER.debug("buildNewUser ...");
         String password = request.getParameter("password");
-        String securePassword = null;
+        String securePassword;
         try {
             securePassword = PasswordHash.createHash(password);
         } catch (NoSuchAlgorithmException e) {
@@ -39,39 +39,39 @@ public final class UserUtil {
         }
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-        RoleType role = takeRoleFromRequest(request);
-        Account1C account1C = buildAccount1CFromRequest(request);
+        RoleType role = takeRole(request);
+        Account1C account1C = buildAccount1C(request);
         User user = new User.Builder(username, securePassword)
                 .email(email)
-                .tableId(account1C)
+                .account1C(account1C)
                 .role(role)
                 .build();
-        LOGGER.debug("The user - " + user + " is built");
+        LOGGER.debug("... " + user + " is built");
         return user;
     }
 
-    public static User buildEditedUserFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildEditedUserFromRequest ...");
+    public static User buildEditedUser(HttpServletRequest request) {
+        LOGGER.debug("buildEditedUser ...");
         HttpSession session = request.getSession();
         User originalUser = (User) session.getAttribute("original-user");
         String securePassword = originalUser.getPassword();
-        long id = takeIdFromRequest(request);
+        long id = takeId(request);
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-        RoleType role = takeRoleFromRequest(request);
-        Account1C account1C = buildAccount1CFromRequest(request);
+        RoleType role = takeRole(request);
+        Account1C account1C = buildAccount1C(request);
         User user = new User.Builder(username, securePassword)
                 .id(id)
                 .email(email)
-                .tableId(account1C)
+                .account1C(account1C)
                 .role(role)
                 .build();
-        LOGGER.debug("The user - " + user + " is built");
+        LOGGER.debug("... " + user + " is built");
         return user;
     }
 
-    private static Account1C buildAccount1CFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildAccount1CFromRequest ...");
+    private static Account1C buildAccount1C(HttpServletRequest request) {
+        LOGGER.debug("buildAccount1C ...");
         Account1C account1C;
         String tableId = request.getParameter("table-id");
         try {
@@ -80,7 +80,7 @@ public final class UserUtil {
             account1C = Account1C.defaultAccount1C();
             LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
         }
-        LOGGER.debug("Table ID = " + account1C.getTableId());
+        LOGGER.debug("... " + account1C.getTableId());
         return account1C;
     }
 
@@ -122,7 +122,7 @@ public final class UserUtil {
         if (error != null) {
             parameters.append("&error=").append(error);
         }
-        LOGGER.debug("Get parameters are fetched");
+        LOGGER.debug("GET-parameters are fetched");
         return parameters.toString();
     }
 
@@ -154,8 +154,8 @@ public final class UserUtil {
         session.removeAttribute("original-user");
     }
 
-    public static long takeIdFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeIdFromRequest ...");
+    public static long takeId(HttpServletRequest request) {
+        LOGGER.debug("takeId ...");
         long id;
         try {
             id = Long.valueOf(request.getParameter("id"));
@@ -165,12 +165,12 @@ public final class UserUtil {
         } catch (NumberFormatException e) {
             throw new GetParameterException("GET parameter \"id\" is not valid : " + e.getMessage());
         }
-        LOGGER.debug(id);
+        LOGGER.debug("... " + id);
         return id;
     }
 
-    private static RoleType takeRoleFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeRoleFromRequest ...");
+    private static RoleType takeRole(HttpServletRequest request) {
+        LOGGER.debug("takeRole ...");
         RoleType role;
         try {
             role = RoleType.valueOf(request.getParameter("role"));
@@ -181,7 +181,7 @@ public final class UserUtil {
             LOGGER.debug("Assigned default user role due to null value : " + e.getMessage());
             role = RoleType.UNREGISTERED;
         }
-        LOGGER.debug("role = " + role);
+        LOGGER.debug("... " + role);
         return role;
     }
 
@@ -203,7 +203,7 @@ public final class UserUtil {
                 request.setAttribute("username-error", "form.user.name.malformed");
             }
         }
-        LOGGER.debug("... valid -> " + isUserNameValid);
+        LOGGER.debug("... " + isUserNameValid);
         return isUserNameValid;
     }
 
@@ -230,7 +230,7 @@ public final class UserUtil {
                 isPasswordValid = false;
             }
         }
-        LOGGER.debug("... valid -> " + isPasswordValid);
+        LOGGER.debug("... " + isPasswordValid);
         return isPasswordValid;
     }
 
@@ -252,7 +252,7 @@ public final class UserUtil {
                 request.setAttribute("email-error", "form.user.email.malformed");
             }
         }
-        LOGGER.debug("... valid -> " + isEmailValid);
+        LOGGER.debug("... " + isEmailValid);
         return isEmailValid;
     }
 
@@ -274,7 +274,7 @@ public final class UserUtil {
                 request.setAttribute("role-error", "form.user.role.malformed");
             }
         }
-        LOGGER.debug("... valid -> " + isRoleValid);
+        LOGGER.debug("... " + isRoleValid);
         return isRoleValid;
     }
 
@@ -298,7 +298,7 @@ public final class UserUtil {
                 request.setAttribute("table-id-error", "form.user.table-id.malformed");
             }
         }
-        LOGGER.debug("... valid -> " + isTableIdValid);
+        LOGGER.debug("... " + isTableIdValid);
         return isTableIdValid;
     }
 }

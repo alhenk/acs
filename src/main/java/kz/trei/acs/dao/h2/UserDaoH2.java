@@ -49,7 +49,7 @@ public class UserDaoH2 implements UserDao {
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
-                        .tableId(tableId)
+                        .account1C(tableId)
                         .build();
                 LOGGER.debug(user);
                 return user;
@@ -96,7 +96,7 @@ public class UserDaoH2 implements UserDao {
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
-                        .tableId(tableId)
+                        .account1C(tableId)
                         .build();
                 LOGGER.debug(user);
                 return user;
@@ -231,7 +231,7 @@ public class UserDaoH2 implements UserDao {
                 user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
-                        .tableId(tableId)
+                        .account1C(tableId)
                         .build();
                 users.add(user);
             }

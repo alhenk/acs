@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:set var="height" value="480"/>
+<c:set var="height" value="520"/>
 <mtag:pagetemplate title="edit-rfidtag">
     <jsp:body>
         <mtag:edit entity="rfidtag" height="${height}">

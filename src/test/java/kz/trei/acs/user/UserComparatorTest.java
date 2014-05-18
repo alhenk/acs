@@ -18,7 +18,7 @@ public class UserComparatorTest extends TestCase {
                 .id(1L)
                 .email("admin@example.com")
                 .role(RoleType.ADMINISTRATOR)
-                .tableId(Account1C.buildAccount1C("KK00000001"))
+                .account1C(Account1C.buildAccount1C("KK00000001"))
                 .build();
 
         user2 = new User
@@ -26,7 +26,7 @@ public class UserComparatorTest extends TestCase {
                 .id(2L)
                 .email("bdmin@example.com")
                 .role(RoleType.SUPERVISOR)
-                .tableId(Account1C.buildAccount1C("KK00000002"))
+                .account1C(Account1C.buildAccount1C("KK00000002"))
                 .build();
 
         user3 = new User

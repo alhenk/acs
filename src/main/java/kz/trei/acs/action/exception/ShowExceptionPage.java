@@ -13,6 +13,7 @@ public class ShowExceptionPage implements Action {
     private static final Logger LOGGER = Logger.getLogger(ShowExceptionPage.class);
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         return new ActionResult(ActionType.FORWARD, "exception");
     }

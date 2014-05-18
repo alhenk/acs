@@ -2,7 +2,7 @@ package kz.trei.acs.dao.sqlite;
 
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.RfidTagDao;
-import kz.trei.acs.dao.RfidTagDaoUtil;
+import kz.trei.acs.dao.util.DaoUtil;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
@@ -20,6 +20,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
 
     @Override
     public void createTable() throws DaoException {
+        LOGGER.debug("createTable ... ");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -59,6 +60,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
 
     @Override
     public RfidTag findById(long id) throws DaoException {
+        LOGGER.debug("findById ... ");
         PreparedStatement stmt = null;
         ResultSet rs;
         Connection conn = null;
@@ -79,9 +81,9 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             LOGGER.debug("Execute Query " + rs);
             if (rs.next()) {
                 String uid = rs.getString("uid");
-                RfidType type = RfidTagDaoUtil.takeTypeFromResult(rs);
-                ProtocolType protocol = RfidTagDaoUtil.takeProtocolFromResult(rs);
-                Issue issue = RfidTagDaoUtil.buildIssueFromResult(rs);
+                RfidType type = DaoUtil.takeType(rs);
+                ProtocolType protocol = DaoUtil.takeProtocol(rs);
+                Issue issue = DaoUtil.buildIssue(rs);
                 rfidTag = new RfidTag.Builder(uid)
                         .id(id)
                         .uid(uid)
@@ -89,7 +91,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                         .protocol(protocol)
                         .issue(issue)
                         .build();
-                LOGGER.debug("Found by id " + rfidTag);
+                LOGGER.debug("... " + rfidTag);
                 return rfidTag;
             }
         } catch (SQLException e) {
@@ -108,6 +110,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
 
     @Override
     public void create(RfidTag rfidTag) throws DaoException {
+        LOGGER.debug("create ... ");
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -126,6 +129,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             stmt.setString(4, rfidTag.getIssue().getIssueDate().getDate());
             stmt.setString(5, rfidTag.getIssue().getExpirationDate().getDate());
             stmt.execute();
+            LOGGER.debug("... the RFID tag is created");
         } catch (SQLException e) {
             CharSequence obj = "is not unique";
             String errorMessage = "";
@@ -146,6 +150,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
 
     @Override
     public long totalNumber() throws DaoException {
+        LOGGER.debug("totalNumber ...");
         long totalNumber = 0;
         Statement stmt = null;
         ResultSet rs = null;
@@ -175,11 +180,13 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+        LOGGER.debug("... " + totalNumber);
         return totalNumber;
     }
 
     @Override
     public void update(RfidTag rfidTag) throws DaoException {
+        LOGGER.debug("update ...");
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -219,6 +226,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
 
     @Override
     public List<RfidTag> findAll() throws DaoException {
+        LOGGER.debug("findAll ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -236,11 +244,11 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
             while (rs.next()) {
-                long id = RfidTagDaoUtil.takeIdFromResult(rs);
+                long id = DaoUtil.takeId(rs);
                 String uid = rs.getString("uid");
-                RfidType type = RfidTagDaoUtil.takeTypeFromResult(rs);
-                ProtocolType protocol = RfidTagDaoUtil.takeProtocolFromResult(rs);
-                Issue issue = RfidTagDaoUtil.buildIssueFromResult(rs);
+                RfidType type = DaoUtil.takeType(rs);
+                ProtocolType protocol = DaoUtil.takeProtocol(rs);
+                Issue issue = DaoUtil.buildIssue(rs);
                 rfidTag = new RfidTag.Builder(uid)
                         .id(id)
                         .uid(uid)
@@ -263,11 +271,13 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+        LOGGER.debug(" ... " + rfidTags.size() + " RFID tags");
         return rfidTags;
     }
 
     @Override
     public List<RfidTag> findInRange(long offset, long length) throws DaoException {
+        LOGGER.debug("findInRange ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -285,11 +295,11 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM RFIDTAGS LIMIT " + length + " OFFSET " + offset);
             while (rs.next()) {
-                long id = RfidTagDaoUtil.takeIdFromResult(rs);
+                long id = DaoUtil.takeId(rs);
                 String uid = rs.getString("uid");
-                RfidType type = RfidTagDaoUtil.takeTypeFromResult(rs);
-                ProtocolType protocol = RfidTagDaoUtil.takeProtocolFromResult(rs);
-                Issue issue = RfidTagDaoUtil.buildIssueFromResult(rs);
+                RfidType type = DaoUtil.takeType(rs);
+                ProtocolType protocol = DaoUtil.takeProtocol(rs);
+                Issue issue = DaoUtil.buildIssue(rs);
                 rfidTag = new RfidTag.Builder(uid)
                         .id(id)
                         .uid(uid)
@@ -312,11 +322,13 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
+        LOGGER.debug(" ... " + rfidTags.size() + " RFID tags");
         return rfidTags;
     }
 
     @Override
     public void delete(long id) throws DaoException {
+        LOGGER.debug("delete ...");
         PreparedStatement stmt = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
@@ -331,6 +343,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             stmt = conn.prepareStatement("DELETE FROM RFIDTAGS WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
+            LOGGER.debug("... id=" + id + "is deleted");
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
             throw new DaoException("Connection pool exception");

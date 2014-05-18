@@ -126,7 +126,7 @@ public final class RfidTagUtil {
     }
 
     public static long takeIdFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeIdFromRequest ...");
+        LOGGER.debug("takeId ...");
         long id;
         try {
             id = Long.valueOf(request.getParameter("id"));
@@ -221,9 +221,8 @@ public final class RfidTagUtil {
         LOGGER.debug("isIssueDateValid ...");
         String issueDate = request.getParameter("issue-date");
         if (issueDate == null || issueDate.isEmpty()) {
-            request.setAttribute("issue-date-error", "form.rfidtag.empty");
-            LOGGER.debug("false");
-            return false;
+            LOGGER.debug("the field is optional - true");
+            return true;
         }
         if (!DateStamp.isDateStampValid(issueDate)) {
             request.setAttribute("issue-date-error", "form.rfidtag.issue-date.malformed");
@@ -239,9 +238,8 @@ public final class RfidTagUtil {
         LOGGER.debug("isExpirationDateValid ...");
         String expirationDate = request.getParameter("expiration-date");
         if (expirationDate == null || expirationDate.isEmpty()) {
-            request.setAttribute("expiration-date-error", "form.rfidtag.empty");
-            LOGGER.debug("false");
-            return false;
+            LOGGER.debug("the field is optional - true");
+            return true;
         }
         if (!DateStamp.isDateStampValid(expirationDate)) {
             request.setAttribute("expiration-date-error", "form.rfidtag.expiration-date.malformed");

@@ -25,7 +25,7 @@ public class EditUser implements Action {
         User user;
         if (isFormValid(request)) {
             try {
-                user = UserUtil.buildEditedUserFromRequest(request);
+                user = UserUtil.buildEditedUser(request);
                 userDao.update(user);
                 LOGGER.debug("user ->" + user);
             } catch (DaoException e) {

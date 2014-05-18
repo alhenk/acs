@@ -29,7 +29,7 @@ public class ShowEditUserPage implements Action {
         UserDao userDao = daoFactory.getUserDao();
         User originalUser;
         try {
-            id = UserUtil.takeIdFromRequest(request);
+            id = UserUtil.takeId(request);
             originalUser = userDao.findById(id);
         } catch (DaoException e) {
             UserUtil.killFieldAttributes(request);

@@ -25,7 +25,7 @@ public class CreateUser implements Action {
         User user;
         if (isFormValid(request)) {
             try {
-                user =  UserUtil.buildNewUserFromRequest(request);
+                user =  UserUtil.buildNewUser(request);
                 userDao.create(user);
             } catch (DaoException e) {
                 request.setAttribute("error", e.getMessage());
