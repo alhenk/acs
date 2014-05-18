@@ -45,7 +45,7 @@ public class UserDaoH2 implements UserDao {
             if (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 RoleType role = RoleType.valueOf(rs.getString("role"));
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
@@ -92,7 +92,7 @@ public class UserDaoH2 implements UserDao {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 RoleType role = RoleType.valueOf(rs.getString("role"));
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 User user = new User.Builder(username, password)
                         .id(id)
                         .role(role)
@@ -226,7 +226,7 @@ public class UserDaoH2 implements UserDao {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                Account1C tableId = Account1C.createId(rs.getString("tableId"));
+                Account1C tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 RoleType role = RoleType.valueOf(rs.getString("role"));
                 user = new User.Builder(username, password)
                         .id(id)

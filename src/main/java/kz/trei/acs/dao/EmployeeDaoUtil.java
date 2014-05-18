@@ -10,13 +10,12 @@ import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Util class for Create and Update Employee DAO methods
- */
+
 public final class EmployeeDaoUtil {
     private static final Logger LOGGER = Logger.getLogger(EmployeeDaoUtil.class);
-    private EmployeeDaoUtil(){}
 
+    private EmployeeDaoUtil() {
+    }
 
     public static RfidTag takeRfidTagFromResult(ResultSet rs) throws SQLException {
         RfidTag rfidTag = new RfidTag();
@@ -37,9 +36,9 @@ public final class EmployeeDaoUtil {
         String id = null;
         try {
             id = rs.getString("id");
-            account1C = Account1C.createId(rs.getString("tableId"));
+            account1C = Account1C.buildAccount1C(rs.getString("tableId"));
         } catch (Account1CException e) {
-            account1C = Account1C.defaultId();
+            account1C = Account1C.defaultAccount1C();
             LOGGER.debug("Employee id=" + id + " : assigned default table ID due to exception: " + e.getMessage());
         }
         LOGGER.debug("Table ID = " + account1C.getTableId());
@@ -56,7 +55,7 @@ public final class EmployeeDaoUtil {
             birthDate = DateStamp.createEmptyDate();
             LOGGER.debug("Employee id=" + id + " : assigned empty birth date due to exception: " + e.getMessage());
         }
-        LOGGER.debug("Birth date = "+birthDate.getDate());
+        LOGGER.debug("Birth date = " + birthDate.getDate());
         return birthDate;
     }
 
@@ -73,7 +72,7 @@ public final class EmployeeDaoUtil {
             LOGGER.debug("Employee id=" + id + " : assigned default position due to null value : " + e.getMessage());
             position = PositionType.DEFAULT;
         }
-        LOGGER.debug("Position = "+position);
+        LOGGER.debug("Position = " + position);
         return position;
     }
 
@@ -90,7 +89,7 @@ public final class EmployeeDaoUtil {
             LOGGER.debug("Employee id=" + id + " : assigned default department due to null value : " + e.getMessage());
             department = DepartmentType.DEFAULT;
         }
-        LOGGER.debug("Department = "+department);
+        LOGGER.debug("Department = " + department);
         return department;
     }
 

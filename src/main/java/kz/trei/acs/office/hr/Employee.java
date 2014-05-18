@@ -77,7 +77,7 @@ public class Employee extends Person {
     }
 
     public void setTableId(String tableId) {
-        this.account1C = Account1C.createId(tableId);
+        this.account1C = Account1C.buildAccount1C(tableId);
     }
 
     public RfidTag getRfidTag() {

@@ -86,7 +86,8 @@ public class RfidTag implements Serializable, Comparable<RfidTag> {
             throw new UidFormatException("Regex pattern flags doesn't corresponds to the defined ones");
         }
         if (isIdValid) {
-            this.uid = uid;;
+            this.uid = uid;
+            ;
         } else {
             throw new UidFormatException("Does not match uidRegex ");
         }

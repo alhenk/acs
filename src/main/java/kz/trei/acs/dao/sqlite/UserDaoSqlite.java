@@ -11,7 +11,6 @@ import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.FileManager;
 import kz.trei.acs.util.PasswordHash;
-import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import java.security.NoSuchAlgorithmException;
@@ -71,9 +70,9 @@ public class UserDaoSqlite implements UserDao {
                 RoleType role = RoleType.valueOf(rs.getString("role"));
                 Account1C tableId;
                 try {
-                    tableId = Account1C.createId(rs.getString("tableId"));
+                    tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 } catch (Account1CException e) {
-                    tableId = Account1C.defaultId();
+                    tableId = Account1C.defaultAccount1C();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
                 User user = new User.Builder(username, password)
@@ -125,9 +124,9 @@ public class UserDaoSqlite implements UserDao {
                 RoleType role = RoleType.valueOf(rs.getString("role"));
                 Account1C tableId;
                 try {
-                    tableId = Account1C.createId(rs.getString("tableId"));
+                    tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 } catch (Account1CException e) {
-                    tableId = Account1C.defaultId();
+                    tableId = Account1C.defaultAccount1C();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
                 LOGGER.debug("find by id = " + id);
@@ -336,9 +335,9 @@ public class UserDaoSqlite implements UserDao {
                 String email = rs.getString("email");
                 Account1C tableId;
                 try {
-                    tableId = Account1C.createId(rs.getString("tableId"));
+                    tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 } catch (Account1CException e) {
-                    tableId = Account1C.defaultId();
+                    tableId = Account1C.defaultAccount1C();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
                 RoleType role = RoleType.valueOf(rs.getString("role"));
@@ -388,9 +387,9 @@ public class UserDaoSqlite implements UserDao {
                 String email = rs.getString("email");
                 Account1C tableId;
                 try {
-                    tableId = Account1C.createId(rs.getString("tableId"));
+                    tableId = Account1C.buildAccount1C(rs.getString("tableId"));
                 } catch (Account1CException e) {
-                    tableId = Account1C.defaultId();
+                    tableId = Account1C.defaultAccount1C();
                     LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
                 }
                 RoleType role = RoleType.valueOf(rs.getString("role"));

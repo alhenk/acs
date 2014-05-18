@@ -11,7 +11,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Table ID assigned to employee accordingly to 1C account data base
  *
- * @throws IllegalArgumentException
+ * @throws Account1CException
  */
 //@XmlType(name = "tableId", namespace ="http://www.trei.kz/attendance/tns")
 public final class Account1C {
@@ -62,7 +62,7 @@ public final class Account1C {
     /**
      * Static fabric method with random ID
      */
-    public static Account1C createRandomId() {
+    public static Account1C buildAccount1CWithRandomId() {
         StringBuilder id = new StringBuilder();
         long number = 1L + (long) (Math.random() * 9999L);
         id.append(PropertyManager.getValue("structure.tablePrefix"));
@@ -74,7 +74,7 @@ public final class Account1C {
      *
      * @throws Account1CException
      */
-    public static Account1C createId(String tableId) {
+    public static Account1C buildAccount1C(String tableId) {
         boolean isIdValid;
         try {
             isIdValid = isValid(tableId);
@@ -93,13 +93,9 @@ public final class Account1C {
     /**
      * Used for assign default table ID in case of Account1CException
      */
-    public static Account1C defaultId() {
+    public static Account1C defaultAccount1C() {
         return new Account1C(DEFAULT_TABLE_ID);
     }
-
-    /**
-     * Getter
-     */
 
     public String getTableId() {
         return tableId;

@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:set var="height" value="740"/>
+<c:set var="height" value="780"/>
 <mtag:pagetemplate title="create-employee">
     <jsp:body>
         <mtag:create entity="employee" height="${height}">

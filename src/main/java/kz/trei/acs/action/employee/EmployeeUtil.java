@@ -25,6 +25,96 @@ public final class EmployeeUtil {
     private EmployeeUtil() {
     }
 
+    public static Person buildNewEmployeeFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildNewEmployeeFromRequest ...");
+        String firstName = request.getParameter("first-name");
+        String patronym = request.getParameter("patronym");
+        String lastName = request.getParameter("last-name");
+        //patronym is optional
+        if (patronym == null) {
+            patronym = "";
+        }
+        DateStamp birthDate = takeBirthDateFromRequest(request);
+        PositionType position = takePositionFromRequest(request);
+        DepartmentType department = takeDepartmentFromRequest(request);
+        RoomType room = takeRoomFromRequest(request);
+        Account1C account1C = buildAccount1CFromRequest(request);
+        RfidTag rfidTag = buildRfidTagFromRequest(request);
+        Person employee = new Employee.Builder()
+                .firstName(firstName)
+                .patronym(patronym)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .position(position)
+                .department(department)
+                .room(room)
+                .account1C(account1C)
+                .rfidTag(rfidTag)
+                .build();
+        LOGGER.debug("Employee " + employee + " is built");
+        return employee;
+    }
+
+    public static Person buildEditedEmployeeFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildEditedEmployeeFromRequest ...");
+        long id = takeIdFromRequest(request);
+        String firstName = request.getParameter("first-name");
+        String patronym = request.getParameter("patronym");
+        String lastName = request.getParameter("last-name");
+        //patronym is optional
+        if (patronym == null) {
+            patronym = "";
+        }
+        DateStamp birthDate = takeBirthDateFromRequest(request);
+        PositionType position = takePositionFromRequest(request);
+        DepartmentType department = takeDepartmentFromRequest(request);
+        RoomType room = takeRoomFromRequest(request);
+        Account1C account1C = buildAccount1CFromRequest(request);
+        RfidTag rfidTag = buildRfidTagFromRequest(request);
+        Person employee = new Employee.Builder()
+                .id(id)
+                .firstName(firstName)
+                .patronym(patronym)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .position(position)
+                .department(department)
+                .room(room)
+                .account1C(account1C)
+                .rfidTag(rfidTag)
+                .build();
+        LOGGER.debug("Employee " + employee + " is built");
+        return employee;
+    }
+
+    public static Account1C buildAccount1CFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildAccount1CFromRequest ...");
+        Account1C account1C;
+        String tableId = request.getParameter("table-id");
+        try {
+            account1C = Account1C.buildAccount1C(tableId);
+        } catch (Account1CException e) {
+            account1C = Account1C.defaultAccount1C();
+            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+        }
+        LOGGER.debug(account1C.getTableId());
+        return account1C;
+    }
+
+    public static RfidTag buildRfidTagFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildRfidTagFromRequest ...");
+        String uid = request.getParameter("uid");
+        RfidTag rfidTag = new RfidTag();
+        try {
+            rfidTag.setUid(request.getParameter("uid"));
+        } catch (UidFormatException e) {
+            rfidTag.setEmptyUid();
+            LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
+        }
+        LOGGER.debug(rfidTag);
+        return rfidTag;
+    }
+
     public static String fetchParameters(HttpServletRequest request) {
         LOGGER.debug("fetchParameters ...");
         StringBuilder parameters = new StringBuilder("?");
@@ -116,69 +206,6 @@ public final class EmployeeUtil {
         session.removeAttribute("original-employee");
     }
 
-    public static Person buildEditedEmployeeFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildEditedEmployeeFromRequest ...");
-        long id = takeIdFromRequest(request);
-        String firstName = request.getParameter("first-name");
-        String patronym = request.getParameter("patronym");
-        String lastName = request.getParameter("last-name");
-        //patronym is optional
-        if (patronym == null) {
-            patronym = "";
-        }
-        DateStamp birthDate = takeBirthDateFromRequest(request);
-        PositionType position = takePositionFromRequest(request);
-        DepartmentType department = takeDepartmentFromRequest(request);
-        RoomType room = takeRoomFromRequest(request);
-        Account1C account1C = takeAccount1CFromRequest(request);
-        RfidTag rfidTag = takeRfidTagFromRequest(request);
-        Person employee = new Employee.Builder()
-                .id(id)
-                .firstName(firstName)
-                .patronym(patronym)
-                .lastName(lastName)
-                .birthDate(birthDate)
-                .position(position)
-                .department(department)
-                .room(room)
-                .account1C(account1C)
-                .rfidTag(rfidTag)
-                .build();
-        LOGGER.debug("Employee " + employee + " is built");
-        return employee;
-    }
-
-    public static Person buildNewEmployeeFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildNewEmployeeFromRequest ...");
-        String firstName = request.getParameter("first-name");
-        String patronym = request.getParameter("patronym");
-        String lastName = request.getParameter("last-name");
-        //patronym is optional
-        if (patronym == null) {
-            patronym = "";
-        }
-        DateStamp birthDate = takeBirthDateFromRequest(request);
-        PositionType position = takePositionFromRequest(request);
-        DepartmentType department = takeDepartmentFromRequest(request);
-        RoomType room = takeRoomFromRequest(request);
-        Account1C account1C = takeAccount1CFromRequest(request);
-        RfidTag rfidTag = takeRfidTagFromRequest(request);
-        LOGGER.debug("Employee " + firstName + " is almost created");
-        Person employee = new Employee.Builder()
-                .firstName(firstName)
-                .patronym(patronym)
-                .lastName(lastName)
-                .birthDate(birthDate)
-                .position(position)
-                .department(department)
-                .room(room)
-                .account1C(account1C)
-                .rfidTag(rfidTag)
-                .build();
-        LOGGER.debug("Employee " + employee + " is built");
-        return employee;
-    }
-
     public static long takeIdFromRequest(HttpServletRequest request) {
         LOGGER.debug("takeIdFromRequest ...");
         long id;
@@ -192,33 +219,6 @@ public final class EmployeeUtil {
         }
         LOGGER.debug(id);
         return id;
-    }
-
-    public static RfidTag takeRfidTagFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeRfidTagFromRequest ...");
-        RfidTag rfidTag = new RfidTag();
-        try {
-            rfidTag.setUid(request.getParameter("uid"));
-        } catch (UidFormatException e) {
-            rfidTag.setEmptyUid();
-            LOGGER.debug("Assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
-        }
-        LOGGER.debug(rfidTag);
-        return rfidTag;
-    }
-
-    public static Account1C takeAccount1CFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeAccount1CFromRequest ...");
-        Account1C account1C;
-        String tableId = request.getParameter("table-id");
-        try {
-            account1C = Account1C.createId(tableId);
-        } catch (Account1CException e) {
-            account1C = Account1C.defaultId();
-            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-        }
-        LOGGER.debug(account1C.getTableId());
-        return account1C;
     }
 
     public static RoomType takeRoomFromRequest(HttpServletRequest request) {

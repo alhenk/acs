@@ -24,6 +24,66 @@ public final class UserUtil {
     private UserUtil() {
     }
 
+    public static User buildNewUserFromRequest(HttpServletRequest request) throws SecurePasswordException {
+        LOGGER.debug("buildNewUserFromRequest ...");
+        String password = request.getParameter("password");
+        String securePassword = null;
+        try {
+            securePassword = PasswordHash.createHash(password);
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("Creating secure password hash fail : " + e.getMessage());
+            throw new SecurePasswordException("Creating secure password hash fail : " + e.getMessage());
+        } catch (InvalidKeySpecException e) {
+            LOGGER.error("Creating secure password hash fail : " + e.getMessage());
+            throw new SecurePasswordException("Creating secure password hash fail : " + e.getMessage());
+        }
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        RoleType role = takeRoleFromRequest(request);
+        Account1C account1C = buildAccount1CFromRequest(request);
+        User user = new User.Builder(username, securePassword)
+                .email(email)
+                .tableId(account1C)
+                .role(role)
+                .build();
+        LOGGER.debug("The user - " + user + " is built");
+        return user;
+    }
+
+    public static User buildEditedUserFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildEditedUserFromRequest ...");
+        HttpSession session = request.getSession();
+        User originalUser = (User) session.getAttribute("original-user");
+        String securePassword = originalUser.getPassword();
+        long id = takeIdFromRequest(request);
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        RoleType role = takeRoleFromRequest(request);
+        Account1C account1C = buildAccount1CFromRequest(request);
+        User user = new User.Builder(username, securePassword)
+                .id(id)
+                .email(email)
+                .tableId(account1C)
+                .role(role)
+                .build();
+        LOGGER.debug("The user - " + user + " is built");
+        return user;
+    }
+
+    private static Account1C buildAccount1CFromRequest(HttpServletRequest request) {
+        LOGGER.debug("buildAccount1CFromRequest ...");
+        Account1C account1C;
+        String tableId = request.getParameter("table-id");
+        try {
+            account1C = Account1C.buildAccount1C(tableId);
+        } catch (Account1CException e) {
+            account1C = Account1C.defaultAccount1C();
+            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
+        }
+        LOGGER.debug("Table ID = " + account1C.getTableId());
+        return account1C;
+    }
+
     public static String fetchParameters(HttpServletRequest request) {
         StringBuilder parameters = new StringBuilder("?");
         String id = request.getParameter("id");
@@ -94,64 +154,19 @@ public final class UserUtil {
         session.removeAttribute("original-user");
     }
 
-    public static User buildEditedUserFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildEditedUserFromRequest ...");
-        HttpSession session = request.getSession();
-        User originalUser = (User) session.getAttribute("original-user");
-        String securePassword = originalUser.getPassword();
-        long id = takeIdFromRequest(request);
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        RoleType role = takeRoleFromRequest(request);
-        Account1C account1C = takeAccount1CFromRequest(request);
-        User user = new User.Builder(username, securePassword)
-                .id(id)
-                .email(email)
-                .tableId(account1C)
-                .role(role)
-                .build();
-        LOGGER.debug("The user - " + user + " is built");
-        return user;
-    }
-
-    public static User buildNewUserFromRequest(HttpServletRequest request) throws SecurePasswordException {
-        LOGGER.debug("buildNewUserFromRequest ...");
-        String password = request.getParameter("password");
-        String securePassword = null;
+    public static long takeIdFromRequest(HttpServletRequest request) {
+        LOGGER.debug("takeIdFromRequest ...");
+        long id;
         try {
-            securePassword = PasswordHash.createHash(password);
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("Creating secure password hash fail : " + e.getMessage());
-            throw new SecurePasswordException("Creating secure password hash fail : " + e.getMessage());
-        } catch (InvalidKeySpecException e) {
-            LOGGER.error("Creating secure password hash fail : " + e.getMessage());
-            throw new SecurePasswordException("Creating secure password hash fail : " + e.getMessage());
+            id = Long.valueOf(request.getParameter("id"));
+            if (id < 0) {
+                throw new NumberFormatException("negative id = " + id);
+            }
+        } catch (NumberFormatException e) {
+            throw new GetParameterException("GET parameter \"id\" is not valid : " + e.getMessage());
         }
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        RoleType role = takeRoleFromRequest(request);
-        Account1C account1C = takeAccount1CFromRequest(request);
-        User user = new User.Builder(username, securePassword)
-                .email(email)
-                .tableId(account1C)
-                .role(role)
-                .build();
-        LOGGER.debug("The user - " + user + " is built");
-        return user;
-    }
-
-    private static Account1C takeAccount1CFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeAccount1CFromRequest ...");
-        Account1C account1C;
-        String tableId = request.getParameter("table-id");
-        try {
-            account1C = Account1C.createId(tableId);
-        } catch (Account1CException e) {
-            account1C = Account1C.defaultId();
-            LOGGER.error("Assigned default table ID due to exception: " + e.getMessage());
-        }
-        LOGGER.debug("Table ID = " + account1C.getTableId());
-        return account1C;
+        LOGGER.debug(id);
+        return id;
     }
 
     private static RoleType takeRoleFromRequest(HttpServletRequest request) {
@@ -168,21 +183,6 @@ public final class UserUtil {
         }
         LOGGER.debug("role = " + role);
         return role;
-    }
-
-    public static long takeIdFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeIdFromRequest ...");
-        long id;
-        try {
-            id = Long.valueOf(request.getParameter("id"));
-            if (id < 0) {
-                throw new NumberFormatException("negative id = " + id);
-            }
-        } catch (NumberFormatException e) {
-            throw new GetParameterException("GET parameter \"id\" is not valid : " + e.getMessage());
-        }
-        LOGGER.debug(id);
-        return id;
     }
 
     //USER NAME VALIDATION

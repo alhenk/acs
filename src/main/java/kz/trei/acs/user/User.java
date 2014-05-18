@@ -19,7 +19,7 @@ public class User implements Serializable {
         this.username = "stranger";
         this.password = "123";
         this.email = "user@example.com";
-        this.account1C = Account1C.createRandomId();
+        this.account1C = Account1C.buildAccount1CWithRandomId();
         this.role = RoleType.UNREGISTERED;
     }
 

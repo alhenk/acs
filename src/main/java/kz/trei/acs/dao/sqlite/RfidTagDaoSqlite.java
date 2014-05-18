@@ -25,7 +25,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
-        ConnectionPool connectionPool = null;
+        ConnectionPool connectionPool;
         String createRfidTagTableSql = FileManager.readFile("rfidtag_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
@@ -65,7 +65,8 @@ public class RfidTagDaoSqlite implements RfidTagDao {
     }
 
     @Override
-    public void create(RfidTag entity) throws DaoException {
+    public void create(RfidTag rfidTag) throws DaoException {
+
     }
 
     @Override
@@ -103,7 +104,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
     }
 
     @Override
-    public void update(RfidTag entity) throws DaoException {
+    public void update(RfidTag rfidTag) throws DaoException {
     }
 
     @Override
@@ -284,6 +285,5 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
         }
-
     }
 }
