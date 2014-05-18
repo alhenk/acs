@@ -4,25 +4,25 @@
     <fieldset class="create-rfidtag">
         <p> &nbsp;</p>
         <ftag:string-field field="uid"
-                           value="RFID UID"
+                           value="${sessionScope['uid']}"
                            clazz="rfidtag"/>
         <p> &nbsp;</p>
         <ftag:select-field clazz="rfidtag"
                            field="type"
                            optionList="${sessionScope['types']}"
-                           value="CARD"/>
+                           value="${sessionScope['type']}"/>
         <p> &nbsp;</p>
         <ftag:select-field clazz="rfidtag"
                            field="protocol"
                            optionList="${sessionScope['protocols']}"
-                           value="ISO15693"/>
+                           value="${sessionScope['protocol']}"/>
         <p> &nbsp;</p>
         <ftag:string-field field="issue-date"
-                           value="YYYY-MM-DD"
+                           value="${sessionScope['issue-date']}"
                            clazz="rfidtag"/>
         <p> &nbsp;</p>
         <ftag:string-field field="expiration-date"
-                           value="YYYY-MM-DD"
+                           value="${sessionScope['expiration-date']}"
                            clazz="rfidtag"/>
         <p> &nbsp;</p>
 

@@ -46,8 +46,6 @@ public class UserDaoSqlite implements UserDao {
             stmt.setString(1, username);
             rs = stmt.executeQuery();
             LOGGER.debug("Executed Query " + rs);
-            //rs must contain single username
-            // because database constrains a unique username as a primary key
             if (rs.next()) {
                 String hash = rs.getString("password");
                 try {
@@ -64,7 +62,6 @@ public class UserDaoSqlite implements UserDao {
                 throw new DaoException("There is no such user");
             }
             if (isPasswordValid) {
-                String hash = rs.getString("password");
                 long id = Long.valueOf(rs.getString("id"));
                 String email = rs.getString("email");
                 RoleType role = RoleType.valueOf(rs.getString("role"));

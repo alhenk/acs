@@ -224,11 +224,11 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt.setString(9, ((Employee) employee).getRfidTag().getUid());
             stmt.setString(10, Long.toString(((Employee) employee).getId()));
             stmt.executeUpdate();
-            LOGGER.debug("id :" + ((Employee) employee).getId());
-            LOGGER.debug("First name :" + employee.getFirstName());
-            LOGGER.debug("Last name :" + employee.getLastName());
-            LOGGER.debug("Job position :" + ((Employee) employee).getPosition());
-            LOGGER.debug("Table ID :" + ((Employee) employee).getAccount1C().getTableId());
+            LOGGER.debug("id : " + ((Employee) employee).getId());
+            LOGGER.debug("First name : " + employee.getFirstName());
+            LOGGER.debug("Last name : " + employee.getLastName());
+            LOGGER.debug("Job position : " + ((Employee) employee).getPosition());
+            LOGGER.debug("Table ID : " + ((Employee) employee).getAccount1C().getTableId());
         } catch (SQLException e) {
             LOGGER.error("SQL UPDATE EMPLOYEES exception: " + e.getMessage());
             throw new DaoException("SQL UPDATE EMPLOYEES exception: " + e.getMessage());
@@ -260,7 +260,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT " + length + " OFFSET " + offset);
             while (rs.next()) {
-                long id = Long.valueOf(rs.getString("id"));
+                long id = EmployeeDaoUtil.takeIdFromResult(rs);
                 String firstName = rs.getString("firstName");
                 String patronym = rs.getString("patronym");
                 String lastName = rs.getString("lastName");

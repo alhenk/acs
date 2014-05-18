@@ -9,7 +9,7 @@ import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
-import kz.trei.acs.util.GetParameterException;
+import kz.trei.acs.exception.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

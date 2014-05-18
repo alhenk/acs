@@ -4,7 +4,7 @@ import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.UidFormatException;
 import kz.trei.acs.office.structure.*;
 import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.DateStampException;
+import kz.trei.acs.exception.DateStampException;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -15,6 +15,18 @@ public final class EmployeeDaoUtil {
     private static final Logger LOGGER = Logger.getLogger(EmployeeDaoUtil.class);
 
     private EmployeeDaoUtil() {
+    }
+
+    public static long takeIdFromResult(ResultSet rs) throws SQLException {
+        LOGGER.debug("takeIdFromResult ...");
+        long id;
+        try {
+            id = Long.valueOf(rs.getString("id"));
+        } catch (NumberFormatException e) {
+            throw new SQLException("DB index \"id\" is not valid : " + e.getMessage());
+        }
+        LOGGER.debug(id);
+        return id;
     }
 
     public static RfidTag takeRfidTagFromResult(ResultSet rs) throws SQLException {

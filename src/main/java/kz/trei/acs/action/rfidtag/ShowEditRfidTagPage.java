@@ -10,7 +10,7 @@ import kz.trei.acs.dao.RfidTagDao;
 import kz.trei.acs.office.rfid.ProtocolType;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.RfidType;
-import kz.trei.acs.util.GetParameterException;
+import kz.trei.acs.exception.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

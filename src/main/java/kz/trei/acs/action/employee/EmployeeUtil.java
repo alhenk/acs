@@ -6,8 +6,8 @@ import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.UidFormatException;
 import kz.trei.acs.office.structure.*;
 import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.DateStampException;
-import kz.trei.acs.util.GetParameterException;
+import kz.trei.acs.exception.DateStampException;
+import kz.trei.acs.exception.GetParameterException;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 

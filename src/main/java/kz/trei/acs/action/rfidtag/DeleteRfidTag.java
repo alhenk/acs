@@ -6,7 +6,7 @@ import kz.trei.acs.action.ActionType;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.RfidTagDao;
-import kz.trei.acs.util.GetParameterException;
+import kz.trei.acs.exception.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

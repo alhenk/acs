@@ -1,4 +1,4 @@
-package kz.trei.acs.util;
+package kz.trei.acs.exception;
 
 
 public class SecurePasswordException extends RuntimeException{

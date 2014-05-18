@@ -5,10 +5,10 @@ import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
-import kz.trei.acs.util.GetParameterException;
+import kz.trei.acs.exception.GetParameterException;
 import kz.trei.acs.util.PasswordHash;
 import kz.trei.acs.util.PropertyManager;
-import kz.trei.acs.util.SecurePasswordException;
+import kz.trei.acs.exception.SecurePasswordException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

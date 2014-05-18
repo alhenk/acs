@@ -7,7 +7,7 @@ import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.user.User;
-import kz.trei.acs.util.SecurePasswordException;
+import kz.trei.acs.exception.SecurePasswordException;
 import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

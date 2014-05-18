@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kz.trei.acs.exception.DateStampException;
 import org.apache.log4j.Logger;
 
 public class DateStamp implements Serializable, Comparable<DateStamp> {

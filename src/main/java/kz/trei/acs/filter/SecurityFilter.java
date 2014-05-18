@@ -35,22 +35,28 @@ public class SecurityFilter implements Filter {
         //User
         groups.put("GET/create-user", administrator);
         groups.put("POST/create-user", administrator);
+        groups.put("GET/cancel-create-user", all);
         groups.put("GET/edit-user", administrator);
         groups.put("POST/edit-user", administrator);
+        groups.put("GET/cancel-edit-user", all);
         groups.put("GET/delete-user", administrator);
         groups.put("GET/user-list", administrator);
         //RfidTag
         groups.put("GET/create-rfidtag", administrator);
         groups.put("POST/create-rfidtag", administrator);
+        groups.put("GET/cancel-create-rfidtag", all);
         groups.put("GET/edit-rfidtag", administrator);
         groups.put("POST/edit-rfidtag", administrator);
+        groups.put("GET/cancel-edit-rfidtag", all);
         groups.put("GET/delete-rfidtag", administrator);
         groups.put("GET/rfidtag-list", administrator);
         //Employee
         groups.put("GET/create-employee", administrator);
         groups.put("POST/create-employee", administrator);
+        groups.put("GET/cancel-create-employee", all);
         groups.put("GET/edit-employee", authorized);
         groups.put("POST/edit-employee", authorized);
+        groups.put("GET/cancel-edit-employee", all);
         groups.put("GET/delete-employee", administrator);
         groups.put("GET/employee-list", authorized);
     }

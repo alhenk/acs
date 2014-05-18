@@ -5,8 +5,8 @@ import kz.trei.acs.office.rfid.ProtocolType;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.RfidType;
 import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.DateStampException;
-import kz.trei.acs.util.GetParameterException;
+import kz.trei.acs.exception.DateStampException;
+import kz.trei.acs.exception.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ public final class RfidTagUtil {
     }
 
     public static RfidTag buildEditedRfidTagFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildEditedRfidTagFromReques ...");
+        LOGGER.debug("buildEditedRfidTagFromRequest ...");
         long id = takeIdFromRequest(request);
         String uid = request.getParameter("uid");
         RfidType type = takeTypeFromRequest(request);
@@ -53,7 +53,7 @@ public final class RfidTagUtil {
     }
 
     private static Issue buildIssueFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildNewRfidTagFromRequest ...");
+        LOGGER.debug("buildIssueFromRequest ...");
         DateStamp issueDate = takeIssueDateFromRequest(request);
         DateStamp expirationDate = takeExpirationDateFromRequest(request);
         Issue issue = new Issue.Builder()
