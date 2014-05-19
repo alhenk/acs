@@ -3,31 +3,25 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:set var="offset" value="${sessionScope.offset}"/>
-<c:set var="length" value="${sessionScope.length}"/>
-<c:set var="totalNumber" value="${sessionScope['total-number']}"/>
-<c:set var="nextPage" value="${offset+length > totalNumber ? offset: offset+length}"/>
-<c:set var="previousPage" value="${offset - length <= 0 ? 0: offset-length}"/>
-<c:set var="currentPage" value="${length == 0 ? 0:offset/length+1}"/>
-<c:set var="totalPages" value="${length == 0 ? 0:totalNumber/length + 1}"/>
+<c:set var="page" value="${sessionScope.page}"/>
+<c:set var="numPages" value="${sessionScope['num-pages']}"/>
+<c:set var="nextPage" value="${page + 1 <= numPages ? page + 1: page}"/>
+<c:set var="previousPage" value="${page - 1 <= 0 ? 1 : page-1}"/>
 
 <div class="grid_1">
     <form action="do/${entity}-list" method="get">
         <input type="hidden" name="sort" value="${param.sort}">
-        <input type="hidden" name="offset" value="${previousPage}">
-        <input type="submit" value="<">
+        <input type="hidden" name="page" value="${previousPage}">
+        <input type="submit" value="<"  ${page <= 1 ? 'disabled':''}/>
+
     </form>
 </div>
-<div class="grid_1">
-    <p><fmt:formatNumber type="number" value="${currentPage}" maxFractionDigits="0"/>
-        /<fmt:formatNumber type="number" value="${totalPages}" maxFractionDigits="0"/>
-    </p>
-</div>
+<div class="grid_1"> ${page}/${numPages} </div>
 <div class="grid_1">
     <form action="do/${entity}-list" method="get">
         <input type="hidden" name="sort" value="${param.sort}">
-        <input type="hidden" name="offset" value="${nextPage}">
-        <input type="submit" value=">">
+        <input type="hidden" name="page" value="${nextPage}">
+        <input type="submit" value=">" ${page >= numPages ? 'disabled':''} />
     </form>
 </div>
 <div class="grid_3">

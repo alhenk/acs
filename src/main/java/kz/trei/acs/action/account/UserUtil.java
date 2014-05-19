@@ -7,6 +7,7 @@ import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.Account1CException;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.user.User;
+import kz.trei.acs.user.UserComparator;
 import kz.trei.acs.util.PasswordHash;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
@@ -183,6 +184,51 @@ public final class UserUtil {
         }
         LOGGER.debug("... " + role);
         return role;
+    }
+
+    public static long takePage(HttpServletRequest request) {
+        long page;
+        try {
+            page = Integer.valueOf(request.getParameter("page"));
+        } catch (NumberFormatException e) {
+            page = 1L;
+            LOGGER.error("GET parameter \"page\" is empty, assigned default value 1");
+        }
+        return page;
+    }
+
+    public static void killUserListAttributes(HttpServletRequest request) {
+        LOGGER.debug("killUserListAttributes ...");
+        HttpSession session = request.getSession();
+        session.removeAttribute("users");
+        session.removeAttribute("page");
+        session.removeAttribute("num-pages");
+    }
+
+    public static long takeLimit(HttpServletRequest request) {
+        long limit;
+        try {
+            limit = Integer.valueOf(request.getParameter("limit"));
+        } catch (NumberFormatException e) {
+            limit = Integer.valueOf(PropertyManager.getValue("paging.limit"));
+            LOGGER.error("GET parameter \"limit\" is empty, assigned configure value (" + limit + ")");
+        }
+        return limit;
+    }
+
+    public static UserComparator.CompareType takeUserComparator(HttpServletRequest request) {
+        UserComparator.CompareType userComparator;
+        try {
+            userComparator =
+                    UserComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
+        } catch (NullPointerException e) {
+            userComparator = UserComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        } catch (IllegalArgumentException e) {
+            userComparator = UserComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        }
+        return userComparator;
     }
 
     //USER NAME VALIDATION

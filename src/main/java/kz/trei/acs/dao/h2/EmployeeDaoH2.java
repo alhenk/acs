@@ -71,7 +71,7 @@ public class EmployeeDaoH2 implements EmployeeDao {
     }
 
     @Override
-    public long totalNumber() throws DaoException {
+    public long numberOfTuples() throws DaoException {
         return 0;
     }
 
@@ -86,7 +86,7 @@ public class EmployeeDaoH2 implements EmployeeDao {
     }
 
     @Override
-    public List<Person> findInRange(long offset, long length) throws DaoException {
+    public List<Person> findInRange(long offset, long limit) throws DaoException {
         return null;
     }
 

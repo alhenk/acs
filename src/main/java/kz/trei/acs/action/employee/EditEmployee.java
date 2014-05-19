@@ -25,7 +25,7 @@ public class EditEmployee implements Action {
         Person employee;
         if (isFormValid(request)) {
             try {
-                employee = EmployeeUtil.buildEditedEmployeeFromRequest(request);
+                employee = EmployeeUtil.buildEditedEmployee(request);
                 employeeDao.update(employee);
                 LOGGER.debug("employee -> " + employee);
             } catch (DaoException e) {

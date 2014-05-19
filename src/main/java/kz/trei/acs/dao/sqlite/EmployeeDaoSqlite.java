@@ -170,9 +170,9 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public long totalNumber() throws DaoException {
-        LOGGER.debug("totalNumber ... ");
-        long totalNumber = 0;
+    public long numberOfTuples() throws DaoException {
+        LOGGER.debug("numberOfTuples ... ");
+        long numTuples = 0;
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -186,10 +186,12 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT count(*) AS totalNumber FROM EMPLOYEES;");
-            while (rs.next()) {
-                totalNumber = Long.valueOf(rs.getString("totalNumber"));
-                LOGGER.debug("Total number of ROWS = " + totalNumber);
+            rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM EMPLOYEES;");
+            if (rs.next()) {
+                numTuples = Long.valueOf(rs.getString("numTuples"));
+            } else {
+                LOGGER.error("Failed to count tuples in EMPLOYEES");
+                throw new DaoException("Failed to count tuples in EMPLOYEES");
             }
         } catch (ConnectionPoolException e) {
             LOGGER.error("Connection pool exception: " + e.getMessage());
@@ -201,8 +203,8 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
-        LOGGER.debug("... " + totalNumber);
-        return totalNumber;
+        LOGGER.debug("... " + numTuples);
+        return numTuples;
     }
 
     @Override
@@ -249,7 +251,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     }
 
     @Override
-    public List<Person> findInRange(long offset, long length) throws DaoException {
+    public List<Person> findInRange(long offset, long limit) throws DaoException {
         LOGGER.debug("findInRange ... ");
         Statement stmt = null;
         ResultSet rs = null;
@@ -266,7 +268,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT " + length + " OFFSET " + offset);
+            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT " + limit + " OFFSET " + offset);
             while (rs.next()) {
                 long id = DaoUtil.takeId(rs);
                 String firstName = rs.getString("firstName");

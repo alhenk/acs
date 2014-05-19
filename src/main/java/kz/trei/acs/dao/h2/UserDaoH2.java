@@ -194,7 +194,7 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
-    public long totalNumber() throws DaoException {
+    public long numberOfTuples() throws DaoException {
         return 0;
     }
 
@@ -249,7 +249,7 @@ public class UserDaoH2 implements UserDao {
     }
 
     @Override
-    public List<User> findInRange(long offset, long length) throws DaoException {
+    public List<User> findInRange(long offset, long limit) throws DaoException {
         return null;
     }
 

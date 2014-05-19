@@ -24,7 +24,7 @@ public class DeleteEmployee implements Action {
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         try {
-            id = EmployeeUtil.takeIdFromRequest(request);
+            id = EmployeeUtil.takeIdFrom(request);
             if (id == 0 || id == 1) {
                 throw new GetParameterException("trying to delete the read-only record");
             }

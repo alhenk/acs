@@ -32,16 +32,20 @@ public class ShowRfidTagListPage implements Action {
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         RfidTagDao rfidTagDao = daoFactory.getRfidTagDao();
-        long totalNumber;
-        long offset = takeOffsetFromRequest(request);
-        long length = takeLengthFromRequest(request);
+        long numTuples;
+        long page = RfidTagUtil.takePage(request);
+        long limit = RfidTagUtil.takeLimit(request);
+        long offset;
+        long numPages;
         RfidTagComparator.CompareType compareType =
-                takeRfidTagComparatorFromRequest(request);
+                RfidTagUtil.takeRfidTagComparator(request);
         List<RfidTag> rfidtags;
         try {
-            rfidtags = rfidTagDao.findInRange(offset, length);
+            numTuples = rfidTagDao.numberOfTuples();
+            numPages = (long) (Math.ceil((1.0 * numTuples) / limit));
+            offset = (page - 1) < 0 || page > numPages ? 0 : (page - 1) * limit;
+            rfidtags = rfidTagDao.findInRange(offset, limit);
             Collections.sort(rfidtags, new RfidTagComparator(compareType));
-            totalNumber = rfidTagDao.totalNumber();
         } catch (DaoException e) {
             killRfidTagListAttribute(request);
             request.setAttribute("error", "error.db.rfidtag-list");
@@ -53,10 +57,9 @@ public class ShowRfidTagListPage implements Action {
             LOGGER.error("Getting rfidtag list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + RfidTagUtil.fetchParameters(request));
         }
-        session.setAttribute("total-number", totalNumber);
-        session.setAttribute("offset", offset);
-        session.setAttribute("length", length);
         session.setAttribute("rfidtags", rfidtags);
+        session.setAttribute("num-pages", numPages);
+        session.setAttribute("page", page);
         LOGGER.debug("..." + rfidtags);
         return new ActionResult(ActionType.FORWARD, "rfidtag-list");
     }
@@ -67,41 +70,5 @@ public class ShowRfidTagListPage implements Action {
         session.removeAttribute("length");
         session.removeAttribute("total-number");
         session.removeAttribute("rfidtags");
-    }
-
-    private RfidTagComparator.CompareType takeRfidTagComparatorFromRequest(HttpServletRequest request) {
-        RfidTagComparator.CompareType rfidTagComparator;
-        try {
-            rfidTagComparator =
-                    RfidTagComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
-        } catch (NullPointerException e) {
-            rfidTagComparator = RfidTagComparator.CompareType.ID;
-            LOGGER.debug("Assigned default comparator by ID");
-        } catch (IllegalArgumentException e) {
-            rfidTagComparator = RfidTagComparator.CompareType.ID;
-            LOGGER.debug("Assigned default comparator by ID");
-        }
-        return rfidTagComparator;
-    }
-
-    private long takeLengthFromRequest(HttpServletRequest request) {
-        long length;
-        try {
-            length = Integer.valueOf(request.getParameter("length"));
-        } catch (NumberFormatException e) {
-            length = Integer.valueOf(PropertyManager.getValue("paging.length"));
-            LOGGER.error("GET parameter length is empty, assigned configure value (" + length + ")");
-        }
-        return length;
-    }
-
-    private long takeOffsetFromRequest(HttpServletRequest request) {
-        long offset;
-        try {
-            offset = Long.valueOf(request.getParameter("offset"));
-        } catch (NumberFormatException e1) {
-            offset = 0;
-        }
-        return offset;
     }
 }

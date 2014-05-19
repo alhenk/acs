@@ -253,9 +253,9 @@ public class UserDaoSqlite implements UserDao {
     }
 
     @Override
-    public long totalNumber() throws DaoException {
-        LOGGER.debug("totalNumber ... ");
-        long totalNumber = 0;
+    public long numberOfTuples() throws DaoException {
+        LOGGER.debug("numberOfTuples ... ");
+        long numTuples = 0;
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -269,10 +269,9 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT count(*) AS TotalNumber FROM USERS");
+            rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM USERS");
             if (rs.next()) {
-                totalNumber = Long.valueOf(rs.getString("TotalNumber"));
-                LOGGER.debug("Total number of tuples in USERS = " + totalNumber);
+                numTuples = Long.valueOf(rs.getString("numTuples"));
             } else {
                 LOGGER.error("Failed to count tuples in USERS");
                 throw new DaoException("Failed to count tuples in USERS");
@@ -287,8 +286,8 @@ public class UserDaoSqlite implements UserDao {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
         }
-        LOGGER.debug("... " + totalNumber);
-        return totalNumber;
+        LOGGER.debug("... " + numTuples);
+        return numTuples;
 
     }
 
@@ -381,7 +380,7 @@ public class UserDaoSqlite implements UserDao {
     }
 
     @Override
-    public List<User> findInRange(long offset, long length) throws DaoException {
+    public List<User> findInRange(long offset, long limit) throws DaoException {
         LOGGER.debug("findInRange ... ");
         Statement stmt = null;
         ResultSet rs = null;
@@ -398,7 +397,7 @@ public class UserDaoSqlite implements UserDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM USERS LIMIT " + length + " OFFSET " + offset);
+            rs = stmt.executeQuery("SELECT * FROM USERS LIMIT " + limit + " OFFSET " + offset);
             while (rs.next()) {
                 long id = DaoUtil.takeId(rs);
                 String username = rs.getString("username");

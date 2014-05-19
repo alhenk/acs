@@ -1,12 +1,10 @@
 package kz.trei.acs.action.rfidtag;
 
-import kz.trei.acs.office.rfid.Issue;
-import kz.trei.acs.office.rfid.ProtocolType;
-import kz.trei.acs.office.rfid.RfidTag;
-import kz.trei.acs.office.rfid.RfidType;
+import kz.trei.acs.office.rfid.*;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.exception.DateStampException;
 import kz.trei.acs.exception.GetParameterException;
+import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -196,6 +194,43 @@ public final class RfidTagUtil {
         }
         LOGGER.debug(expirationDate.getDate());
         return expirationDate;
+    }
+
+    public static long takePage(HttpServletRequest request) {
+        long page;
+        try {
+            page = Integer.valueOf(request.getParameter("page"));
+        } catch (NumberFormatException e) {
+            page = 1L;
+            LOGGER.error("GET parameter \"page\" is empty, assigned default value 1");
+        }
+        return page;
+    }
+
+    public static long takeLimit(HttpServletRequest request) {
+        long limit;
+        try {
+            limit = Integer.valueOf(request.getParameter("limit"));
+        } catch (NumberFormatException e) {
+            limit = Integer.valueOf(PropertyManager.getValue("paging.limit"));
+            LOGGER.error("GET parameter \"limit\" is empty, assigned configure value (" + limit + ")");
+        }
+        return limit;
+    }
+
+    public static RfidTagComparator.CompareType takeRfidTagComparator(HttpServletRequest request) {
+        RfidTagComparator.CompareType rfidTagComparator;
+        try {
+            rfidTagComparator =
+                    RfidTagComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
+        } catch (NullPointerException e) {
+            rfidTagComparator = RfidTagComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        } catch (IllegalArgumentException e) {
+            rfidTagComparator = RfidTagComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        }
+        return rfidTagComparator;
     }
 
     //UID VALIDATION

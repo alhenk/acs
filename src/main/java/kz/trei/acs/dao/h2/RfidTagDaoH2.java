@@ -70,7 +70,7 @@ public class RfidTagDaoH2 implements RfidTagDao {
     }
 
     @Override
-    public long totalNumber() throws DaoException {
+    public long numberOfTuples() throws DaoException {
         return 0;
     }
 
@@ -85,7 +85,7 @@ public class RfidTagDaoH2 implements RfidTagDao {
     }
 
     @Override
-    public List<RfidTag> findInRange(long offset, long length) throws DaoException {
+    public List<RfidTag> findInRange(long offset, long limit) throws DaoException {
         return null;
     }
 

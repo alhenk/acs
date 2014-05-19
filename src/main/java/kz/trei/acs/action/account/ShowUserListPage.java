@@ -32,75 +32,35 @@ public class ShowUserListPage implements Action {
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
-        long totalNumber;
-        long offset = takeOffsetFromRequest(request);
-        long length = takeLengthFromRequest(request);
-        UserComparator.CompareType userComparator = takeUserComparatorFromRequest(request);
+        long numTuples;
+        long page = UserUtil.takePage(request);
+        long limit = UserUtil.takeLimit(request);
+        long offset;
+        long numPages;
+        UserComparator.CompareType userComparator = UserUtil.takeUserComparator(request);
         List<User> users;
         try {
-            users = userDao.findInRange(offset, length);
+            numTuples = userDao.numberOfTuples();
+            numPages = (long) (Math.ceil((1.0 * numTuples) / limit));
+            offset = (page - 1) < 0 || page > numPages ? 0 : (page - 1) * limit;
+            users = userDao.findInRange(offset, limit);
             Collections.sort(users, new UserComparator(userComparator));
-            totalNumber = userDao.totalNumber();
         } catch (DaoException e) {
-            killUserListAttributes(request);
+            UserUtil.killUserListAttributes(request);
             LOGGER.error("Getting user list exception: " + e.getMessage());
             request.setAttribute("error", "error=error.db.user-list");
             return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         } catch (RuntimeException e) {
-            killUserListAttributes(request);
+            UserUtil.killUserListAttributes(request);
             request.setAttribute("error", "error=error.db.user-list");
             return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         }
         session.setAttribute("users", users);
-        session.setAttribute("total-number", totalNumber);
-        session.setAttribute("offset", offset);
-        session.setAttribute("length", length);
+        session.setAttribute("num-pages", numPages);
+        session.setAttribute("page", page);
         LOGGER.debug("..." + users);
         return new ActionResult(ActionType.FORWARD, "user-list");
     }
 
-    private void killUserListAttributes(HttpServletRequest request) {
-        LOGGER.debug("killUserListAttributes ...");
-        HttpSession session = request.getSession();
-        session.removeAttribute("users");
-        session.removeAttribute("total-number");
-        session.removeAttribute("offset");
-        session.removeAttribute("length");
-    }
 
-    private long takeLengthFromRequest(HttpServletRequest request) {
-        long length;
-        try {
-            length = Integer.valueOf(request.getParameter("length"));
-        } catch (NumberFormatException e) {
-            length = Integer.valueOf(PropertyManager.getValue("paging.length"));
-            LOGGER.error("GET parameter length is empty, assigned configure value (" + length + ")");
-        }
-        return length;
-    }
-
-    private long takeOffsetFromRequest(HttpServletRequest request) {
-        long offset;
-        try {
-            offset = Long.valueOf(request.getParameter("offset"));
-        } catch (NumberFormatException e1) {
-            offset = 0;
-        }
-        return offset;
-    }
-
-    private UserComparator.CompareType takeUserComparatorFromRequest(HttpServletRequest request) {
-        UserComparator.CompareType userComparator;
-        try {
-            userComparator =
-                    UserComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
-        } catch (NullPointerException e) {
-            userComparator = UserComparator.CompareType.ID;
-            LOGGER.debug("Assigned default comparator by ID");
-        } catch (IllegalArgumentException e) {
-            userComparator = UserComparator.CompareType.ID;
-            LOGGER.debug("Assigned default comparator by ID");
-        }
-        return userComparator;
-    }
 }

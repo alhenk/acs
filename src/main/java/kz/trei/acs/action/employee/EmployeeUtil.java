@@ -1,13 +1,14 @@
 package kz.trei.acs.action.employee;
 
+import kz.trei.acs.exception.DateStampException;
+import kz.trei.acs.exception.GetParameterException;
 import kz.trei.acs.office.hr.Employee;
+import kz.trei.acs.office.hr.EmployeeComparator;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.UidFormatException;
 import kz.trei.acs.office.structure.*;
 import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.exception.DateStampException;
-import kz.trei.acs.exception.GetParameterException;
 import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
@@ -25,8 +26,8 @@ public final class EmployeeUtil {
     private EmployeeUtil() {
     }
 
-    public static Person buildNewEmployeeFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildNewEmployeeFromRequest ...");
+    public static Person buildNewEmployee(HttpServletRequest request) {
+        LOGGER.debug("buildNewEmployee ...");
         String firstName = request.getParameter("first-name");
         String patronym = request.getParameter("patronym");
         String lastName = request.getParameter("last-name");
@@ -34,12 +35,12 @@ public final class EmployeeUtil {
         if (patronym == null) {
             patronym = "";
         }
-        DateStamp birthDate = takeBirthDateFromRequest(request);
-        PositionType position = takePositionFromRequest(request);
-        DepartmentType department = takeDepartmentFromRequest(request);
-        RoomType room = takeRoomFromRequest(request);
-        Account1C account1C = buildAccount1CFromRequest(request);
-        RfidTag rfidTag = buildRfidTagFromRequest(request);
+        DateStamp birthDate = takeBirthDate(request);
+        PositionType position = takePosition(request);
+        DepartmentType department = takeDepartment(request);
+        RoomType room = takeRoom(request);
+        Account1C account1C = buildAccount1C(request);
+        RfidTag rfidTag = buildRfidTag(request);
         Person employee = new Employee.Builder()
                 .firstName(firstName)
                 .patronym(patronym)
@@ -55,9 +56,9 @@ public final class EmployeeUtil {
         return employee;
     }
 
-    public static Person buildEditedEmployeeFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildEditedEmployeeFromRequest ...");
-        long id = takeIdFromRequest(request);
+    public static Person buildEditedEmployee(HttpServletRequest request) {
+        LOGGER.debug("buildEditedEmployee ...");
+        long id = takeIdFrom(request);
         String firstName = request.getParameter("first-name");
         String patronym = request.getParameter("patronym");
         String lastName = request.getParameter("last-name");
@@ -65,12 +66,12 @@ public final class EmployeeUtil {
         if (patronym == null) {
             patronym = "";
         }
-        DateStamp birthDate = takeBirthDateFromRequest(request);
-        PositionType position = takePositionFromRequest(request);
-        DepartmentType department = takeDepartmentFromRequest(request);
-        RoomType room = takeRoomFromRequest(request);
-        Account1C account1C = buildAccount1CFromRequest(request);
-        RfidTag rfidTag = buildRfidTagFromRequest(request);
+        DateStamp birthDate = takeBirthDate(request);
+        PositionType position = takePosition(request);
+        DepartmentType department = takeDepartment(request);
+        RoomType room = takeRoom(request);
+        Account1C account1C = buildAccount1C(request);
+        RfidTag rfidTag = buildRfidTag(request);
         Person employee = new Employee.Builder()
                 .id(id)
                 .firstName(firstName)
@@ -87,8 +88,8 @@ public final class EmployeeUtil {
         return employee;
     }
 
-    public static Account1C buildAccount1CFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildAccount1CFromRequest ...");
+    public static Account1C buildAccount1C(HttpServletRequest request) {
+        LOGGER.debug("buildAccount1C ...");
         Account1C account1C;
         String tableId = request.getParameter("table-id");
         try {
@@ -101,8 +102,8 @@ public final class EmployeeUtil {
         return account1C;
     }
 
-    public static RfidTag buildRfidTagFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildRfidTagFromRequest ...");
+    public static RfidTag buildRfidTag(HttpServletRequest request) {
+        LOGGER.debug("buildRfidTag ...");
         String uid = request.getParameter("uid");
         RfidTag rfidTag = new RfidTag();
         try {
@@ -206,7 +207,7 @@ public final class EmployeeUtil {
         session.removeAttribute("original-employee");
     }
 
-    public static long takeIdFromRequest(HttpServletRequest request) {
+    public static long takeIdFrom(HttpServletRequest request) {
         LOGGER.debug("takeId ...");
         long id;
         try {
@@ -221,8 +222,8 @@ public final class EmployeeUtil {
         return id;
     }
 
-    public static RoomType takeRoomFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeRoomFromRequest ...");
+    public static RoomType takeRoom(HttpServletRequest request) {
+        LOGGER.debug("takeRoom ...");
         RoomType room;
         try {
             room = RoomType.valueOf(request.getParameter("room"));
@@ -237,8 +238,8 @@ public final class EmployeeUtil {
         return room;
     }
 
-    public static DepartmentType takeDepartmentFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeDepartmentFromRequest ...");
+    public static DepartmentType takeDepartment(HttpServletRequest request) {
+        LOGGER.debug("takeDepartment ...");
         DepartmentType department;
         try {
             department = DepartmentType.valueOf(request.getParameter("department"));
@@ -253,8 +254,8 @@ public final class EmployeeUtil {
         return department;
     }
 
-    public static PositionType takePositionFromRequest(HttpServletRequest request) {
-        LOGGER.debug(" takePositionFromRequest ...");
+    public static PositionType takePosition(HttpServletRequest request) {
+        LOGGER.debug(" takePosition ...");
         PositionType position;
         try {
             position = PositionType.valueOf(request.getParameter("position"));
@@ -269,8 +270,8 @@ public final class EmployeeUtil {
         return position;
     }
 
-    public static DateStamp takeBirthDateFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeBirthDateFromRequest ...");
+    public static DateStamp takeBirthDate(HttpServletRequest request) {
+        LOGGER.debug("takeBirthDate ...");
         DateStamp birthDate;
         try {
             birthDate = DateStamp.create(request.getParameter("birth-date"));
@@ -280,6 +281,50 @@ public final class EmployeeUtil {
         }
         LOGGER.debug(birthDate.getDate());
         return birthDate;
+    }
+
+    public static void killEmployeeListAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("employees");
+        session.removeAttribute("page");
+        session.removeAttribute("num-pages");
+    }
+
+    public static long takePage(HttpServletRequest request) {
+        long page;
+        try {
+            page = Integer.valueOf(request.getParameter("page"));
+        } catch (NumberFormatException e) {
+            page = 1L;
+            LOGGER.error("GET parameter \"page\" is empty, assigned default value 1");
+        }
+        return page;
+    }
+
+    public static long takeLimit(HttpServletRequest request) {
+        long limit;
+        try {
+            limit = Integer.valueOf(request.getParameter("limit"));
+        } catch (NumberFormatException e) {
+            limit = Integer.valueOf(PropertyManager.getValue("paging.limit"));
+            LOGGER.error("GET parameter \"limit\" is empty, assigned configure value (" + limit + ")");
+        }
+        return limit;
+    }
+
+    public static EmployeeComparator.CompareType takeEmployeeComparator(HttpServletRequest request) {
+        EmployeeComparator.CompareType employeeComparator;
+        try {
+            employeeComparator =
+                    EmployeeComparator.CompareType.valueOf(request.getParameter("sort").toUpperCase());
+        } catch (NullPointerException e) {
+            employeeComparator = EmployeeComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        } catch (IllegalArgumentException e) {
+            employeeComparator = EmployeeComparator.CompareType.ID;
+            LOGGER.debug("Assigned default comparator by ID");
+        }
+        return employeeComparator;
     }
 
     //FIRST NAME VALIDATION

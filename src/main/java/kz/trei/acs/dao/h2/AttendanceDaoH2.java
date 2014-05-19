@@ -70,7 +70,7 @@ public class AttendanceDaoH2 implements AttendanceDao {
     }
 
     @Override
-    public long totalNumber() throws DaoException {
+    public long numberOfTuples() throws DaoException {
         return 0;
     }
 
@@ -85,7 +85,7 @@ public class AttendanceDaoH2 implements AttendanceDao {
     }
 
     @Override
-    public List<Attendance> findInRange(long offset, long length) throws DaoException {
+    public List<Attendance> findInRange(long offset, long limit) throws DaoException {
         return null;
     }
 

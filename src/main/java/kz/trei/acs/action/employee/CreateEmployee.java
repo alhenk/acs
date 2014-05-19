@@ -23,7 +23,7 @@ public class CreateEmployee implements Action {
         Person employee;
         if (isFormValid(request)) {
             LOGGER.debug("Form is valid, ready to build Employee");
-            employee = EmployeeUtil.buildNewEmployeeFromRequest(request);
+            employee = EmployeeUtil.buildNewEmployee(request);
             DaoFactory daoFactory = DaoFactory.getFactory();
             EmployeeDao employeeDao = daoFactory.getEmployeeDao();
             try {

@@ -32,7 +32,7 @@ public class ShowEditEmployeePage implements Action {
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         Person originalEmployee;
         try {
-            id = EmployeeUtil.takeIdFromRequest(request);
+            id = EmployeeUtil.takeIdFrom(request);
             originalEmployee = employeeDao.findById(id);
         } catch (DaoException e) {
             EmployeeUtil.killFieldAttributes(request);
