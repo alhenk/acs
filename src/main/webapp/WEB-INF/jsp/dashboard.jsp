@@ -3,17 +3,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<c:set var="height" value="320"/>
 <mtag:pagetemplate title="dashboard">
     <jsp:body>
-        <div class="grid_16">
+        <div class="grid_8">
             <div class="box">
                 <h2>
                     <a><fmt:message bundle="${msg}" key="common.dashboard"/></a>
                 </h2>
 
                 <div class="block">
-                    <div id="sign-form" style="height:320px;">
+                    <div id="sign-form" style="height:${height}px;">
                         <c:choose>
                             <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
                                 <h3><fmt:message bundle="${msg}" key="common.administrator"/></h3>
@@ -40,5 +40,10 @@
                 </div>
             </div>
         </div>
+        <mtag:info height="${height}">
+            <jsp:body>
+                <fmt:message bundle="${msg}" key="lorem.ipsum"/>
+            </jsp:body>
+        </mtag:info>
     </jsp:body>
 </mtag:pagetemplate>

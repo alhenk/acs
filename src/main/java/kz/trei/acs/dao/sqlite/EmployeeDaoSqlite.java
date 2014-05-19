@@ -43,7 +43,7 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createStaffTableSql);
-            rs = stmt.executeQuery("SELECT * FROM STAFF");
+            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES");
             for (int i = 0; i < 20; i++) {
                 if (rs.next()) {
                     LOGGER.debug(rs.getString("id") + "\t"

@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<c:set var="height" value="320"/>
 <mtag:pagetemplate title="main">
     <jsp:body>
         <div class="grid_8">
@@ -20,7 +20,7 @@
                 </h2>
 
                 <div class="block">
-                    <div id="sign-form" style="height:320px;">
+                    <div id="sign-form" style="height:${height}px;">
                         <p> &nbsp;</p>
 
                         <p> &nbsp;</p>
@@ -47,16 +47,10 @@
                 </div>
             </div>
         </div>
-        <div class="grid_8">
-            <div class="box">
-                <h2><a><fmt:message bundle="${msg}" key="common.info"/></a></h2>
-
-                <div class="block">
-                    <div id="info" style="height:320px;">
-                        <p>&nbsp;</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <mtag:info height="${height}">
+            <jsp:body>
+                <fmt:message bundle="${msg}" key="lorem.ipsum"/>
+            </jsp:body>
+        </mtag:info>
     </jsp:body>
 </mtag:pagetemplate>
