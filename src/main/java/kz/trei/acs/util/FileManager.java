@@ -31,7 +31,7 @@ public final class FileManager {
 		BufferedReader bufferedReader = null;
 		try {
 			bufferedReader = new BufferedReader(new InputStreamReader(
-					getResourceAsStream(fileName)));
+					getResourceAsStream(fileName), "UTF8"));
 		} catch (Exception e) {
 			LOGGER.error("File " + fileName + " reading error " + e);
 		}
