@@ -5,4 +5,6 @@ import kz.trei.acs.office.attendance.Attendance;
 
 public interface AttendanceDao extends Dao<Attendance> {
     public void createTable() throws DaoException;
+    public void createView() throws DaoException;
+
 }

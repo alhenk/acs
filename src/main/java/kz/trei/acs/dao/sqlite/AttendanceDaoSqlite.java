@@ -60,6 +60,47 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
+    public void createView() throws DaoException {
+        LOGGER.debug("createView ...");
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool = null;
+        String createOfficeHoursViewSql = FileManager.readFile("office_hours_view.sql");
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            stmt.executeUpdate(createOfficeHoursViewSql);
+            rs = stmt.executeQuery("SELECT * FROM OFFICEHOURS");
+            for (int i = 0; i < 20; i++) {
+                if (rs.next()) {
+                    LOGGER.debug(rs.getString("LastName") + "\t"
+                            + rs.getString("dDate") + "\t"
+                            + rs.getString("Tmin") + "\t"
+                            + rs.getString("Tmax") + "\t"
+                            + rs.getString("officeHours"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+    }
+
+
+    @Override
     public Attendance findById(long id) throws DaoException {
         return null;
     }

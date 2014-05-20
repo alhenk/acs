@@ -60,6 +60,11 @@ public class AttendanceDaoH2 implements AttendanceDao {
     }
 
     @Override
+    public void createView() throws DaoException {
+
+    }
+
+    @Override
     public Attendance findById(long id) throws DaoException {
         return null;
     }

@@ -67,6 +67,16 @@ public class ContextListener implements ServletContextListener {
                 LOGGER.error("Create Attendance table exception " + e.getMessage());
             }
         }
+
+        boolean isViewExist = DbUtil.isTableExist("OFFICEHOURS");
+        LOGGER.debug("OFFICEHOURS view exist = " + isViewExist);
+        if (!isViewExist) {
+            try {
+                attendanceDao.createView();
+            } catch (DaoException e) {
+                LOGGER.error("Create Office Hours table exception " + e.getMessage());
+            }
+        }
     }
 
     @Override
