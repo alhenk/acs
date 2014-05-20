@@ -31,6 +31,11 @@
                                     <input type="submit"
                                            value="<fmt:message bundle="${msg}" key="common.employee-list"/>" />
                                 </form>
+                                <p>&nbsp;</p>
+                                <form action="do/late-arrival-report" method="get">
+                                    <input type="submit"
+                                           value="<fmt:message bundle="${msg}" key="common.late-arrival-report"/>" />
+                                </form>
                             </c:when>
                             <c:otherwise>
                                 <p><fmt:message bundle="${msg}" key="common.user"/></p>

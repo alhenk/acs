@@ -6,7 +6,9 @@ import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.attendance.Attendance;
+import kz.trei.acs.office.attendance.OfficeHour;
 import kz.trei.acs.user.User;
+import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.FileManager;
 import org.apache.log4j.Logger;
 
@@ -62,6 +64,16 @@ public class AttendanceDaoH2 implements AttendanceDao {
     @Override
     public void createView() throws DaoException {
 
+    }
+
+    @Override
+    public List<OfficeHour> lateArrivalReport(DateStamp date) throws DaoException {
+        return null;
+    }
+
+    @Override
+    public List<OfficeHour> leavingBeforeReport(DateStamp date) throws DaoException {
+        return null;
     }
 
     @Override

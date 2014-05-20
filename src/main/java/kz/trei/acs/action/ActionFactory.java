@@ -7,6 +7,7 @@ import kz.trei.acs.action.exception.ShowExceptionPage;
 import kz.trei.acs.action.general.SetLanguage;
 import kz.trei.acs.action.general.ShowDashboard;
 import kz.trei.acs.action.general.ShowMainPage;
+import kz.trei.acs.action.reports.ShowLateArrivalReportPage;
 import kz.trei.acs.action.rfidtag.*;
 import org.apache.log4j.Logger;
 
@@ -55,6 +56,9 @@ public class ActionFactory {
         actions.put("POST/create-employee", new CreateEmployee());
         actions.put("GET/cancel-create-employee", new CancelCreateEmployee());
         actions.put("GET/delete-employee", new DeleteEmployee());
+        //Reports
+        actions.put("GET/late-arrival-report", new ShowLateArrivalReportPage());
+
         LOGGER.debug("Instantiated ActionFactory");
     }
 

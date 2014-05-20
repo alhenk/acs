@@ -7,7 +7,8 @@ import java.util.Date;
 
 
 public class Attendance {
-	private String uid;
+    private static final long serialVersionUID =1L;
+    private String uid;
 	private DirectionType direction;
 	private DateStamp date;
 	private TimeStamp time;
