@@ -22,7 +22,7 @@ public class ShowEditUserPage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         long id;
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -34,7 +34,7 @@ public class ShowEditUserPage implements Action {
         } catch (DaoException e) {
             UserUtil.killFieldAttributes(request);
             request.setAttribute("error", "error.db.find-by-id");
-            LOGGER.error("DAO find by ID exception: " + e.getMessage());
+            LOGGER.error("... DAO find by ID exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         } catch (GetParameterException e) {
             UserUtil.killFieldAttributes(request);

@@ -18,13 +18,13 @@ public class ShowCreateRfidTagPage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         List<String> protocols = ProtocolType.getList();
         List<String> types = RfidType.getList();
         session.setAttribute("protocols", protocols);
         session.setAttribute("types", types);
-        LOGGER.debug("...");
         return new ActionResult(ActionType.FORWARD, "create-rfidtag");
     }
 }

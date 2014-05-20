@@ -18,7 +18,7 @@ public class DeleteEmployee implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         long id;
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -31,15 +31,15 @@ public class DeleteEmployee implements Action {
             employeeDao.delete(id);
         } catch (DaoException e) {
             request.setAttribute("status", "delete.employee.fail");
-            LOGGER.error("DAO delete error " + e.getMessage());
+            LOGGER.error("... DAO delete error " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
         } catch (GetParameterException e) {
             request.setAttribute("status", "error.parameter.id.invalid");
-            LOGGER.error(e.getMessage());
+            LOGGER.error("..." + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
         }
         request.setAttribute("status", "delete.employee.success");
-        LOGGER.debug("The employee is deleted successfully");
+        LOGGER.debug("... the employee is deleted successfully");
         return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
     }
 }

@@ -19,6 +19,7 @@ public class EditUser implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         DaoFactory daoFactory = DaoFactory.getFactory();
         UserDao userDao = daoFactory.getUserDao();
@@ -30,7 +31,7 @@ public class EditUser implements Action {
                 LOGGER.debug("user ->" + user);
             } catch (DaoException e) {
                 request.setAttribute("status", "form.user.create.fail");
-                LOGGER.error("SQL UPDATE USERS exception : " + e.getMessage());
+                LOGGER.error("... SQL UPDATE USERS exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "edit-user" + UserUtil.fetchParameters(request));
             } catch (GetParameterException e){
                 UserUtil.killFieldAttributes(request);
@@ -40,11 +41,11 @@ public class EditUser implements Action {
             }
             UserUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.user.edit.success");
-            LOGGER.debug("Form user edit success");
+            LOGGER.debug("... form user edit success");
             return new ActionResult(ActionType.REDIRECT, "user-list" + UserUtil.fetchParameters(request));
         }
         request.setAttribute("error", "form.user.incomplete");
-        LOGGER.error("Form user incomplete");
+        LOGGER.error("... form user incomplete");
         return new ActionResult(ActionType.REDIRECT, "edit-user" + UserUtil.fetchParameters(request));
     }
 

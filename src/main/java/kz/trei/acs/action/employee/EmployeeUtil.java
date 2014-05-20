@@ -213,7 +213,7 @@ public final class EmployeeUtil {
         try {
             id = Long.valueOf(request.getParameter("id"));
             if (id < 0) {
-                throw new NumberFormatException("negative id = " + id);
+                throw new GetParameterException("negative id = " + id);
             }
         } catch (NumberFormatException e) {
             throw new GetParameterException("GET parameter \"id\" is not valid : " + e.getMessage());

@@ -27,7 +27,7 @@ public class ShowEmployeeListPage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -50,18 +50,18 @@ public class ShowEmployeeListPage implements Action {
         } catch (DaoException e) {
             EmployeeUtil.killEmployeeListAttributes(request);
             request.setAttribute("error","error.db.employee-list");
-            LOGGER.error("Getting employee list exception: " + e.getMessage());
+            LOGGER.error("... getting employee list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
         } catch (RuntimeException e) {
             EmployeeUtil.killEmployeeListAttributes(request);
             request.setAttribute("error","error.db.employee-list");
-            LOGGER.error("Getting employee list exception: " + e.getMessage());
+            LOGGER.error("... getting employee list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
         }
         session.setAttribute("employees", employees);
         session.setAttribute("num-pages", numPages);
         session.setAttribute("page", page);
-        LOGGER.debug("..." + employees);
+        LOGGER.debug("... " + employees);
         return new ActionResult(ActionType.FORWARD, "employee-list");
     }
 }

@@ -18,7 +18,7 @@ public class CreateRfidTag implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         RfidTagUtil.createFieldAttributes(request);
         RfidTag rfidTag;
@@ -32,16 +32,16 @@ public class CreateRfidTag implements Action {
             } catch (DaoException e) {
                 request.setAttribute("error", e.getMessage());
                 request.setAttribute("status", "form.rfidtag.create.fail");
-                LOGGER.error("SQL INSERT statement exception : " + e.getMessage());
+                LOGGER.error("... SQL INSERT statement exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "create-rfidtag" + RfidTagUtil.fetchParameters(request));
             }
             RfidTagUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.rfidtag.create.success");
-            LOGGER.debug("Create rfidtag success");
+            LOGGER.debug("... create rfidtag success");
             return new ActionResult(ActionType.REDIRECT, "rfidtag-list" + RfidTagUtil.fetchParameters(request));
         }
         request.setAttribute("error", "form.rfidtag.incomplete");
-        LOGGER.debug("Create rfidtag fail");
+        LOGGER.debug("... create rfidtag fail");
         return new ActionResult(ActionType.REDIRECT, "create-rfidtag" + RfidTagUtil.fetchParameters(request));
     }
 

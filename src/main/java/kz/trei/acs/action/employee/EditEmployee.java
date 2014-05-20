@@ -19,7 +19,7 @@ public class EditEmployee implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         DaoFactory daoFactory = DaoFactory.getFactory();
         EmployeeDao employeeDao = daoFactory.getEmployeeDao();
         Person employee;
@@ -30,7 +30,7 @@ public class EditEmployee implements Action {
                 LOGGER.debug("employee -> " + employee);
             } catch (DaoException e) {
                 request.setAttribute("status", "form.employee.create.fail");
-                LOGGER.error("SQL UPDATE EMPLOYEES exception : " + e.getMessage());
+                LOGGER.error("... SQL UPDATE EMPLOYEES exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "edit-employee" + EmployeeUtil.fetchParameters(request));
             } catch (GetParameterException e) {
                 EmployeeUtil.killFieldAttributes(request);
@@ -40,7 +40,7 @@ public class EditEmployee implements Action {
             }
             EmployeeUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.employee.edit.success");
-            LOGGER.debug("Form employee edit success");
+            LOGGER.debug("... form employee edit success");
             return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
         }
         request.setAttribute("error", "form.employee.incomplete");

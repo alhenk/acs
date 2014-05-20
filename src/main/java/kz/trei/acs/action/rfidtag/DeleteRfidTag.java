@@ -18,7 +18,7 @@ public class DeleteRfidTag implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         long id;
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -31,15 +31,15 @@ public class DeleteRfidTag implements Action {
             rfidTagDao.delete(id);
         } catch (DaoException e) {
             request.setAttribute("status", "delete.rfidtag.fail");
-            LOGGER.error("DAO delete error " + e.getMessage());
+            LOGGER.error("... DAO delete error " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "rfidtag-list" + RfidTagUtil.fetchParameters(request));
         } catch (GetParameterException e) {
             request.setAttribute("status", "error.parameter.id.invalid");
-            LOGGER.error(e.getMessage());
+            LOGGER.error("... " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "rfidtag-list" + RfidTagUtil.fetchParameters(request));
         }
         request.setAttribute("status", "delete.rfidtag.success");
-        LOGGER.debug("The rfidtag is deleted successfully");
+        LOGGER.debug("... the rfidtag is deleted successfully");
         return new ActionResult(ActionType.REDIRECT, "rfidtag-list" + RfidTagUtil.fetchParameters(request));
     }
 }

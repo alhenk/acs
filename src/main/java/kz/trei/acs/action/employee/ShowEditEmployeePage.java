@@ -7,11 +7,11 @@ import kz.trei.acs.action.rfidtag.ShowEditRfidTagPage;
 import kz.trei.acs.dao.DaoException;
 import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.EmployeeDao;
+import kz.trei.acs.exception.GetParameterException;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.office.structure.RoomType;
-import kz.trei.acs.exception.GetParameterException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class ShowEditEmployeePage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         long id;
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -37,12 +37,12 @@ public class ShowEditEmployeePage implements Action {
         } catch (DaoException e) {
             EmployeeUtil.killFieldAttributes(request);
             request.setAttribute("error", "error.db.find-by-id");
-            LOGGER.error("DAO find by ID exception: " + e.getMessage());
+            LOGGER.error("... DAO find by ID exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
-        }catch (GetParameterException e) {
+        } catch (GetParameterException e) {
             EmployeeUtil.killFieldAttributes(request);
             request.setAttribute("status", "error.parameter.id.invalid");
-            LOGGER.error(e.getMessage());
+            LOGGER.error("... " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + EmployeeUtil.fetchParameters(request));
         }
         HttpSession session = request.getSession();

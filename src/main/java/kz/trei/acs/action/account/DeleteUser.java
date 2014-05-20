@@ -17,7 +17,7 @@ public class DeleteUser implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         long id;
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -30,7 +30,7 @@ public class DeleteUser implements Action {
             userDao.delete(id);
         } catch (DaoException e) {
             request.setAttribute("status", "delete.user.fail");
-            LOGGER.error("DAO delete error " + e.getMessage());
+            LOGGER.error("... DAO delete error " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "user-list" + UserUtil.fetchParameters(request));
         } catch (GetParameterException e) {
             request.setAttribute("status", "error.parameter.id.invalid");
@@ -38,7 +38,7 @@ public class DeleteUser implements Action {
             return new ActionResult(ActionType.REDIRECT, "user-list" + UserUtil.fetchParameters(request));
         }
         request.setAttribute("status", "delete.user.success");
-        LOGGER.debug("The user is deleted successfully");
+        LOGGER.debug("... the user is deleted successfully");
         return new ActionResult(ActionType.REDIRECT, "user-list" + UserUtil.fetchParameters(request));
     }
 }

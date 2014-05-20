@@ -18,6 +18,7 @@ public class CreateUser implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         UserUtil.createFieldAttributes(request);
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -40,11 +41,11 @@ public class CreateUser implements Action {
             }
             UserUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.user.create.success");
-            LOGGER.debug("Create user success");
+            LOGGER.debug("... create user success " + user);
             return new ActionResult(ActionType.REDIRECT, "user-list" + UserUtil.fetchParameters(request));
         }
         request.setAttribute("error", "form.user.incomplete");
-        LOGGER.debug("Create user fail");
+        LOGGER.debug("... create user fail");
         return new ActionResult(ActionType.REDIRECT, "create-user" + UserUtil.fetchParameters(request));
     }
 

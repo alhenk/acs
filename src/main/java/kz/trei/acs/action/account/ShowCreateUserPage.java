@@ -16,11 +16,11 @@ public class ShowCreateUserPage implements Action {
     private static final Logger LOGGER = Logger.getLogger(ShowCreateUserPage.class);
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         List<String> roles = RoleType.getList();
         session.setAttribute("roles", roles);
-        LOGGER.debug("...");
         return new ActionResult(ActionType.FORWARD, "create-user");
     }
 }

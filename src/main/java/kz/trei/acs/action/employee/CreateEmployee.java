@@ -17,7 +17,7 @@ public class CreateEmployee implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         EmployeeUtil.createFieldAttributes(request);
         Person employee;
@@ -31,16 +31,16 @@ public class CreateEmployee implements Action {
             } catch (DaoException e) {
                 request.setAttribute("error", e.getMessage());
                 request.setAttribute("status", "form.employee.create.fail");
-                LOGGER.error("SQL INSERT statement exception : " + e.getMessage());
+                LOGGER.error("... SQL INSERT statement exception : " + e.getMessage());
                 return new ActionResult(ActionType.REDIRECT, "create-employee" + EmployeeUtil.fetchParameters(request));
             }
             EmployeeUtil.killFieldAttributes(request);
             request.setAttribute("status", "form.employee.create.success");
-            LOGGER.debug("Create employee success");
+            LOGGER.debug("... create employee success");
             return new ActionResult(ActionType.REDIRECT, "employee-list" + EmployeeUtil.fetchParameters(request));
         }
         request.setAttribute("error", "form.employee.incomplete");
-        LOGGER.debug("Create employee fail");
+        LOGGER.debug("... create employee fail");
         return new ActionResult(ActionType.REDIRECT, "create-employee" + EmployeeUtil.fetchParameters(request));
     }
 

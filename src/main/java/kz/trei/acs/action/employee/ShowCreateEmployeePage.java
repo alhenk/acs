@@ -21,6 +21,7 @@ public class ShowCreateEmployeePage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         List<String> positions = PositionType.getList();
@@ -29,7 +30,6 @@ public class ShowCreateEmployeePage implements Action {
         session.setAttribute("positions", positions);
         session.setAttribute("departments", departments);
         session.setAttribute("rooms", rooms);
-        LOGGER.debug("...");
         return new ActionResult(ActionType.FORWARD, "create-employee");
     }
 }

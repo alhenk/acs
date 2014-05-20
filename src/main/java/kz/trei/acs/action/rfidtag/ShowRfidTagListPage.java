@@ -27,7 +27,7 @@ public class ShowRfidTagListPage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ... ");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
@@ -49,12 +49,12 @@ public class ShowRfidTagListPage implements Action {
         } catch (DaoException e) {
             killRfidTagListAttribute(request);
             request.setAttribute("error", "error.db.rfidtag-list");
-            LOGGER.error("Getting rfidtag list exception: " + e.getMessage());
+            LOGGER.error("... getting rfidtag list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + RfidTagUtil.fetchParameters(request));
         } catch (RuntimeException e) {
             killRfidTagListAttribute(request);
             request.setAttribute("error", "error.db.rfidtag-list");
-            LOGGER.error("Getting rfidtag list exception: " + e.getMessage());
+            LOGGER.error("... getting rfidtag list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error" + RfidTagUtil.fetchParameters(request));
         }
         session.setAttribute("rfidtags", rfidtags);

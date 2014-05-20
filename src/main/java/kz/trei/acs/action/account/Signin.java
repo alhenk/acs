@@ -19,6 +19,7 @@ public class Signin implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
@@ -31,18 +32,18 @@ public class Signin implements Action {
         } catch (DaoException e) {
             request.setAttribute("status", "form.sign-in.fail");
             request.setAttribute("error", "form.sign-in.wrong-password");
-            LOGGER.error("DAO find user \"" + username + "\" exception");
+            LOGGER.error("... DAO find user \"" + username + "\" exception");
             return new ActionResult(ActionType.REDIRECT, "main" + UserUtil.fetchParameters(request));
         }
         if (user == null) {
             request.setAttribute("status", "form.sign-in.fail");
             request.setAttribute("error", "form.sign-in.wrong-password");
-            LOGGER.debug("User name or password error");
+            LOGGER.debug("...user name or password error");
             return new ActionResult(ActionType.REDIRECT, "main" + UserUtil.fetchParameters(request));
         }
         session.setAttribute("user", user);
         request.setAttribute("status", "form.sign-in.success");
-        LOGGER.debug("The user logged successfully");
+        LOGGER.debug("...the user logged successfully");
         return new ActionResult(ActionType.REDIRECT, "dashboard" + UserUtil.fetchParameters(request));
     }
 }
