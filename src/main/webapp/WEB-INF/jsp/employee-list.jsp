@@ -34,7 +34,7 @@
                         <tr>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="FIRST_NAME"  ${param.sort == 'FIRST_NAME' ? 'checked':''}
                                            onchange="submit()"/>
@@ -43,7 +43,7 @@
                             <td>&nbsp;</td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="LAST_NAME"  ${param.sort == 'LAST_NAME' ? 'checked':''}
                                            onchange="submit()"/>
@@ -51,7 +51,7 @@
                             </td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="BIRTH_DATE"  ${param.sort == 'BIRTH_DATE' ? 'checked':''}
                                            onchange="submit()"/>
@@ -59,7 +59,7 @@
                             </td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="POSITION"  ${param.sort == 'POSITION' ? 'checked':''}
                                            onchange="submit()"/>
@@ -67,7 +67,7 @@
                             </td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="DEPARTMENT"  ${param.sort == 'DEPARTMENT' ? 'checked':''}
                                            onchange="submit()"/>
@@ -75,7 +75,7 @@
                             </td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="ROOM"  ${param.sort == 'ROOM' ? 'checked':''}
                                            onchange="submit()"/>
@@ -83,7 +83,7 @@
                             </td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="TABLE_ID"  ${param.sort == 'TABLE_ID' ? 'checked':''}
                                            onchange="submit()"/>
@@ -91,7 +91,7 @@
                             </td>
                             <td>
                                 <form method="GET" action="do/employee-list">
-                                    <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                    <input type="hidden" name="page" value="${sessionScope.page}">
                                     <input type="checkbox" name="sort"
                                            value="UID"  ${param.sort == 'UID' ? 'checked':''} onchange="submit()"/>
                                 </form>

@@ -27,7 +27,7 @@ public class ShowUserListPage implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOGGER.debug("...");
+        LOGGER.debug("execute ...");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();

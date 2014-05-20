@@ -27,7 +27,7 @@
                             <tr>
                                 <td>
                                     <form method="GET" action="do/user-list">
-                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                        <input type="hidden" name="page" value="${sessionScope.page}">
                                         <input type="checkbox" name="sort"
                                                value="USER_NAME"  ${param.sort == 'USER_NAME' ? 'checked':''}
                                                onchange="submit()"/>
@@ -35,7 +35,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/user-list">
-                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                        <input type="hidden" name="page" value="${sessionScope.page}">
                                         <input type="checkbox" name="sort"
                                                value="EMAIL"  ${param.sort == 'EMAIL' ? 'checked':''}
                                                onchange="submit()"/>
@@ -43,7 +43,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/user-list">
-                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                        <input type="hidden" name="page" value="${sessionScope.page}">
                                         <input type="checkbox" name="sort"
                                                value="TABLE_ID"  ${param.sort == 'TABLE_ID' ? 'checked':''}
                                                onchange="submit()"/>
@@ -51,7 +51,7 @@
                                 </td>
                                 <td>
                                     <form method="GET" action="do/user-list">
-                                        <input type="hidden" name="offset" value="${sessionScope.offset}">
+                                        <input type="hidden" name="page" value="${sessionScope.page}">
                                         <input type="checkbox" name="sort"
                                                value="ROLE"  ${param.sort == 'ROLE' ? 'checked':''}
                                                onchange="submit()"/>

@@ -211,7 +211,7 @@ public final class UserUtil {
             limit = Integer.valueOf(request.getParameter("limit"));
         } catch (NumberFormatException e) {
             limit = Integer.valueOf(PropertyManager.getValue("paging.limit"));
-            LOGGER.error("GET parameter \"limit\" is empty, assigned configure value (" + limit + ")");
+            LOGGER.error("GET parameter \"limit\" is empty, assigned value (" + limit + ")");
         }
         return limit;
     }
