@@ -2,6 +2,7 @@ package kz.trei.acs.dao.sqlite;
 
 import kz.trei.acs.dao.AttendanceDao;
 import kz.trei.acs.dao.DaoException;
+import kz.trei.acs.dao.util.DaoUtil;
 import kz.trei.acs.db.ConnectionPool;
 import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
@@ -11,6 +12,8 @@ import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.UidFormatException;
+import kz.trei.acs.office.structure.DepartmentType;
+import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.FileManager;
 import kz.trei.acs.util.TimeStamp;
@@ -109,7 +112,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
 
     @Override
     public List<OfficeHour> lateArrivalReport(DateStamp date) throws DaoException {
-        LOGGER.debug("findAll ...");
+        LOGGER.debug("lateArrivalReport ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -129,17 +132,18 @@ public class AttendanceDaoSqlite implements AttendanceDao {
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
-                String uid = rs.getString("UID");
-                DateStamp workingDay = DateStamp.create(rs.getString("dDate"));
-                TimeStamp arriving = TimeStamp.create(rs.getString("Tmin"));
-                TimeStamp leaving = TimeStamp.create(rs.getString("Tmax"));
-                TimeStamp total = TimeStamp.create(rs.getString("officeHours"));
-                RfidTag rfidTag = new RfidTag.Builder()
-                        .uid(uid)
-                        .build();
+                PositionType position = DaoUtil.takePosition(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                DateStamp workingDay = DaoUtil.takeWorkingDay(rs);
+                TimeStamp arriving = DaoUtil.takeArriving(rs);
+                TimeStamp leaving =  DaoUtil.takeLeaving(rs);
+                TimeStamp total = DaoUtil.takeOfficeHours(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
                 Person employee = new Employee.Builder()
                         .firstName(firstName)
                         .lastName(lastName)
+                        .position(position)
+                        .department(department)
                         .rfidTag(rfidTag)
                         .build();
                 officeHour = new OfficeHour.Builder()
@@ -170,7 +174,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
 
     @Override
     public List<OfficeHour> leavingBeforeReport(DateStamp date) throws DaoException {
-        LOGGER.debug("findAll ...");
+        LOGGER.debug("avingBeforeReport ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;

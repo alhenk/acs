@@ -2,11 +2,13 @@ package kz.trei.acs.dao.util;
 
 import kz.trei.acs.exception.DateStampException;
 import kz.trei.acs.exception.SecurePasswordException;
+import kz.trei.acs.exception.TimeStampException;
 import kz.trei.acs.office.rfid.*;
 import kz.trei.acs.office.structure.*;
 import kz.trei.acs.user.RoleType;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.PasswordHash;
+import kz.trei.acs.util.TimeStamp;
 import org.apache.log4j.Logger;
 
 import java.security.NoSuchAlgorithmException;
@@ -42,7 +44,7 @@ public final class DaoUtil {
             rfidTag.setUid(resultSet.getString("uid"));
         } catch (UidFormatException e) {
             rfidTag.setEmptyUid();
-            LOGGER.debug("Employee id=" + id + " : assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned empty UID \"00000000\" date due to exception: " + e.getMessage());
         }
         LOGGER.debug("... " + rfidTag);
         return rfidTag;
@@ -57,7 +59,7 @@ public final class DaoUtil {
             account1C = Account1C.buildAccount1C(resultSet.getString("tableId"));
         } catch (Account1CException e) {
             account1C = Account1C.defaultAccount1C();
-            LOGGER.debug("Employee id=" + id + " : assigned default table ID due to exception: " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default table ID due to exception: " + e.getMessage());
         }
         LOGGER.debug("..." + account1C.getTableId());
         return account1C;
@@ -72,7 +74,7 @@ public final class DaoUtil {
             birthDate = DateStamp.create(resultSet.getString("birthDate"));
         } catch (DateStampException e) {
             birthDate = DateStamp.createEmptyDate();
-            LOGGER.debug("Employee id=" + id + " : assigned empty birth date due to exception: " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned empty birth date due to exception: " + e.getMessage());
         }
         LOGGER.debug("... " + birthDate.getDate());
         return birthDate;
@@ -86,10 +88,10 @@ public final class DaoUtil {
             id = resultSet.getString("id");
             position = PositionType.valueOf(resultSet.getString("jobPosition"));
         } catch (IllegalArgumentException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default position due to illegal argument : " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default position due to illegal argument : " + e.getMessage());
             position = PositionType.DEFAULT;
         } catch (NullPointerException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default position due to null value : " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default position due to null value : " + e.getMessage());
             position = PositionType.DEFAULT;
         }
         LOGGER.debug("... " + position);
@@ -104,10 +106,10 @@ public final class DaoUtil {
             id = resultSet.getString("id");
             department = DepartmentType.valueOf(resultSet.getString("department"));
         } catch (IllegalArgumentException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default department due to illegal argument : " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default department due to illegal argument : " + e.getMessage());
             department = DepartmentType.DEFAULT;
         } catch (NullPointerException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default department due to null value : " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default department due to null value : " + e.getMessage());
             department = DepartmentType.DEFAULT;
         }
         LOGGER.debug("... " + department);
@@ -122,10 +124,10 @@ public final class DaoUtil {
             id = resultSet.getString("id");
             room = RoomType.valueOf(resultSet.getString("room"));
         } catch (IllegalArgumentException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default room due to illegal argument : " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default room due to illegal argument : " + e.getMessage());
             room = RoomType.DEFAULT;
         } catch (NullPointerException e) {
-            LOGGER.debug("Employee id=" + id + " : assigned default room due to null value : " + e.getMessage());
+            LOGGER.debug("id=" + id + " : assigned default room due to null value : " + e.getMessage());
             room = RoomType.DEFAULT;
         }
         LOGGER.debug("Room = " + room.getRoomNumber() + " - " + room.getRoomName());
@@ -216,6 +218,59 @@ public final class DaoUtil {
         }
         LOGGER.debug("... " + role);
         return role;
+    }
+
+    public static DateStamp takeWorkingDay(ResultSet resultSet) throws SQLException {
+        LOGGER.debug("takeBirthDate ...");
+        DateStamp workingDay;
+        String id = null;
+        try {
+            workingDay = DateStamp.create(resultSet.getString("dDate"));
+        } catch (DateStampException e) {
+            workingDay = DateStamp.createEmptyDate();
+            LOGGER.debug("... assigned empty birth date due to exception: " + e.getMessage());
+        }
+        LOGGER.debug("... " + workingDay.getDate());
+        return workingDay;
+    }
+
+    public static TimeStamp takeArriving(ResultSet resultSet) throws SQLException {
+        LOGGER.debug("takeArriving ...");
+        TimeStamp arriving;
+        try {
+            arriving = TimeStamp.create(resultSet.getString("Tmin"));
+        } catch (TimeStampException e) {
+            arriving = TimeStamp.createEmptyTime();
+            LOGGER.debug("... assigned empty arriving time due to exception: " + e.getMessage());
+        }
+        LOGGER.debug("... " + arriving.getTime());
+        return arriving;
+    }
+
+    public static TimeStamp takeLeaving(ResultSet resultSet) throws SQLException {
+        LOGGER.debug("takeLeaving ...");
+        TimeStamp leaving;
+        try {
+            leaving = TimeStamp.create(resultSet.getString("Tmax"));
+        } catch (TimeStampException e) {
+            leaving = TimeStamp.createEmptyTime();
+            LOGGER.debug("... assigned empty leaving time due to exception: " + e.getMessage());
+        }
+        LOGGER.debug("... " + leaving.getTime());
+        return leaving;
+    }
+
+    public static TimeStamp takeOfficeHours(ResultSet resultSet) throws SQLException {
+        LOGGER.debug("takeOfficeHours ...");
+        TimeStamp officeHour;
+        try {
+            officeHour = TimeStamp.create(resultSet.getString("officeHours"));
+        } catch (TimeStampException e) {
+            officeHour = TimeStamp.createEmptyTime();
+            LOGGER.debug("... assigned empty office hour due to exception: " + e.getMessage());
+        }
+        LOGGER.debug("... " + officeHour.getTime());
+        return officeHour;
     }
 
     /**

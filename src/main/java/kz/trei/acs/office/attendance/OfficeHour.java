@@ -1,7 +1,6 @@
 package kz.trei.acs.office.attendance;
 
 import kz.trei.acs.office.hr.Person;
-import kz.trei.acs.user.User;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.TimeStamp;
 

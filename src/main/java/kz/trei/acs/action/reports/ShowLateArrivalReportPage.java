@@ -41,6 +41,6 @@ public class ShowLateArrivalReportPage implements Action {
         }
         session.setAttribute("office-hour-list", officeHourList);
 //        LOGGER.debug("... " + officeHourList);
-        return new ActionResult(ActionType.FORWARD, "report");
+        return new ActionResult(ActionType.FORWARD, "report-list");
     }
 }
