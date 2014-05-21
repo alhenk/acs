@@ -16,6 +16,7 @@ import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.FileManager;
+import kz.trei.acs.util.MonthType;
 import kz.trei.acs.util.TimeStamp;
 import org.apache.log4j.Logger;
 
@@ -111,13 +112,14 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> lateArrivalReport(DateStamp date) throws DaoException {
-        LOGGER.debug("lateArrivalReport ...");
+    public List<OfficeHour> lateArrivalReportMonthly(String year, String month) throws DaoException {
+        LOGGER.debug("lateArrivalReportMonthly ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
         ConnectionPool connectionPool = null;
         OfficeHour officeHour;
+        String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
         try {
             connectionPool = ConnectionPool.getInstance();
@@ -128,7 +130,10 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("Select * FROM OFFICEHOURS WHERE substr(dDate,1,4)='2013' AND substr(dDate,6,2)='04' AND Tmin > '09:00' AND Tmax<>Tmin GROUP BY dDate, lastName;");
+            rs = stmt.executeQuery("Select * FROM OFFICEHOURS WHERE substr(dDate,1,4)='"
+                    + year + "' AND substr(dDate,6,2)='"
+                    + MonthDoubleDigitString
+                    + "' AND Tmin > '09:00' AND Tmax<>Tmin GROUP BY dDate, lastName;");
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
@@ -136,7 +141,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                 DepartmentType department = DaoUtil.takeDepartment(rs);
                 DateStamp workingDay = DaoUtil.takeWorkingDay(rs);
                 TimeStamp arriving = DaoUtil.takeArriving(rs);
-                TimeStamp leaving =  DaoUtil.takeLeaving(rs);
+                TimeStamp leaving = DaoUtil.takeLeaving(rs);
                 TimeStamp total = DaoUtil.takeOfficeHours(rs);
                 RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
                 Person employee = new Employee.Builder()
@@ -173,7 +178,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> leavingBeforeReport(DateStamp date) throws DaoException {
+    public List<OfficeHour> leavingBeforeReportMonthly(String year, String month) throws DaoException {
         LOGGER.debug("avingBeforeReport ...");
         Statement stmt = null;
         ResultSet rs = null;

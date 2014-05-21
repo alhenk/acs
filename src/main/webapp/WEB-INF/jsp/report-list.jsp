@@ -12,6 +12,14 @@
                 </h2>
 
                 <div class="block">
+                    <div class="grid_1">
+                        <p>${sessionScope.year}</p>
+
+                    </div>
+                    <div class="grid_1">
+                        <p><fmt:message bundle="${msg}" key="date.month.${sessionScope.month}"/></p>
+                    </div>
+
                     <table summary="user list">
                         <thead>
                         <th><fmt:message bundle="${msg}" key="table.report.first-name"/></th>
