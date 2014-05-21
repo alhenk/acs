@@ -59,7 +59,7 @@
                                             </form>
                                         </c:when>
                                         <c:otherwise>
-                                            <p><fmt:message bundle="${msg}" key="common.user"/></p>
+                                            <h3><fmt:message bundle="${msg}" key="common.user"/></h3>
                                         </c:otherwise>
                                     </c:choose>
 
