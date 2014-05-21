@@ -5,6 +5,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="height" value="320"/>
+<c:set var="reportType" value="individual"/>
+<c:if test="${sessionScope.user.role == 'SUPERVISOR' || sessionScope.user.role == 'ADMINISTRATOR'}">
+    <c:set var="reportType" value="group"/>
+</c:if>
 <mtag:pagetemplate title="dashboard">
     <jsp:body>
         <div class="grid_8">
@@ -79,7 +83,7 @@
                 <div class="grid_8">
                     <div class="box">
                         <div class="block">
-                            <form action="do/group-monthly-report" method="get">
+                            <form action="do/${reportType}-monthly-report" method="get">
                                 <fieldset class="create-employee">
                                     <ftag:string-field field="year"
                                                        value="${sessionScope['year']}"
@@ -98,7 +102,7 @@
 
                             <p> &nbsp;</p>
 
-                            <form action="do/group-daily-report" method="get">
+                            <form action="do/${reportType}-daily-report" method="get">
                                 <fieldset>
                                     <ftag:string-field field="report-date"
                                                        value="${sessionScope['report-date']}"

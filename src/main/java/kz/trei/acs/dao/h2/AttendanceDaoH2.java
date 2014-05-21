@@ -7,6 +7,7 @@ import kz.trei.acs.db.ConnectionPoolException;
 import kz.trei.acs.db.DbUtil;
 import kz.trei.acs.office.attendance.Attendance;
 import kz.trei.acs.office.attendance.OfficeHour;
+import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.user.User;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.FileManager;
@@ -72,7 +73,17 @@ public class AttendanceDaoH2 implements AttendanceDao {
     }
 
     @Override
+    public List<OfficeHour> individualMonthlyReport(String year, String month, Account1C account1C) throws DaoException {
+        return null;
+    }
+
+    @Override
     public List<OfficeHour> groupDailyReport(DateStamp date) throws DaoException {
+        return null;
+    }
+
+    @Override
+    public List<OfficeHour> individualDailyReport(DateStamp dateStamp, Account1C account1C) throws DaoException {
         return null;
     }
 

@@ -12,6 +12,7 @@ import kz.trei.acs.office.hr.Employee;
 import kz.trei.acs.office.hr.Person;
 import kz.trei.acs.office.rfid.RfidTag;
 import kz.trei.acs.office.rfid.UidFormatException;
+import kz.trei.acs.office.structure.Account1C;
 import kz.trei.acs.office.structure.DepartmentType;
 import kz.trei.acs.office.structure.PositionType;
 import kz.trei.acs.util.DateStamp;
@@ -178,6 +179,76 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
+    public List<OfficeHour> individualMonthlyReport(String year, String month, Account1C account1C) throws DaoException {
+        LOGGER.debug("groupMonthlyReport ...");
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool;
+        OfficeHour officeHour;
+        String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
+        String tableId = account1C.getTableId();
+        List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE substr(dDate,1,4)='"
+                    + year + "' AND substr(dDate,6,2)='"
+                    + MonthDoubleDigitString
+                    + "' AND (Tmin > '09:00' OR Tmax < '18:00')AND Tmax<>Tmin AND tableId='"
+                    + tableId
+                    + "' GROUP BY dDate, lastName;");
+            while (rs.next()) {
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                PositionType position = DaoUtil.takePosition(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                DateStamp workingDay = DaoUtil.takeWorkingDay(rs);
+                TimeStamp arriving = DaoUtil.takeArriving(rs);
+                TimeStamp leaving = DaoUtil.takeLeaving(rs);
+                TimeStamp total = DaoUtil.takeOfficeHours(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
+                Person employee = new Employee.Builder()
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .position(position)
+                        .department(department)
+                        .rfidTag(rfidTag)
+                        .account1C(account1C)
+                        .build();
+                officeHour = new OfficeHour.Builder()
+                        .employee(employee)
+                        .workingDay(workingDay)
+                        .arriving(arriving)
+                        .leaving(leaving)
+                        .total(total)
+                        .build();
+                officeHourList.add(officeHour);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } catch (UidFormatException e) {
+            LOGGER.error("RFID tag building exception: " + e.getMessage());
+            throw new DaoException("RFID tag building exception " + e.getMessage());
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        LOGGER.debug(" ... " + officeHourList.size() + " office hour records");
+        return officeHourList;
+    }
+
+    @Override
     public List<OfficeHour> groupDailyReport(DateStamp dateStamp) throws DaoException {
         LOGGER.debug("groupDailyReport ...");
         Statement stmt = null;
@@ -215,6 +286,75 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                         .position(position)
                         .department(department)
                         .rfidTag(rfidTag)
+                        .build();
+                officeHour = new OfficeHour.Builder()
+                        .employee(employee)
+                        .workingDay(workingDay)
+                        .arriving(arriving)
+                        .leaving(leaving)
+                        .total(total)
+                        .build();
+                officeHourList.add(officeHour);
+            }
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Connection pool exception: " + e.getMessage());
+            throw new DaoException("Connection pool exception");
+        } catch (SQLException e) {
+            LOGGER.error("SQL statement exception execute: " + e.getMessage());
+            throw new DaoException("SQL statement exception execute");
+        } catch (UidFormatException e) {
+            LOGGER.error("RFID tag building exception: " + e.getMessage());
+            throw new DaoException("RFID tag building exception " + e.getMessage());
+        } finally {
+            DbUtil.close(stmt, rs);
+            connectionPool.returnConnection(conn);
+        }
+        LOGGER.debug(" ... " + officeHourList.size() + " office hour records");
+        return officeHourList;
+    }
+
+    @Override
+    public List<OfficeHour> individualDailyReport(DateStamp dateStamp, Account1C account1C) throws DaoException {
+        LOGGER.debug("individualDailyReport ...");
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        ConnectionPool connectionPool;
+        OfficeHour officeHour;
+        String tableId = account1C.getTableId();
+        List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
+        try {
+            connectionPool = ConnectionPool.getInstance();
+        } catch (ConnectionPoolException e) {
+            LOGGER.error("Get connection pool instance exception " + e.getMessage());
+            throw new DaoException("Get connection pool instance exception");
+        }
+        String date = dateStamp.getDate();
+        try {
+            conn = connectionPool.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE dDate = '"
+                    + date
+                    + "' AND (Tmin > '09:00' OR Tmax < '18:00') AND Tmax<>Tmin AND tableId='"
+                    + tableId
+                    +"' GROUP BY dDate, lastName;");
+            while (rs.next()) {
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                PositionType position = DaoUtil.takePosition(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                DateStamp workingDay = DaoUtil.takeWorkingDay(rs);
+                TimeStamp arriving = DaoUtil.takeArriving(rs);
+                TimeStamp leaving = DaoUtil.takeLeaving(rs);
+                TimeStamp total = DaoUtil.takeOfficeHours(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
+                Person employee = new Employee.Builder()
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .position(position)
+                        .department(department)
+                        .rfidTag(rfidTag)
+                        .account1C(account1C)
                         .build();
                 officeHour = new OfficeHour.Builder()
                         .employee(employee)

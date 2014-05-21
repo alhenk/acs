@@ -9,6 +9,8 @@ import kz.trei.acs.action.general.ShowDashboard;
 import kz.trei.acs.action.general.ShowMainPage;
 import kz.trei.acs.action.reports.ShowGroupDailyReportPage;
 import kz.trei.acs.action.reports.ShowGroupMonthlyReportPage;
+import kz.trei.acs.action.reports.ShowIndividualDailyReportPage;
+import kz.trei.acs.action.reports.ShowIndividualMonthlyReportPage;
 import kz.trei.acs.action.rfidtag.*;
 import org.apache.log4j.Logger;
 
@@ -60,15 +62,16 @@ public class ActionFactory {
         //Reports
         actions.put("GET/group-monthly-report", new ShowGroupMonthlyReportPage());
         actions.put("GET/group-daily-report", new ShowGroupDailyReportPage());
-
+        actions.put("GET/individual-monthly-report", new ShowIndividualMonthlyReportPage());
+        actions.put("GET/individual-daily-report", new ShowIndividualDailyReportPage());
         LOGGER.debug("Instantiated ActionFactory");
     }
 
     public Action getAction(String actionName) {
         Action action = actions.get(actionName);
-        if (action != null){
-        LOGGER.debug("created action = " + action.getClass().getName());
-        }else{
+        if (action != null) {
+            LOGGER.debug("created action = " + action.getClass().getName());
+        } else {
             LOGGER.debug("created action = null");
         }
         return action;
