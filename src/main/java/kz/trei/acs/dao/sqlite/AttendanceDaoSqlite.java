@@ -37,7 +37,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
-        ConnectionPool connectionPool = null;
+        ConnectionPool connectionPool;
         String createAttendanceTableSql = FileManager.readFile("attendance_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
@@ -112,12 +112,12 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> lateArrivalReportMonthly(String year, String month) throws DaoException {
-        LOGGER.debug("lateArrivalReportMonthly ...");
+    public List<OfficeHour> groupMonthlyReport(String year, String month) throws DaoException {
+        LOGGER.debug("groupMonthlyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
-        ConnectionPool connectionPool = null;
+        ConnectionPool connectionPool;
         OfficeHour officeHour;
         String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
@@ -130,10 +130,10 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("Select * FROM OFFICEHOURS WHERE substr(dDate,1,4)='"
+            rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE substr(dDate,1,4)='"
                     + year + "' AND substr(dDate,6,2)='"
                     + MonthDoubleDigitString
-                    + "' AND Tmin > '09:00' AND Tmax<>Tmin GROUP BY dDate, lastName;");
+                    + "' AND (Tmin > '09:00' OR Tmax < '18:00')AND Tmax<>Tmin GROUP BY dDate, lastName;");
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
@@ -178,12 +178,12 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> leavingBeforeReportMonthly(String year, String month) throws DaoException {
-        LOGGER.debug("avingBeforeReport ...");
+    public List<OfficeHour> groupDailyReport(DateStamp dateStamp) throws DaoException {
+        LOGGER.debug("groupDailyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
-        ConnectionPool connectionPool = null;
+        ConnectionPool connectionPool;
         OfficeHour officeHour;
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
         try {
@@ -192,24 +192,28 @@ public class AttendanceDaoSqlite implements AttendanceDao {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
+        String date = dateStamp.getDate();
         try {
             conn = connectionPool.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("Select * FROM OFFICEHOURS WHERE substr(dDate,1,4)='2013' AND substr(dDate,6,2)='04' AND Tmax < '18:00' AND Tmax<>Tmin GROUP BY dDate, lastName;");
+            rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE dDate = '"
+                    + date
+                    + "' AND (Tmin > '09:00' OR Tmax < '18:00') AND Tmax<>Tmin GROUP BY dDate, lastName;");
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
-                String uid = rs.getString("UID");
-                DateStamp workingDay = DateStamp.create(rs.getString("dDate"));
-                TimeStamp arriving = TimeStamp.create(rs.getString("Tmin"));
-                TimeStamp leaving = TimeStamp.create(rs.getString("Tmax"));
-                TimeStamp total = TimeStamp.create(rs.getString("officeHours"));
-                RfidTag rfidTag = new RfidTag.Builder()
-                        .uid(uid)
-                        .build();
+                PositionType position = DaoUtil.takePosition(rs);
+                DepartmentType department = DaoUtil.takeDepartment(rs);
+                DateStamp workingDay = DaoUtil.takeWorkingDay(rs);
+                TimeStamp arriving = DaoUtil.takeArriving(rs);
+                TimeStamp leaving = DaoUtil.takeLeaving(rs);
+                TimeStamp total = DaoUtil.takeOfficeHours(rs);
+                RfidTag rfidTag = DaoUtil.takeRfidTag(rs);
                 Person employee = new Employee.Builder()
                         .firstName(firstName)
                         .lastName(lastName)
+                        .position(position)
+                        .department(department)
                         .rfidTag(rfidTag)
                         .build();
                 officeHour = new OfficeHour.Builder()

@@ -24,7 +24,7 @@ public class DeleteRfidTag implements Action {
         DaoFactory daoFactory = DaoFactory.getFactory();
         RfidTagDao rfidTagDao = daoFactory.getRfidTagDao();
         try {
-            id = RfidTagUtil.takeIdFromRequest(request);
+            id = RfidTagUtil.takeId(request);
             if (id == 0 || id == 1) {
                 throw new GetParameterException("trying to delete the read-only record");
             }

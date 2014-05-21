@@ -67,14 +67,15 @@ public class AttendanceDaoH2 implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> lateArrivalReportMonthly(String year, String month) throws DaoException {
+    public List<OfficeHour> groupMonthlyReport(String year, String month) throws DaoException {
         return null;
     }
 
     @Override
-    public List<OfficeHour> leavingBeforeReportMonthly(String year, String month) throws DaoException {
+    public List<OfficeHour> groupDailyReport(DateStamp date) throws DaoException {
         return null;
     }
+
 
     @Override
     public Attendance findById(long id) throws DaoException {

@@ -26,7 +26,7 @@ public class EditRfidTag implements Action {
         RfidTag rfidTag;
         if (isFormValid(request)) {
             try {
-                rfidTag = RfidTagUtil.buildEditedRfidTagFromRequest(request);
+                rfidTag = RfidTagUtil.buildEditedRfidTag(request);
                 rfidTagDao.update(rfidTag);
                 LOGGER.debug("rfidtag -> " + rfidTag);
             } catch (DaoException e) {

@@ -16,12 +16,12 @@ public final class RfidTagUtil {
     private RfidTagUtil() {
     }
 
-    public static RfidTag buildNewRfidTagFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildNewRfidTagFromRequest ...");
+    public static RfidTag buildNewRfidTag(HttpServletRequest request) {
+        LOGGER.debug("buildNewRfidTag ...");
         String uid = request.getParameter("uid");
-        RfidType type = takeTypeFromRequest(request);
-        ProtocolType protocol = takeProtocolFromRequest(request);
-        Issue issue = buildIssueFromRequest(request);
+        RfidType type = takeType(request);
+        ProtocolType protocol = takeProtocol(request);
+        Issue issue = buildIssue(request);
         RfidTag rfidTag = new RfidTag.Builder()
                 .uid(uid)
                 .type(type)
@@ -32,13 +32,13 @@ public final class RfidTagUtil {
         return rfidTag;
     }
 
-    public static RfidTag buildEditedRfidTagFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildEditedRfidTagFromRequest ...");
-        long id = takeIdFromRequest(request);
+    public static RfidTag buildEditedRfidTag(HttpServletRequest request) {
+        LOGGER.debug("buildEditedRfidTag ...");
+        long id = takeId(request);
         String uid = request.getParameter("uid");
-        RfidType type = takeTypeFromRequest(request);
-        ProtocolType protocol = takeProtocolFromRequest(request);
-        Issue issue = buildIssueFromRequest(request);
+        RfidType type = takeType(request);
+        ProtocolType protocol = takeProtocol(request);
+        Issue issue = buildIssue(request);
         RfidTag rfidTag = new RfidTag.Builder()
                 .id(id)
                 .uid(uid)
@@ -50,10 +50,10 @@ public final class RfidTagUtil {
         return rfidTag;
     }
 
-    private static Issue buildIssueFromRequest(HttpServletRequest request) {
-        LOGGER.debug("buildIssueFromRequest ...");
-        DateStamp issueDate = takeIssueDateFromRequest(request);
-        DateStamp expirationDate = takeExpirationDateFromRequest(request);
+    private static Issue buildIssue(HttpServletRequest request) {
+        LOGGER.debug("buildIssue ...");
+        DateStamp issueDate = takeIssueDate(request);
+        DateStamp expirationDate = takeExpirationDate(request);
         Issue issue = new Issue.Builder()
                 .issueDate(issueDate)
                 .expirationDate(expirationDate)
@@ -123,7 +123,7 @@ public final class RfidTagUtil {
         session.removeAttribute("original-rfidtag");
     }
 
-    public static long takeIdFromRequest(HttpServletRequest request) {
+    public static long takeId(HttpServletRequest request) {
         LOGGER.debug("takeId ...");
         long id;
         try {
@@ -138,8 +138,8 @@ public final class RfidTagUtil {
         return id;
     }
 
-    public static RfidType takeTypeFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeTypeFromRequest ...");
+    public static RfidType takeType(HttpServletRequest request) {
+        LOGGER.debug("takeType ...");
         RfidType type;
         try {
             type = RfidType.valueOf(request.getParameter("type"));
@@ -154,8 +154,8 @@ public final class RfidTagUtil {
         return type;
     }
 
-    public static ProtocolType takeProtocolFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeProtocolFromRequest ...");
+    public static ProtocolType takeProtocol(HttpServletRequest request) {
+        LOGGER.debug("takeProtocol ...");
         ProtocolType protocol;
         try {
             protocol = ProtocolType.valueOf(request.getParameter("protocol"));
@@ -170,8 +170,8 @@ public final class RfidTagUtil {
         return protocol;
     }
 
-    public static DateStamp takeIssueDateFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeIssueDateFromRequest ...");
+    public static DateStamp takeIssueDate(HttpServletRequest request) {
+        LOGGER.debug("takeIssueDate ...");
         DateStamp issueDate;
         try {
             issueDate = DateStamp.create(request.getParameter("issue-date"));
@@ -183,8 +183,8 @@ public final class RfidTagUtil {
         return issueDate;
     }
 
-    public static DateStamp takeExpirationDateFromRequest(HttpServletRequest request) {
-        LOGGER.debug("takeExpirationDateFromRequest ...");
+    public static DateStamp takeExpirationDate(HttpServletRequest request) {
+        LOGGER.debug("takeExpirationDate ...");
         DateStamp expirationDate;
         try {
             expirationDate = DateStamp.create(request.getParameter("expiration-date"));

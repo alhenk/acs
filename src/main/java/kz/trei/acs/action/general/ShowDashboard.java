@@ -4,7 +4,6 @@ import kz.trei.acs.action.Action;
 import kz.trei.acs.action.ActionResult;
 import kz.trei.acs.action.ActionType;
 import kz.trei.acs.action.reports.AttendanceUtil;
-import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.MonthType;
 import org.apache.log4j.Logger;
 
@@ -26,9 +25,13 @@ public class ShowDashboard implements Action {
         String paramMonth = AttendanceUtil.takeYear(request);
         String attrMonth = (String) session.getAttribute("month");
         String month = attrMonth != null ? attrMonth : paramMonth;
-        String paramYear =  AttendanceUtil.takeYear(request);
+        String paramYear = AttendanceUtil.takeYear(request);
         String attrYear = (String) session.getAttribute("year");
         String year = attrYear != null ? attrYear : paramYear;
+        String paramReportDate = AttendanceUtil.takeReportDate(request).getDate();
+        String attrReportDate = (String) session.getAttribute("report-date");
+        String reportDate = attrReportDate != null ? attrReportDate : paramReportDate;
+        session.setAttribute("report-date", reportDate);
         session.setAttribute("year", year);
         session.setAttribute("month", month);
         return new ActionResult(ActionType.FORWARD, "dashboard");

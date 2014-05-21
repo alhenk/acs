@@ -15,32 +15,53 @@
 
                 <div class="block">
                     <div id="sign-form" style="height:${height}px;">
-                        <c:choose>
-                            <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
-                                <h3><fmt:message bundle="${msg}" key="common.administrator"/></h3>
 
-                                <p>&nbsp;</p>
+                        <div class="grid_4">
+                            <div class="box">
+                                <div class="block">
+                                    <p>&nbsp;</p>
+                                </div>
+                            </div>
+                        </div>
 
-                                <form action="do/user-list" method="get">
-                                    <input type="submit" value="<fmt:message bundle="${msg}" key="common.user-list"/>"/>
-                                </form>
-                                <p>&nbsp;</p>
+                        <div class="grid_8">
+                            <div class="box">
+                                <div class="block">
+                                    <c:choose>
+                                        <c:when test="${sessionScope.user.role=='ADMINISTRATOR'}">
+                                            <h3><fmt:message bundle="${msg}" key="common.administrator"/></h3>
 
-                                <form action="do/rfidtag-list" method="get">
-                                    <input type="submit"
-                                           value="<fmt:message bundle="${msg}" key="common.rfidtag-list"/>"/>
-                                </form>
-                                <p>&nbsp;</p>
+                                            <p>&nbsp;</p>
 
-                                <form action="do/employee-list" method="get">
-                                    <input type="submit"
-                                           value="<fmt:message bundle="${msg}" key="common.employee-list"/>"/>
-                                </form>
-                            </c:when>
-                            <c:otherwise>
-                                <p><fmt:message bundle="${msg}" key="common.user"/></p>
-                            </c:otherwise>
-                        </c:choose>
+                                            <p> &nbsp;</p>
+
+                                            <p> &nbsp;</p>
+
+                                            <form action="do/user-list" method="get">
+                                                <input type="submit"
+                                                       value="<fmt:message bundle="${msg}" key="common.user-list"/>"/>
+                                            </form>
+                                            <p>&nbsp;</p>
+
+                                            <form action="do/rfidtag-list" method="get">
+                                                <input type="submit"
+                                                       value="<fmt:message bundle="${msg}" key="common.rfidtag-list"/>"/>
+                                            </form>
+                                            <p>&nbsp;</p>
+
+                                            <form action="do/employee-list" method="get">
+                                                <input type="submit"
+                                                       value="<fmt:message bundle="${msg}" key="common.employee-list"/>"/>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p><fmt:message bundle="${msg}" key="common.user"/></p>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,11 +79,8 @@
                 <div class="grid_8">
                     <div class="box">
                         <div class="block">
-                            <p>&nbsp;</p>
-
-                            <form action="do/late-arrival-report" method="get">
+                            <form action="do/group-monthly-report" method="get">
                                 <fieldset class="create-employee">
-                                    <p> &nbsp;</p>
                                     <ftag:string-field field="year"
                                                        value="${sessionScope['year']}"
                                                        clazz="date"/>
@@ -72,10 +90,23 @@
                                                        optionList="${sessionScope['months']}"
                                                        value="${sessionScope['month']}"/>
                                     <p> &nbsp;</p>
+                                    <input type="submit"
+                                           value="<fmt:message bundle="${msg}" key="common.report.monthly"/>"/>
+                                </fieldset>
+                            </form>
+                            <p> &nbsp;</p>
 
+                            <p> &nbsp;</p>
+
+                            <form action="do/group-daily-report" method="get">
+                                <fieldset>
+                                    <ftag:string-field field="report-date"
+                                                       value="${sessionScope['report-date']}"
+                                                       clazz="date"/>
                                     <p> &nbsp;</p>
                                     <input type="submit"
-                                           value="<fmt:message bundle="${msg}" key="common.late-arrival.report.monthly"/>"/>
+                                           value="<fmt:message bundle="${msg}" key="common.report.daily"/>"/>
+
                                 </fieldset>
                             </form>
                         </div>

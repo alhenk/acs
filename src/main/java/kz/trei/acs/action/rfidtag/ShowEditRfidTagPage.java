@@ -30,7 +30,7 @@ public class ShowEditRfidTagPage implements Action {
         RfidTagDao rfidTagDao = daoFactory.getRfidTagDao();
         RfidTag originalRfidTag;
         try {
-            id = RfidTagUtil.takeIdFromRequest(request);
+            id = RfidTagUtil.takeId(request);
             originalRfidTag = rfidTagDao.findById(id);
         } catch (DaoException e) {
             RfidTagUtil.killFieldAttributes(request);

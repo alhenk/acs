@@ -151,7 +151,7 @@ public final class DaoUtil {
     }
 
     public static ProtocolType takeProtocol(ResultSet resultSet) throws SQLException {
-        LOGGER.debug("takeProtocolFromRequest ...");
+        LOGGER.debug("takeProtocol ...");
         ProtocolType protocol;
         try {
             protocol = ProtocolType.valueOf(resultSet.getString("protocol"));

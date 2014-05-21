@@ -24,7 +24,7 @@ public class CreateRfidTag implements Action {
         RfidTag rfidTag;
         if (isFormValid(request)) {
             LOGGER.debug("Form is valid, ready to build RFID tag");
-            rfidTag = RfidTagUtil.buildNewRfidTagFromRequest(request);
+            rfidTag = RfidTagUtil.buildNewRfidTag(request);
             DaoFactory daoFactory = DaoFactory.getFactory();
             RfidTagDao rfidTagDao = daoFactory.getRfidTagDao();
             try {

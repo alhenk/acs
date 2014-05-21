@@ -8,16 +8,19 @@
         <div class="grid_16">
             <div class="box">
                 <h2>
-                    <a href="do/user-list"><fmt:message bundle="${msg}" key="common.late-arrival"/></a>
+                    <a href="do/user-list"><fmt:message bundle="${msg}" key="common.report"/></a>
                 </h2>
 
                 <div class="block">
                     <div class="grid_1">
-                        <p>${sessionScope.year}</p>
-
+                        <c:if test="${not empty sessionScope.year }">
+                            <p>${sessionScope.year}</p>
+                        </c:if>
                     </div>
                     <div class="grid_1">
-                        <p><fmt:message bundle="${msg}" key="date.month.${sessionScope.month}"/></p>
+                        <c:if test="${not empty sessionScope.year }">
+                            <p><fmt:message bundle="${msg}" key="date.month.${sessionScope.month}"/></p>
+                        </c:if>
                     </div>
 
                     <table summary="user list">

@@ -1,6 +1,7 @@
 package kz.trei.acs.action.reports;
 
 
+import kz.trei.acs.exception.DateStampException;
 import kz.trei.acs.util.DateStamp;
 import kz.trei.acs.util.MonthType;
 import kz.trei.acs.util.PropertyManager;
@@ -75,5 +76,18 @@ public class AttendanceUtil {
         }
         LOGGER.debug(month);
         return month.toString().toUpperCase();
+    }
+
+    public static DateStamp takeReportDate(HttpServletRequest request) {
+            LOGGER.debug("takeReportDate ...");
+            DateStamp date;
+            try {
+                date = DateStamp.create(request.getParameter("report-date"));
+            } catch (DateStampException e) {
+                date = new DateStamp();
+                LOGGER.debug("Assigned current date due to exception: " + e.getMessage());
+            }
+            LOGGER.debug(date.getDate());
+            return date;
     }
 }
