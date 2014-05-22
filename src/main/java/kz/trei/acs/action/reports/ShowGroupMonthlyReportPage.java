@@ -27,9 +27,10 @@ public class ShowGroupMonthlyReportPage implements Action {
         AttendanceDao attendanceDao = daoFactory.getAttendanceDao();
         String year  = AttendanceUtil.takeYear(request);
         String month = AttendanceUtil.takeMonth(request);
+        List<String> sorts = AttendanceUtil.takeSorts(request);
         List<OfficeHour> officeHourList;
         try {
-            officeHourList = attendanceDao.groupMonthlyReport(year, month);
+            officeHourList = attendanceDao.groupMonthlyReport(year, month, sorts);
         } catch (DaoException e) {
             request.setAttribute("error", "error.db.report-list");
             LOGGER.error("... getting monthly report list exception: " + e.getMessage());
@@ -39,9 +40,19 @@ public class ShowGroupMonthlyReportPage implements Action {
             LOGGER.error("... getting monthly report list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error");
         }
-        session.setAttribute("office-hour-list", officeHourList);
+        long numTuples = officeHourList.size();
+        long page = AttendanceUtil.takePage(request);
+        long limit = AttendanceUtil.takeLimit(request);
+        long numPages = (long) (Math.ceil((1.0 * numTuples) / limit));
+        long offset = (page - 1) < 0 || page > numPages ? 0 : (page - 1) * limit;
+        List<OfficeHour> officeHours =
+        officeHourList.subList((int)Math.max(0, offset), (int)Math.min(numTuples, offset+limit) );
+        session.setAttribute("num-pages", numPages);
+        session.setAttribute("page", page);
+        session.setAttribute("office-hour-list", officeHours);
         session.setAttribute("year", year);
         session.setAttribute("month", month);
+        session.setAttribute("report-action", "group-monthly-report");
         LOGGER.debug("... " + officeHourList.size());
         return new ActionResult(ActionType.FORWARD, "report-list");
     }

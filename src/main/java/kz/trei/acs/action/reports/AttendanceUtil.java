@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class AttendanceUtil {
     private static final Logger LOGGER = Logger.getLogger(AttendanceUtil.class);
@@ -89,5 +91,18 @@ public class AttendanceUtil {
             }
             LOGGER.debug(date.getDate());
             return date;
+    }
+
+    public static List<String> takeSorts(HttpServletRequest request) {
+        List<String> sorts = new LinkedList<String>();
+        if("1".equals(request.getParameter("sortFN"))) sorts.add("firstName");
+        if("1".equals(request.getParameter("sortLN"))) sorts.add("lastName");
+        if("1".equals(request.getParameter("sortJP"))) sorts.add("jobPosition");
+        if("1".equals(request.getParameter("sortDP"))) sorts.add("department");
+        if("1".equals(request.getParameter("sortWD"))) sorts.add("dDate");
+        if("1".equals(request.getParameter("sortAR"))) sorts.add("Tmin");
+        if("1".equals(request.getParameter("sortLV"))) sorts.add("Tmax");
+        if("1".equals(request.getParameter("sortOH"))) sorts.add("officeHours");
+        return sorts;
     }
 }

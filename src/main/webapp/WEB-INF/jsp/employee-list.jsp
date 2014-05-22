@@ -6,16 +6,13 @@
 <mtag:pagetemplate title="employee-list">
     <jsp:body>
         <div class="grid_16">
-        <div class="box">
-            <h2>
-                <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
-            </h2>
-
-            <div class="block">
-                <div id="employee-list-control" style="height:30px;">
+            <div class="box">
+                <h2>
+                    <a href="do/employee-list"><fmt:message bundle="${msg}" key="common.employee-list"/></a>
+                </h2>
+                <div class="block">
                     <mtag:paging entity="employee"/>
                     <div class="clear"></div>
-
                     <table summary="employee list">
                         <thead>
                         <th><fmt:message bundle='${msg}' key='table.employee.first-name'/></th>

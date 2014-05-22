@@ -27,13 +27,14 @@ public class ShowIndividualMonthlyReportPage implements Action {
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         AttendanceDao attendanceDao = daoFactory.getAttendanceDao();
-        String year  = AttendanceUtil.takeYear(request);
+        String year = AttendanceUtil.takeYear(request);
         String month = AttendanceUtil.takeMonth(request);
         User user = (User) session.getAttribute("user");
         Account1C account1C = user.getAccount1C();
+        List<String> sorts = AttendanceUtil.takeSorts(request);
         List<OfficeHour> officeHourList;
         try {
-            officeHourList = attendanceDao.individualMonthlyReport(year, month, account1C);
+            officeHourList = attendanceDao.individualMonthlyReport(year, month, account1C, sorts);
         } catch (DaoException e) {
             request.setAttribute("error", "error.db.report-list");
             LOGGER.error("... getting monthly report list exception: " + e.getMessage());
@@ -43,9 +44,19 @@ public class ShowIndividualMonthlyReportPage implements Action {
             LOGGER.error("... getting monthly report list exception: " + e.getMessage());
             return new ActionResult(ActionType.REDIRECT, "error");
         }
-        session.setAttribute("office-hour-list", officeHourList);
+        long numTuples = officeHourList.size();
+        long page = AttendanceUtil.takePage(request);
+        long limit = AttendanceUtil.takeLimit(request);
+        long numPages = (long) (Math.ceil((1.0 * numTuples) / limit));
+        long offset = (page - 1) < 0 || page > numPages ? 0 : (page - 1) * limit;
+        List<OfficeHour> officeHours =
+                officeHourList.subList((int) Math.max(0, offset), (int) Math.min(numTuples, offset + limit));
+        session.setAttribute("num-pages", numPages);
+        session.setAttribute("page", page);
+        session.setAttribute("office-hour-list", officeHours);
         session.setAttribute("year", year);
         session.setAttribute("month", month);
+        session.setAttribute("report-action", "individual-monthly-report");
         LOGGER.debug("... " + officeHourList.size());
         return new ActionResult(ActionType.FORWARD, "report-list");
     }

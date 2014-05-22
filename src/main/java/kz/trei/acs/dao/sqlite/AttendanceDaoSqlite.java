@@ -113,7 +113,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> groupMonthlyReport(String year, String month) throws DaoException {
+    public List<OfficeHour> groupMonthlyReport(String year, String month, List<String> sorts) throws DaoException {
         LOGGER.debug("groupMonthlyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
@@ -122,6 +122,19 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         OfficeHour officeHour;
         String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
+        StringBuilder groupBy = new StringBuilder();
+        if (sorts.size() == 0) {
+            groupBy.append("dDate, lastName");
+        } else {
+            for (String sort : sorts) {
+                groupBy.append(sort);
+                groupBy.append(",");
+            }
+            groupBy.deleteCharAt(groupBy.lastIndexOf(","));
+        }
+        groupBy.append(";");
+        String groups = groupBy.toString();
+        LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -134,7 +147,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
             rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE substr(dDate,1,4)='"
                     + year + "' AND substr(dDate,6,2)='"
                     + MonthDoubleDigitString
-                    + "' AND (Tmin > '09:00' OR Tmax < '18:00')AND Tmax<>Tmin GROUP BY dDate, lastName;");
+                    + "' AND (Tmin > '09:00' OR Tmax < '18:00')AND Tmax<>Tmin ORDER BY " + groups);
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
@@ -179,7 +192,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> individualMonthlyReport(String year, String month, Account1C account1C) throws DaoException {
+    public List<OfficeHour> individualMonthlyReport(String year, String month, Account1C account1C, List<String> sorts) throws DaoException {
         LOGGER.debug("groupMonthlyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
@@ -189,6 +202,19 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
         String tableId = account1C.getTableId();
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
+        StringBuilder groupBy = new StringBuilder();
+        if (sorts.size() == 0) {
+            groupBy.append("dDate, lastName");
+        } else {
+            for (String sort : sorts) {
+                groupBy.append(sort);
+                groupBy.append(",");
+            }
+            groupBy.deleteCharAt(groupBy.lastIndexOf(","));
+        }
+        groupBy.append(";");
+        String groups = groupBy.toString();
+        LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -203,7 +229,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                     + MonthDoubleDigitString
                     + "' AND (Tmin > '09:00' OR Tmax < '18:00')AND Tmax<>Tmin AND tableId='"
                     + tableId
-                    + "' GROUP BY dDate, lastName;");
+                    + "' ORDER BY " + groups);
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
@@ -249,7 +275,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> groupDailyReport(DateStamp dateStamp) throws DaoException {
+    public List<OfficeHour> groupDailyReport(DateStamp dateStamp, List<String> sorts) throws DaoException {
         LOGGER.debug("groupDailyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
@@ -257,6 +283,19 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         ConnectionPool connectionPool;
         OfficeHour officeHour;
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
+        StringBuilder groupBy = new StringBuilder();
+        if (sorts.size() == 0) {
+            groupBy.append("dDate, lastName");
+        } else {
+            for (String sort : sorts) {
+                groupBy.append(sort);
+                groupBy.append(",");
+            }
+            groupBy.deleteCharAt(groupBy.lastIndexOf(","));
+        }
+        groupBy.append(";");
+        String groups = groupBy.toString();
+        LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -269,7 +308,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE dDate = '"
                     + date
-                    + "' AND (Tmin > '09:00' OR Tmax < '18:00') AND Tmax<>Tmin GROUP BY dDate, lastName;");
+                    + "' AND (Tmin > '09:00' OR Tmax < '18:00') AND Tmax<>Tmin ORDER BY " + groups);
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
@@ -314,7 +353,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
     }
 
     @Override
-    public List<OfficeHour> individualDailyReport(DateStamp dateStamp, Account1C account1C) throws DaoException {
+    public List<OfficeHour> individualDailyReport(DateStamp dateStamp, Account1C account1C, List<String> sorts) throws DaoException {
         LOGGER.debug("individualDailyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
@@ -323,6 +362,19 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         OfficeHour officeHour;
         String tableId = account1C.getTableId();
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
+        StringBuilder groupBy = new StringBuilder();
+        if (sorts.size() == 0) {
+            groupBy.append("dDate, lastName");
+        } else {
+            for (String sort : sorts) {
+                groupBy.append(sort);
+                groupBy.append(",");
+            }
+            groupBy.deleteCharAt(groupBy.lastIndexOf(","));
+        }
+        groupBy.append(";");
+        String groups = groupBy.toString();
+        LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
         } catch (ConnectionPoolException e) {
@@ -337,7 +389,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                     + date
                     + "' AND (Tmin > '09:00' OR Tmax < '18:00') AND Tmax<>Tmin AND tableId='"
                     + tableId
-                    +"' GROUP BY dDate, lastName;");
+                    + "' ORDER BY " + groups);
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");

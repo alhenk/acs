@@ -6,13 +6,12 @@
 <mtag:pagetemplate title="rfidtag-list">
     <jsp:body>
         <div class="grid_16">
-        <div class="box">
-            <h2>
-                <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
-            </h2>
+            <div class="box">
+                <h2>
+                    <a href="do/rfidtag-list"><fmt:message bundle="${msg}" key="common.rfidtag-list"/></a>
+                </h2>
 
-            <div class="block">
-                <div id="rfidtag-list-control" style="height:30px;">
+                <div class="block">
                     <mtag:paging entity="rfidtag"/>
                     <div class="clear"></div>
                     <table summary="RFID tag list">
