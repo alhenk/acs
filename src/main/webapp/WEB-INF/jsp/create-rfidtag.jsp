@@ -13,7 +13,14 @@
         </mtag:create>
         <mtag:info height="${height}">
             <jsp:body>
-                <fmt:message bundle="${msg}" key="lorem.ipsum"/>
+                <c:choose>
+                    <c:when test="${locale.language == 'en'}">
+                        <mtag:rfidtag_rules_en/>
+                    </c:when>
+                    <c:when test="${locale.language == 'ru'}">
+                        <mtag:rfidtag_rules_ru/>
+                    </c:when>
+                </c:choose>
             </jsp:body>
         </mtag:info>
     </jsp:body>
