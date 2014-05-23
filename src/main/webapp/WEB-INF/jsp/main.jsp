@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<c:set var="height" value="380"/>
+<c:set var="height" value="400"/>
 <mtag:pagetemplate title="main">
     <jsp:body>
         <div class="grid_8">
@@ -49,8 +49,14 @@
         </div>
         <mtag:info height="${height}">
             <jsp:body>
-                <%--<fmt:message bundle="${msg}" key="lorem.ipsum"/>--%>
-                <mtag:policy_en/>
+                <c:choose>
+                    <c:when test="${locale.language == 'en'}">
+                        <mtag:policy_en/>
+                    </c:when>
+                    <c:when test="${locale.language == 'ru'}">
+                        <mtag:policy_ru/>
+                    </c:when>
+                </c:choose>
             </jsp:body>
         </mtag:info>
     </jsp:body>
