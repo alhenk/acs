@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS "UZERS";
 CREATE TABLE UZERS (
-  id INTEGER PRIMARY KEY,
+  id bigint auto_increment,
   username CHAR(20) NOT NULL ,
   password CHAR(128) NOT NULL ,
   email CHAR(32),
   tableId CHAR(32),
   role CHAR(20),
-  UNIQUE (username),
+  PRIMARY KEY  (id, username),
   FOREIGN KEY (tableId) REFERENCES EMPLOYEES(tableId));
 INSERT INTO "UZERS" (username, password, email, tableId, role) VALUES('admin','1000:700728b9c738f18c580ebf33101c3632fb60109d1c53ac2a:f41ac581b0c986d892bf9390918246d510ad42cabd2e9bb7','admin@example.com','KK00000263','ADMINISTRATOR');
 INSERT INTO "UZERS" (username, password, email, tableId, role) VALUES('morgan','1000:4ab19b5ca2080e6b93197bc9e05a45ca6d38088c4b099c42:30e120e82ba245a99a8f608043a8577abf3b4fe3d1ab8d1a','morgan@trei.lan','KK00000302','EMPLOYEE');

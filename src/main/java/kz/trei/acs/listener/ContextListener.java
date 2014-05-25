@@ -12,7 +12,7 @@ import javax.servlet.ServletContextListener;
 
 public class ContextListener implements ServletContextListener {
     private static final Logger LOGGER = Logger.getLogger(ContextListener.class);
-    private static final String USER_TABLE = "USERS";
+    private static final String USER_TABLE = "UZERS";
     private static final String EMPLOYEE_TABLE = "EMPLOYEES";
     private static final String RFIDTAG_TABLE = "RFIDTAGS";
     private static final String ATTENDANCE_TABLE = "ATTENDANCE";

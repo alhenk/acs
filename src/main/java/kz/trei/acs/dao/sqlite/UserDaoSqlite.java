@@ -40,7 +40,7 @@ public class UserDaoSqlite implements UserDao {
                 LOGGER.debug("The username and/or password are empty or null");
                 throw new DaoException("The username and/or password are empty or null");
             }
-            stmt = conn.prepareStatement("SELECT * FROM USERS WHERE username = ?");
+            stmt = conn.prepareStatement("SELECT * FROM UZERS WHERE username = ?");
             stmt.setString(1, username);
             rs = stmt.executeQuery();
             LOGGER.debug("Executed Query " + rs);
@@ -88,7 +88,7 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception : " + e.getMessage());
         }
         try {
-            stmt = conn.prepareStatement("SELECT * FROM USERS WHERE id = ?");
+            stmt = conn.prepareStatement("SELECT * FROM UZERS WHERE id = ?");
             stmt.setLong(1, id);
             rs = stmt.executeQuery();
             LOGGER.debug("Execute Query " + rs);
@@ -134,7 +134,7 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception : " + e.getMessage());
         }
         try {
-            stmt = conn.prepareStatement("INSERT INTO USERS (username, password, email, tableId, role) VALUES (?,?,?,?,?)");
+            stmt = conn.prepareStatement("INSERT INTO UZERS (username, password, email, tableId, role) VALUES (?,?,?,?,?)");
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getEmail());
@@ -177,7 +177,7 @@ public class UserDaoSqlite implements UserDao {
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createUserTableSql);
-            rs = stmt.executeQuery("SELECT * FROM USERS");
+            rs = stmt.executeQuery("SELECT * FROM UZERS");
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t"
                         + rs.getString("username") + "\t"
@@ -210,7 +210,7 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception : " + e.getMessage());
         }
         try {
-            stmt = conn.prepareStatement("SELECT * FROM USERS WHERE username = ?");
+            stmt = conn.prepareStatement("SELECT * FROM UZERS WHERE username = ?");
             stmt.setString(1, username);
             rs = stmt.executeQuery();
             LOGGER.debug("Execute Query " + rs);
@@ -257,7 +257,7 @@ public class UserDaoSqlite implements UserDao {
         }
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM USERS");
+            rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM UZERS");
             if (rs.next()) {
                 numTuples = Long.valueOf(rs.getString("numTuples"));
             } else {
@@ -291,7 +291,7 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception : " + e.getMessage());
         }
         try {
-            stmt = conn.prepareStatement("UPDATE USERS SET username = ?, password = ?, email = ?, tableId = ?, role = ? WHERE id = ?");
+            stmt = conn.prepareStatement("UPDATE UZERS SET username = ?, password = ?, email = ?, tableId = ?, role = ? WHERE id = ?");
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getEmail());
@@ -333,7 +333,7 @@ public class UserDaoSqlite implements UserDao {
         }
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM USERS");
+            rs = stmt.executeQuery("SELECT * FROM UZERS");
             while (rs.next()) {
                 long id = Long.valueOf(rs.getString("id"));
                 String username = rs.getString("username");
@@ -380,7 +380,7 @@ public class UserDaoSqlite implements UserDao {
         }
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM USERS LIMIT " + limit + " OFFSET " + offset);
+            rs = stmt.executeQuery("SELECT * FROM UZERS LIMIT " + limit + " OFFSET " + offset);
             while (rs.next()) {
                 long id = DaoUtil.takeId(rs);
                 String username = rs.getString("username");
@@ -422,7 +422,7 @@ public class UserDaoSqlite implements UserDao {
             throw new DaoException("Get connection pool instance exception : " + e.getMessage());
         }
         try {
-            stmt = conn.prepareStatement("DELETE FROM USERS WHERE id = ?");
+            stmt = conn.prepareStatement("DELETE FROM UZERS WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
             LOGGER.debug("... id=" + id + "is deleted");

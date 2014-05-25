@@ -48,11 +48,11 @@ public class ShowUserListPage implements Action {
         } catch (DaoException e) {
             UserUtil.killUserListAttributes(request);
             LOGGER.error("... getting user list exception: " + e.getMessage());
-            request.setAttribute("error", "error=error.db.user-list");
+            request.setAttribute("error", "error.db.user-list");
             return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         } catch (RuntimeException e) {
             UserUtil.killUserListAttributes(request);
-            request.setAttribute("error", "error=error.db.user-list");
+            request.setAttribute("error", "error.db.user-list");
             LOGGER.error("... user sort list error");
             return new ActionResult(ActionType.REDIRECT, "error" + UserUtil.fetchParameters(request));
         }
