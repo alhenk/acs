@@ -20,6 +20,7 @@ import kz.trei.acs.util.FileManager;
 import kz.trei.acs.util.MonthType;
 import kz.trei.acs.util.TimeStamp;
 import org.apache.log4j.Logger;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -37,17 +38,18 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("createTable ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         String createAttendanceTableSql = FileManager.readFile("attendance_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createAttendanceTableSql);
@@ -63,9 +65,6 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -77,17 +76,18 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("createView ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool = null;
         String createOfficeHoursViewSql = FileManager.readFile("office_hours_view.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             stmt.executeUpdate(createOfficeHoursViewSql);
             rs = stmt.executeQuery("SELECT * FROM OFFICEHOURS");
@@ -103,9 +103,6 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -117,7 +114,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("groupMonthlyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         OfficeHour officeHour;
         String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
@@ -137,12 +134,13 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE substr(dDate,1,4)='"
                     + year + "' AND substr(dDate,6,2)='"
@@ -174,9 +172,6 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                         .build();
                 officeHourList.add(officeHour);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -196,7 +191,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("groupMonthlyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         OfficeHour officeHour;
         String MonthDoubleDigitString = MonthType.valueOf(month.toUpperCase()).getMonthDoubleDigitString();
@@ -217,12 +212,13 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE substr(dDate,1,4)='"
                     + year + "' AND substr(dDate,6,2)='"
@@ -257,9 +253,6 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                         .build();
                 officeHourList.add(officeHour);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -279,7 +272,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("groupDailyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         OfficeHour officeHour;
         List<OfficeHour> officeHourList = new LinkedList<OfficeHour>();
@@ -298,13 +291,14 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         String date = dateStamp.getDate();
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE dDate = '"
                     + date
@@ -335,9 +329,6 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                         .build();
                 officeHourList.add(officeHour);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -357,7 +348,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("individualDailyReport ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         OfficeHour officeHour;
         String tableId = account1C.getTableId();
@@ -377,13 +368,14 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         LOGGER.debug("SORT BY = "+groups);
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         String date = dateStamp.getDate();
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("Select * FROM OFFICEHOURS  WHERE dDate = '"
                     + date
@@ -417,9 +409,6 @@ public class AttendanceDaoSqlite implements AttendanceDao {
                         .build();
                 officeHourList.add(officeHour);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -436,36 +425,36 @@ public class AttendanceDaoSqlite implements AttendanceDao {
 
     @Override
     public Attendance findById(long id) throws DaoException {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void create(Attendance entity) throws DaoException {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public long numberOfTuples() throws DaoException {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public void update(Attendance entity) throws DaoException {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Attendance> findAll() throws DaoException {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Attendance> findInRange(long offset, long limit) throws DaoException {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(long id) throws DaoException {
-
+        throw new NotImplementedException();
     }
 }

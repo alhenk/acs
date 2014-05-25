@@ -29,17 +29,18 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         LOGGER.debug("createTable ... ");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         String createStaffTableSql = FileManager.readFile("employee_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createStaffTableSql);
@@ -56,9 +57,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         } catch (SQLException e) {
             LOGGER.error("SQL CREATE table EMPLOYEES or SELECT from it exception : " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -70,17 +68,18 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         LOGGER.debug("findById ... ");
         PreparedStatement stmt = null;
         ResultSet rs;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         Person employee;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             LOGGER.debug("Got connection " + conn);
             stmt = conn.prepareStatement("SELECT * FROM EMPLOYEES WHERE id = ?");
             stmt.setLong(1, id);
@@ -114,9 +113,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         } catch (SQLException e) {
             LOGGER.error("SQL SELECT by ID exception : " + e.getMessage());
             throw new DaoException("SQL SELECT by ID exception" + e.getMessage());
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Get connection exception: " + e.getMessage());
-            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -129,16 +125,17 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     public void create(Person employee) throws DaoException {
         LOGGER.debug("create ... ");
         PreparedStatement stmt = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.prepareStatement("INSERT INTO EMPLOYEES (firstName, patronym, lastName, birthDate, jobPosition, department, room, tableId, uid) VALUES (?,?,?,?,?,?,?,?,?)");
             stmt.setString(1, employee.getFirstName());
             stmt.setString(2, employee.getPatronym());
@@ -160,9 +157,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             }
             LOGGER.error("SQL INSERT into EMPLOYEES exception : " + e.getMessage());
             throw new DaoException(errorMessage);
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Get connection exception: " + e.getMessage());
-            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -175,16 +169,17 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         long numTuples = 0;
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM EMPLOYEES;");
             if (rs.next()) {
@@ -193,9 +188,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                 LOGGER.error("Failed to count tuples in EMPLOYEES");
                 throw new DaoException("Failed to count tuples in EMPLOYEES");
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL SELECT count(*) exception : " + e.getMessage());
             throw new DaoException("SQL SELECT count(*) exception : " + e.getMessage());
@@ -211,16 +203,17 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     public void update(Person employee) throws DaoException {
         LOGGER.debug("update ... ");
         PreparedStatement stmt = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.prepareStatement("UPDATE EMPLOYEES SET firstName=?, patronym=?, lastName=?, birthDate=?, jobPosition=?, department=?, room=?, tableId=?, uid=? WHERE id = ?");
             stmt.setString(1, employee.getFirstName());
             stmt.setString(2, employee.getPatronym());
@@ -241,9 +234,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         } catch (SQLException e) {
             LOGGER.error("SQL UPDATE EMPLOYEES exception: " + e.getMessage());
             throw new DaoException("SQL UPDATE EMPLOYEES exception: " + e.getMessage());
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Get connection exception: " + e.getMessage());
-            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -255,18 +245,19 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         LOGGER.debug("findInRange ... ");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         Person employee;
         List<Person> employees = new LinkedList<Person>();
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT " + limit + " OFFSET " + offset);
             while (rs.next()) {
@@ -294,9 +285,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                         .build();
                 employees.add(employee);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("Select EMPLOYEES table exception: " + e.getMessage());
             throw new DaoException("Select EMPLOYEES table exception: " + e.getMessage());
@@ -313,18 +301,19 @@ public class EmployeeDaoSqlite implements EmployeeDao {
         LOGGER.debug("findAll ... ");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         Person employee;
         List<Person> employees = new LinkedList<Person>();
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM EMPLOYEES");
             while (rs.next()) {
@@ -350,9 +339,6 @@ public class EmployeeDaoSqlite implements EmployeeDao {
                         .build();
                 employees.add(employee);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("Select EMPLOYEES table exception: " + e.getMessage());
             throw new DaoException("Select EMPLOYEES table exception: " + e.getMessage());
@@ -368,23 +354,21 @@ public class EmployeeDaoSqlite implements EmployeeDao {
     public void delete(long id) throws DaoException {
         LOGGER.debug("delete ... ");
         PreparedStatement stmt = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception" + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.prepareStatement("DELETE FROM EMPLOYEES WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
             LOGGER.debug("... id=" + id + "is deleted");
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL DELETE form EMPLOYEES exception: " + e.getMessage());
             throw new DaoException("SQL DELETE form EMPLOYEES exception: " + e.getMessage());
@@ -393,6 +377,4 @@ public class EmployeeDaoSqlite implements EmployeeDao {
             connectionPool.returnConnection(conn);
         }
     }
-
-
 }

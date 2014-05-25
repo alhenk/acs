@@ -23,17 +23,18 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         LOGGER.debug("createTable ... ");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         ConnectionPool connectionPool;
         String createRfidTagTableSql = FileManager.readFile("rfidtag_table.sql");
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createRfidTagTableSql);
@@ -49,9 +50,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } finally {
             DbUtil.close(stmt, rs);
             connectionPool.returnConnection(conn);
@@ -63,18 +61,18 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         LOGGER.debug("findById ... ");
         PreparedStatement stmt = null;
         ResultSet rs;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         RfidTag rfidTag;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
-            LOGGER.debug("Got connection " + conn);
             stmt = conn.prepareStatement("SELECT * FROM RFIDTAGS WHERE id = ?");
             stmt.setLong(1, id);
             rs = stmt.executeQuery();
@@ -97,9 +95,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         } catch (SQLException e) {
             LOGGER.error("SQL SELECT by ID exception : " + e.getMessage());
             throw new DaoException("SQL SELECT by ID exception" + e.getMessage());
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Get connection exception: " + e.getMessage());
-            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -112,16 +107,17 @@ public class RfidTagDaoSqlite implements RfidTagDao {
     public void create(RfidTag rfidTag) throws DaoException {
         LOGGER.debug("create ... ");
         PreparedStatement stmt = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.prepareStatement("INSERT INTO RFIDTAGS (uid, type, protocol, issueDate, expirationDate) VALUES (?,?,?,?,?)");
             stmt.setString(1, rfidTag.getUid());
             stmt.setString(2, rfidTag.getType().toString());
@@ -139,9 +135,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             }
             LOGGER.error("SQL INSERT into RFIDTAGS exception : " + e.getMessage());
             throw new DaoException(errorMessage);
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Get connection exception: " + e.getMessage());
-            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -154,16 +147,17 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         long numTuples = 0;
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM RFIDTAGS");
             if (rs.next()) {
@@ -172,9 +166,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                 LOGGER.error("Failed to count tuples in RFIDTAGS");
                 throw new DaoException("Failed to count tuples in RFIDTAGS");
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("RfidTags total number exception: " + e.getMessage());
             throw new DaoException("RfidTags total number exception");
@@ -190,16 +181,17 @@ public class RfidTagDaoSqlite implements RfidTagDao {
     public void update(RfidTag rfidTag) throws DaoException {
         LOGGER.debug("update ...");
         PreparedStatement stmt = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception " + e.getMessage());
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.prepareStatement("UPDATE RFIDTAGS SET uid=?, type=?, protocol=?, issueDate=?, expirationDate=? WHERE id = ?");
             stmt.setString(1, rfidTag.getUid());
             stmt.setString(2, rfidTag.getType().toString());
@@ -217,9 +209,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         } catch (SQLException e) {
             LOGGER.error("SQL UPDATE RFIDTAGS exception: " + e.getMessage());
             throw new DaoException("SQL UPDATE RFIDTAGS exception: " + e.getMessage());
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Get connection exception: " + e.getMessage());
-            throw new DaoException("Get connection exception: " + e.getMessage());
         } finally {
             DbUtil.close(stmt);
             connectionPool.returnConnection(conn);
@@ -231,18 +220,19 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         LOGGER.debug("findAll ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         RfidTag rfidTag;
         List<RfidTag> rfidTags = new LinkedList<RfidTag>();
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
             while (rs.next()) {
@@ -260,9 +250,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                         .build();
                 rfidTags.add(rfidTag);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -282,18 +269,19 @@ public class RfidTagDaoSqlite implements RfidTagDao {
         LOGGER.debug("findInRange ...");
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         RfidTag rfidTag;
         List<RfidTag> rfidTags = new LinkedList<RfidTag>();
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM RFIDTAGS LIMIT " + limit + " OFFSET " + offset);
             while (rs.next()) {
@@ -311,9 +299,6 @@ public class RfidTagDaoSqlite implements RfidTagDao {
                         .build();
                 rfidTags.add(rfidTag);
             }
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
             throw new DaoException("SQL statement exception execute");
@@ -332,23 +317,21 @@ public class RfidTagDaoSqlite implements RfidTagDao {
     public void delete(long id) throws DaoException {
         LOGGER.debug("delete ...");
         PreparedStatement stmt = null;
-        Connection conn = null;
-        ConnectionPool connectionPool = null;
+        Connection conn;
+        ConnectionPool connectionPool;
         try {
             connectionPool = ConnectionPool.getInstance();
+            conn = connectionPool.getConnection();
+            LOGGER.debug("Got connection " + conn);
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
             throw new DaoException("Get connection pool instance exception");
         }
         try {
-            conn = connectionPool.getConnection();
             stmt = conn.prepareStatement("DELETE FROM RFIDTAGS WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
             LOGGER.debug("... id=" + id + "is deleted");
-        } catch (ConnectionPoolException e) {
-            LOGGER.error("Connection pool exception: " + e.getMessage());
-            throw new DaoException("Connection pool exception");
         } catch (SQLException e) {
             LOGGER.error("Delete from rfidTags exception: " + e.getMessage());
             throw new DaoException("Delete from rfidTags exception");

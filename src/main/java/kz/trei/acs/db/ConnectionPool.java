@@ -62,6 +62,7 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() throws ConnectionPoolException {
+        LOGGER.debug("getConnection ...");
         try {
             if (semaphore.tryAcquire(WAIT_MAX, TimeUnit.MILLISECONDS)) {
                 Connection connection = resources.poll();
@@ -72,6 +73,7 @@ public class ConnectionPool {
             LOGGER.error("Get DB connection exception: " + e.getMessage());
             throw new ConnectionPoolException("Get DB connection exception");
         }
+        LOGGER.debug("... time out");
         throw new ConnectionPoolException("Path wait time out");
     }
 
