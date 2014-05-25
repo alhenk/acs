@@ -30,15 +30,17 @@ public class ConnectionPool {
     private final Queue<Connection> resources = new LinkedList<Connection>();
 
     public static ConnectionPool getInstance() throws ConnectionPoolException {
-        if (instance == null) {
+        ConnectionPool localInstance = instance;
+        if (localInstance == null) {
             synchronized (ConnectionPool.class) {
-                if (instance == null) {
-                    instance = new ConnectionPool();
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new ConnectionPool();
                     instance.init();
                 }
             }
         }
-        return instance;
+        return localInstance;
     }
 
     private void init() throws ConnectionPoolException {
