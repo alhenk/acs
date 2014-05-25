@@ -37,6 +37,20 @@ public enum MonthType {
         return types;
     }
 
+    public static MonthType select(int monthNumber) {
+        if (codeToMonthTypeMapping == null) {
+            initMapping();
+        }
+        return codeToMonthTypeMapping.get(monthNumber);
+    }
+
+    private static void initMapping() {
+        codeToMonthTypeMapping = new HashMap<Integer, MonthType>();
+        for (MonthType e : values()) {
+            codeToMonthTypeMapping.put(e.monthNumber, e);
+        }
+    }
+
     public int getMonthNumber() {
         return monthNumber;
     }
@@ -51,19 +65,5 @@ public enum MonthType {
 
     public void setMonthDoubleDigitString(String monthDoubleDigitString) {
         this.monthDoubleDigitString = monthDoubleDigitString;
-    }
-
-    public static MonthType select(int monthNumber) {
-        if (codeToMonthTypeMapping == null) {
-            initMapping();
-        }
-        return codeToMonthTypeMapping.get(monthNumber);
-    }
-
-    private static void initMapping() {
-        codeToMonthTypeMapping = new HashMap<Integer, MonthType>();
-        for (MonthType e : values()) {
-            codeToMonthTypeMapping.put(e.monthNumber, e);
-        }
     }
 }

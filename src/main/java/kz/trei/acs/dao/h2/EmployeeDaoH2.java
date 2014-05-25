@@ -42,17 +42,14 @@ public class EmployeeDaoH2 implements EmployeeDao {
         }
         try {
             stmt = conn.createStatement();
-//            stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createStaffTableSql);
-            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES");
-            for (int i = 0; i < 20; i++) {
-                if (rs.next()) {
-                    LOGGER.debug(rs.getString("id") + "\t"
-                            + rs.getString("firstName") + "\t"
-                            + rs.getString("lastName") + "\t"
-                            + rs.getString("tableId") + "\t"
-                            + rs.getString("uid"));
-                }
+            rs = stmt.executeQuery("SELECT * FROM EMPLOYEES LIMIT 20 OFFSET 0");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("id") + "\t"
+                        + rs.getString("firstName") + "\t"
+                        + rs.getString("lastName") + "\t"
+                        + rs.getString("tableId") + "\t"
+                        + rs.getString("uid"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL CREATE table EMPLOYEES or SELECT from it exception : " + e.getMessage());

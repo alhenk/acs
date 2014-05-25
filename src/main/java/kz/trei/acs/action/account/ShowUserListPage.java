@@ -8,7 +8,6 @@ import kz.trei.acs.dao.DaoFactory;
 import kz.trei.acs.dao.UserDao;
 import kz.trei.acs.user.User;
 import kz.trei.acs.user.UserComparator;
-import kz.trei.acs.util.PropertyManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +19,6 @@ import java.util.List;
 
 public class ShowUserListPage implements Action {
     private static final Logger LOGGER = Logger.getLogger(ShowUserListPage.class);
-
-    static {
-        PropertyManager.load("configure.properties");
-    }
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) {

@@ -26,8 +26,9 @@ public final class PasswordHash {
     public static final int PBKDF2_INDEX = 2;
     private static final Logger LOGGER = Logger.getLogger(PasswordHash.class);
 
-    private PasswordHash(){
+    private PasswordHash() {
     }
+
     /**
      * Returns a salted PBKDF2 hash of the password.
      *

@@ -13,7 +13,8 @@ import java.io.IOException;
 public class ErrorHandler extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(ErrorHandler.class);
     private static final long serialVersionUID = 1L;
-    static{
+
+    static {
         PropertyManager.load("configure.properties");
     }
 
@@ -21,7 +22,7 @@ public class ErrorHandler extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.debug("doGet...");
         processError(request, response);
-        request.getRequestDispatcher(PropertyManager.getValue("jsp.view.path")+"/error.jsp").forward(request, response);
+        request.getRequestDispatcher(PropertyManager.getValue("jsp.view.path") + "/error.jsp").forward(request, response);
     }
 
     @Override
@@ -42,8 +43,8 @@ public class ErrorHandler extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("status-code", statusCode);
         session.setAttribute("request-uri", requestUri);
-        LOGGER.debug("Status Code "+ statusCode);
-        LOGGER.debug("Request Uri "+ requestUri);
+        LOGGER.debug("Status Code " + statusCode);
+        LOGGER.debug("Request Uri " + requestUri);
         return;
     }
 }

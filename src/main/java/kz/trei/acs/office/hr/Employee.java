@@ -34,7 +34,9 @@ public class Employee extends Person {
         this.setBirthDate(builder.birthDate);
     }
 
-    public PositionType getPosition() {return position;}
+    public PositionType getPosition() {
+        return position;
+    }
 
     public void setPosition(PositionType position) {
         this.position = position;

@@ -9,15 +9,15 @@ public class UserComparator implements Comparator<User> {
     private static final Logger LOGGER = Logger.getLogger(UserComparator.class);
     private CompareType type;
 
-    public UserComparator(CompareType type){
+    public UserComparator(CompareType type) {
         this.type = type;
     }
 
     @Override
     public int compare(User u1, User u2) {
-        if(u1 == null && u2 == null) return 0;
-        if(u1 == null && u2 != null) return -1;
-        if(u1 != null && u2 == null) return 1;
+        if (u1 == null && u2 == null) return 0;
+        if (u1 == null && u2 != null) return -1;
+        if (u1 != null && u2 == null) return 1;
         switch (type) {
             case ID:
                 return new Long(u1.getId()).compareTo(u2.getId());
@@ -28,13 +28,14 @@ public class UserComparator implements Comparator<User> {
             case ROLE:
                 return u1.getRole().compareTo(u2.getRole());
             case TABLE_ID:
-                if(u1.getAccount1C() == null && u2.getAccount1C() == null) return 0;
-                if(u1.getAccount1C() == null && u2.getAccount1C() != null) return -1;
-                if(u1.getAccount1C() != null && u2.getAccount1C() == null) return 1;
+                if (u1.getAccount1C() == null && u2.getAccount1C() == null) return 0;
+                if (u1.getAccount1C() == null && u2.getAccount1C() != null) return -1;
+                if (u1.getAccount1C() != null && u2.getAccount1C() == null) return 1;
                 return u1.getAccount1C().getTableId().compareTo(u2.getAccount1C().getTableId());
         }
         return 0;
     }
+
     public enum CompareType {
         ID, USER_NAME, EMAIL, ROLE, TABLE_ID;
 

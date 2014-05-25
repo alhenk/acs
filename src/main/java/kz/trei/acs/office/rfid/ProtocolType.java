@@ -6,17 +6,17 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(name = "protocol", namespace ="http://www.trei.kz/attendance/tns")
+@XmlType(name = "protocol", namespace = "http://www.trei.kz/attendance/tns")
 @XmlEnum
 public enum ProtocolType {
-	@XmlEnumValue("ISO14443A")
-	ISO14443A,
-	@XmlEnumValue("ISO14443B")
-	ISO14443B,
-	@XmlEnumValue("ISO15693")
-	ISO15693, 
-	@XmlEnumValue("DEFAULT")
-	DEFAULT;
+    @XmlEnumValue("ISO14443A")
+    ISO14443A,
+    @XmlEnumValue("ISO14443B")
+    ISO14443B,
+    @XmlEnumValue("ISO15693")
+    ISO15693,
+    @XmlEnumValue("DEFAULT")
+    DEFAULT;
 
     public static List<String> getList() {
         List<String> types = new ArrayList<String>();

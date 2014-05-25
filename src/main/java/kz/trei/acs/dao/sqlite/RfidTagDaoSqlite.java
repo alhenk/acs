@@ -38,14 +38,12 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createRfidTagTableSql);
-            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS");
-            for (int i = 0; i < 20; i++) {
-                if (rs.next()) {
-                    LOGGER.debug(rs.getString("id") + "\t"
-                            + rs.getString("uid") + "\t"
-                            + rs.getString("type") + "\t"
-                            + rs.getString("protocol"));
-                }
+            rs = stmt.executeQuery("SELECT * FROM RFIDTAGS LIMIT 20 OFFSET 0");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("id") + "\t"
+                        + rs.getString("uid") + "\t"
+                        + rs.getString("type") + "\t"
+                        + rs.getString("protocol"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -162,7 +160,7 @@ public class RfidTagDaoSqlite implements RfidTagDao {
             rs = stmt.executeQuery("SELECT count(*) AS numTuples FROM RFIDTAGS");
             if (rs.next()) {
                 numTuples = Long.valueOf(rs.getString("numTuples"));
-            }else {
+            } else {
                 LOGGER.error("Failed to count tuples in RFIDTAGS");
                 throw new DaoException("Failed to count tuples in RFIDTAGS");
             }

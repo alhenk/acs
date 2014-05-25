@@ -44,15 +44,21 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public RoleType getRole() { return role;}
+    public RoleType getRole() {
+        return role;
+    }
 
     public void setRole(RoleType role) {
         this.role = role;
     }
 
-    public String getEmail() {return email;}
+    public String getEmail() {
+        return email;
+    }
 
-    public void setEmail(String email) {this.email = email;}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUsername() {
         return username;

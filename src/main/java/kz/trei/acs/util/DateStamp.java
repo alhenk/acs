@@ -53,13 +53,13 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
         return new DateStamp("");
     }
 
-    public static String getCurrentYear(){
+    public static String getCurrentYear() {
         Date date = new Date();
         SimpleDateFormat year = new SimpleDateFormat("yyyy");
         return year.format(date);
     }
 
-    public static String getCurrentMonth(){
+    public static String getCurrentMonth() {
         Date date = new Date();
         SimpleDateFormat month = new SimpleDateFormat("MM");
         return MonthType.select(Integer.valueOf(month.format(date))).toString().toUpperCase();
@@ -99,7 +99,6 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
         LOGGER.error(date + " is not a valid date stamp");
         throw new DateStampException(date + " is not a valid date stamp");
     }
-
 
     @Override
     public String toString() {

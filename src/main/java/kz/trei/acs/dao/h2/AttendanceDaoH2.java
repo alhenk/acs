@@ -87,15 +87,13 @@ public class AttendanceDaoH2 implements AttendanceDao {
         try {
             stmt = conn.createStatement();
             stmt.executeUpdate(createOfficeHoursViewSql);
-            rs = stmt.executeQuery("SELECT * FROM OFFICEHOURS");
-            for (int i = 0; i < 20; i++) {
-                if (rs.next()) {
-                    LOGGER.debug(rs.getString("LastName") + "\t"
-                            + rs.getString("dDate") + "\t"
-                            + rs.getString("Tmin") + "\t"
-                            + rs.getString("Tmax") + "\t"
-                            + rs.getString("officeHours"));
-                }
+            rs = stmt.executeQuery("SELECT * FROM OFFICEHOURS LIMIT 20 OFFSET 0");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("LastName") + "\t"
+                        + rs.getString("dDate") + "\t"
+                        + rs.getString("Tmin") + "\t"
+                        + rs.getString("Tmax") + "\t"
+                        + rs.getString("officeHours"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());

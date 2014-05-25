@@ -27,7 +27,7 @@ public class ShowIndividualDailyReportPage implements Action {
         HttpSession session = request.getSession();
         DaoFactory daoFactory = DaoFactory.getFactory();
         AttendanceDao attendanceDao = daoFactory.getAttendanceDao();
-        DateStamp reportDate= AttendanceUtil.takeReportDate(request);
+        DateStamp reportDate = AttendanceUtil.takeReportDate(request);
         User user = (User) session.getAttribute("user");
         Account1C account1C = user.getAccount1C();
         List<String> sorts = AttendanceUtil.takeSorts(request);
@@ -49,12 +49,11 @@ public class ShowIndividualDailyReportPage implements Action {
         long numPages = (long) (Math.ceil((1.0 * numTuples) / limit));
         long offset = (page - 1) < 0 || page > numPages ? 0 : (page - 1) * limit;
         List<OfficeHour> officeHours =
-                officeHourList.subList((int)Math.max(0, offset), (int)Math.min(numTuples, offset+limit) );
+                officeHourList.subList((int) Math.max(0, offset), (int) Math.min(numTuples, offset + limit));
         session.setAttribute("num-pages", numPages);
         session.setAttribute("page", page);
         session.setAttribute("office-hour-list", officeHourList);
         session.setAttribute("report-date", reportDate.getDate());
-//        session.setAttribute("month", "NONE");
         session.setAttribute("report-action", "individual-daily-report");
         LOGGER.debug("... " + officeHourList.size());
         return new ActionResult(ActionType.FORWARD, "report-list");

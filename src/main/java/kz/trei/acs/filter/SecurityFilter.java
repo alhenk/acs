@@ -24,7 +24,7 @@ public class SecurityFilter implements Filter {
         EnumSet<RoleType> authorized = EnumSet.of(RoleType.ADMINISTRATOR,
                 RoleType.SUPERVISOR, RoleType.EMPLOYEE);
         EnumSet<RoleType> administrator = EnumSet.of(RoleType.ADMINISTRATOR);
-        EnumSet<RoleType> supervisor = EnumSet.of(RoleType.SUPERVISOR);
+        EnumSet<RoleType> supervisor = EnumSet.of(RoleType.ADMINISTRATOR, RoleType.SUPERVISOR);
         EnumSet<RoleType> employee = EnumSet.of(RoleType.EMPLOYEE);
         //General
         groups.put("GET/main", all);
@@ -59,6 +59,12 @@ public class SecurityFilter implements Filter {
         groups.put("GET/cancel-edit-employee", all);
         groups.put("GET/delete-employee", administrator);
         groups.put("GET/employee-list", authorized);
+        //Reports
+        groups.put("GET/group-monthly-report", supervisor);
+        groups.put("GET/group-daily-report", supervisor);
+        groups.put("GET/individual-monthly-report", authorized);
+        groups.put("GET/individual-daily-report", authorized);
+
     }
 
     @Override

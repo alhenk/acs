@@ -22,15 +22,15 @@ public class EmployeeComparator implements Comparator<Person> {
             case BIRTH_DATE:
                 return e1.getBirthDate().compareTo(e2.getBirthDate());
             case POSITION:
-                return  new Integer(((Employee) e1).getPosition().getHierarchy()).compareTo(((Employee) e2).getPosition().getHierarchy());
+                return new Integer(((Employee) e1).getPosition().getHierarchy()).compareTo(((Employee) e2).getPosition().getHierarchy());
             case DEPARTMENT:
                 return ((Employee) e1).getDepartment().compareTo(((Employee) e2).getDepartment());
             case ROOM:
                 return ((Employee) e1).getRoom().compareTo(((Employee) e2).getRoom());
             case TABLE_ID:
-                if(((Employee) e1).getAccount1C() == null && ((Employee) e2).getAccount1C() == null) return 0;
-                if(((Employee) e1).getAccount1C() == null && ((Employee) e2).getAccount1C() != null) return -1;
-                if(((Employee) e1).getAccount1C() != null && ((Employee) e2).getAccount1C() == null) return 1;
+                if (((Employee) e1).getAccount1C() == null && ((Employee) e2).getAccount1C() == null) return 0;
+                if (((Employee) e1).getAccount1C() == null && ((Employee) e2).getAccount1C() != null) return -1;
+                if (((Employee) e1).getAccount1C() != null && ((Employee) e2).getAccount1C() == null) return 1;
                 return ((Employee) e1).getTableIdValue().compareTo(((Employee) e2).getTableIdValue());
             case UID:
                 return ((Employee) e1).getAccount1C().getTableId().compareTo(((Employee) e2).getAccount1C().getTableId());

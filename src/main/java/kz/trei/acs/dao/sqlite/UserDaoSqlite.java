@@ -177,7 +177,7 @@ public class UserDaoSqlite implements UserDao {
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createUserTableSql);
-            rs = stmt.executeQuery("SELECT * FROM UZERS");
+            rs = stmt.executeQuery("SELECT * FROM UZERS LIMIT 20 OFFSET 0");
             while (rs.next()) {
                 LOGGER.debug(rs.getString("id") + "\t"
                         + rs.getString("username") + "\t"

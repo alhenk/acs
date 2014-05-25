@@ -1,127 +1,124 @@
 package kz.trei.acs.office.rfid;
 
+import kz.trei.acs.util.DateStamp;
+import kz.trei.acs.util.PropertyManager;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import kz.trei.acs.user.User;
-import kz.trei.acs.util.DateStamp;
-import kz.trei.acs.util.PropertyManager;
-
 public class Issue implements Serializable, Comparable<Issue> {
-	private static final long serialVersionUID = -7410469239152467286L;
-	static {
-		PropertyManager.load("configure.properties");
-	}
-	private DateStamp issueDate;
-	private DateStamp expirationDate;
+    private static final long serialVersionUID = -7410469239152467286L;
 
-	/**
-	 * Default constructor sets issue to current date and expiration to default
-	 * value in configure properties
-	 */
-	public Issue() {
-		Integer defaultExpirationInMonths = new Integer(
-				PropertyManager.getValue("issue.defaultExpirationInMonths"));
-		Calendar calendar = Calendar.getInstance();
-		Date currentDate = new Date();
-		calendar.setTime(currentDate);
-		calendar.add(Calendar.MONTH, defaultExpirationInMonths);
-		this.issueDate = DateStamp.create(currentDate);
-		this.expirationDate = DateStamp.create(calendar.getTime());
-	}
+    static {
+        PropertyManager.load("configure.properties");
+    }
 
-    public Issue(Builder builder){
+    private DateStamp issueDate;
+    private DateStamp expirationDate;
+
+    /**
+     * Default constructor sets issue to current date and expiration to default
+     * value in configure properties
+     */
+    public Issue() {
+        Integer defaultExpirationInMonths = new Integer(
+                PropertyManager.getValue("issue.defaultExpirationInMonths"));
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = new Date();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.MONTH, defaultExpirationInMonths);
+        this.issueDate = DateStamp.create(currentDate);
+        this.expirationDate = DateStamp.create(calendar.getTime());
+    }
+
+    public Issue(Builder builder) {
         this.issueDate = builder.issueDate;
         this.expirationDate = builder.expirationDate;
     }
 
-	public Issue(DateStamp issueDate, DateStamp expirationDate) {
-		this.issueDate = issueDate;
-		this.expirationDate = expirationDate;
-	}
+    public Issue(DateStamp issueDate, DateStamp expirationDate) {
+        this.issueDate = issueDate;
+        this.expirationDate = expirationDate;
+    }
 
-	public static class Builder {
-		private DateStamp issueDate;
-		private DateStamp expirationDate;
+    public DateStamp getIssueDate() {
+        return issueDate;
+    }
 
-		public Builder issueDate(DateStamp issueDate) {
-			this.issueDate = issueDate;
-			return this;
-		}
+    public void setIssueDate(DateStamp issueDate) {
+        this.issueDate = issueDate;
+    }
 
-		public Builder expirationDate(DateStamp experationDate) {
-			this.expirationDate = experationDate;
-			return this;
-		}
+    public DateStamp getExpirationDate() {
+        return expirationDate;
+    }
 
-		public Issue build() {
-			return new Issue(this);
-		}
-	}
+    public void setExpirationDate(DateStamp expirationDate) {
+        this.expirationDate = expirationDate;
+    }
 
-	public DateStamp getIssueDate() {
-		return issueDate;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((expirationDate == null) ? 0 : expirationDate.hashCode());
+        result = prime * result
+                + ((issueDate == null) ? 0 : issueDate.hashCode());
+        return result;
+    }
 
-	public void setIssueDate(DateStamp issueDate) {
-		this.issueDate = issueDate;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Issue other = (Issue) obj;
+        if (expirationDate == null) {
+            if (other.expirationDate != null)
+                return false;
+        } else if (!expirationDate.equals(other.expirationDate))
+            return false;
+        if (issueDate == null) {
+            if (other.issueDate != null)
+                return false;
+        } else if (!issueDate.equals(other.issueDate))
+            return false;
+        return true;
+    }
 
-	public DateStamp getExpirationDate() {
-		return expirationDate;
-	}
+    @Override
+    public String toString() {
+        return "Issue [issueDate = " + issueDate.getDate() + ", expirationDate = "
+                + expirationDate.getDate() + "]";
+    }
 
-	public void setExpirationDate(DateStamp expirationDate) {
-		this.expirationDate = expirationDate;
-	}
+    @Override
+    public int compareTo(Issue anotherIssue) {
+        return issueDate.compareTo(anotherIssue.getIssueDate());
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((expirationDate == null) ? 0 : expirationDate.hashCode());
-		result = prime * result
-				+ ((issueDate == null) ? 0 : issueDate.hashCode());
-		return result;
-	}
+    public static class Builder {
+        private DateStamp issueDate;
+        private DateStamp expirationDate;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Issue other = (Issue) obj;
-		if (expirationDate == null) {
-			if (other.expirationDate != null)
-				return false;
-		} else if (!expirationDate.equals(other.expirationDate))
-			return false;
-		if (issueDate == null) {
-			if (other.issueDate != null)
-				return false;
-		} else if (!issueDate.equals(other.issueDate))
-			return false;
-		return true;
-	}
+        public Builder issueDate(DateStamp issueDate) {
+            this.issueDate = issueDate;
+            return this;
+        }
 
-	@Override
-	public String toString() {
-		return "Issue [issueDate = " + issueDate.getDate() + ", expirationDate = "
-				+ expirationDate.getDate() + "]";
-	}
+        public Builder expirationDate(DateStamp experationDate) {
+            this.expirationDate = experationDate;
+            return this;
+        }
 
-	@Override
-	public int compareTo(Issue anotherIssue) {
-		return issueDate.compareTo(anotherIssue.getIssueDate());
-	}
+        public Issue build() {
+            return new Issue(this);
+        }
+    }
 
 }

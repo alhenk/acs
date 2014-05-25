@@ -88,6 +88,8 @@ public class ContextListener implements ServletContextListener {
         } catch (ConnectionPoolException e) {
             LOGGER.error("Get connection pool instance exception " + e.getMessage());
         }
-        connectionPool.closeConnections();
+        if (connectionPool != null) {
+            connectionPool.closeConnections();
+        }
     }
 }

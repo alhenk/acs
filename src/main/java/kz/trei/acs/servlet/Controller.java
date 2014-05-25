@@ -27,7 +27,7 @@ public class Controller extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         Object test = request.getParameter("test");
         if (test != null) {
-            if ( test.equals("servlet-exception")) {
+            if (test.equals("servlet-exception")) {
                 throw new ServletException("Test Servlet Exception");
             } else if (test.equals("io-exception")) {
                 throw new IOException("Test IO Exception");

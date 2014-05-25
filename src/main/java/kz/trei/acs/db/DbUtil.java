@@ -15,6 +15,11 @@ public final class DbUtil {
     private DbUtil() {
     }
 
+    /**
+     * Conversion from old Staff database
+     * with wrong data stamp format DD.MM.YYYY
+     * to YYYY.MM.DD
+     */
     public static void convertStaffDb(String dbName) {
         //dbName - STAFF_DB.3db
         PreparedStatement stmt = null;
@@ -105,5 +110,6 @@ public final class DbUtil {
                 LOGGER.error("Result Set close exception: " + e.getMessage());
             }
         }
+        close(statement);
     }
 }

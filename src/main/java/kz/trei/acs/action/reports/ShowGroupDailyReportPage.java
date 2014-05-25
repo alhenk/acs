@@ -51,7 +51,6 @@ public class ShowGroupDailyReportPage implements Action {
         session.setAttribute("page", page);
         session.setAttribute("office-hour-list", officeHours);
         session.setAttribute("report-date", reportDate.getDate());
-//        session.setAttribute("month", "NONE");
         session.setAttribute("report-action", "group-daily-report");
         LOGGER.debug("... " + officeHourList.size());
         return new ActionResult(ActionType.FORWARD, "report-list");

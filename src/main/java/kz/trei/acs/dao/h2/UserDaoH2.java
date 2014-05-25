@@ -175,7 +175,6 @@ public class UserDaoH2 implements UserDao {
         }
         try {
             stmt = conn.createStatement();
-//            stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createUserTableSql);
             rs = stmt.executeQuery("SELECT * FROM UZERS");
             while (rs.next()) {

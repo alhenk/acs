@@ -96,7 +96,8 @@ public class OfficeHour {
         public Builder() {
             super();
         }
-        public Builder employee(Person employee){
+
+        public Builder employee(Person employee) {
             this.employee = employee;
             return this;
         }

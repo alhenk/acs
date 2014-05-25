@@ -53,14 +53,12 @@ public class AttendanceDaoSqlite implements AttendanceDao {
             stmt = conn.createStatement();
             stmt.execute("PRAGMA foreign_keys = ON");
             stmt.executeUpdate(createAttendanceTableSql);
-            rs = stmt.executeQuery("SELECT * FROM ATTENDANCE");
-            for (int i = 0; i < 20; i++) {
-                if (rs.next()) {
-                    LOGGER.debug(rs.getString("id") + "\t"
-                            + rs.getString("uid") + "\t"
-                            + rs.getString("dDate") + "\t"
-                            + rs.getString("tTime"));
-                }
+            rs = stmt.executeQuery("SELECT * FROM ATTENDANCE LIMIT 20 OFFSET 0");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("id") + "\t"
+                        + rs.getString("uid") + "\t"
+                        + rs.getString("dDate") + "\t"
+                        + rs.getString("tTime"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -90,15 +88,13 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         try {
             stmt = conn.createStatement();
             stmt.executeUpdate(createOfficeHoursViewSql);
-            rs = stmt.executeQuery("SELECT * FROM OFFICEHOURS");
-            for (int i = 0; i < 20; i++) {
-                if (rs.next()) {
-                    LOGGER.debug(rs.getString("LastName") + "\t"
-                            + rs.getString("dDate") + "\t"
-                            + rs.getString("Tmin") + "\t"
-                            + rs.getString("Tmax") + "\t"
-                            + rs.getString("officeHours"));
-                }
+            rs = stmt.executeQuery("SELECT * FROM OFFICEHOURS LIMIT 20 OFFSET 0");
+            while (rs.next()) {
+                LOGGER.debug(rs.getString("LastName") + "\t"
+                        + rs.getString("dDate") + "\t"
+                        + rs.getString("Tmin") + "\t"
+                        + rs.getString("Tmax") + "\t"
+                        + rs.getString("officeHours"));
             }
         } catch (SQLException e) {
             LOGGER.error("SQL statement exception execute: " + e.getMessage());
@@ -131,7 +127,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         }
         groupBy.append(";");
         String groups = groupBy.toString();
-        LOGGER.debug("SORT BY = "+groups);
+        LOGGER.debug("SORT BY = " + groups);
         try {
             connectionPool = ConnectionPool.getInstance();
             conn = connectionPool.getConnection();
@@ -209,7 +205,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         }
         groupBy.append(";");
         String groups = groupBy.toString();
-        LOGGER.debug("SORT BY = "+groups);
+        LOGGER.debug("SORT BY = " + groups);
         try {
             connectionPool = ConnectionPool.getInstance();
             conn = connectionPool.getConnection();
@@ -288,7 +284,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         }
         groupBy.append(";");
         String groups = groupBy.toString();
-        LOGGER.debug("SORT BY = "+groups);
+        LOGGER.debug("SORT BY = " + groups);
         try {
             connectionPool = ConnectionPool.getInstance();
             conn = connectionPool.getConnection();
@@ -365,7 +361,7 @@ public class AttendanceDaoSqlite implements AttendanceDao {
         }
         groupBy.append(";");
         String groups = groupBy.toString();
-        LOGGER.debug("SORT BY = "+groups);
+        LOGGER.debug("SORT BY = " + groups);
         try {
             connectionPool = ConnectionPool.getInstance();
             conn = connectionPool.getConnection();
