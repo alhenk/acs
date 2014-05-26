@@ -11,7 +11,7 @@ import java.util.Date;
 public class DateStamp implements Serializable, Comparable<DateStamp> {
     private static final long serialVersionUID = -8961625269572879384L;
     private static final Logger LOGGER = Logger.getLogger(DateStamp.class);
-    private static SimpleDateFormat format;
+    private static SimpleDateFormat dateFormat;
 
     static {
         PropertyManager.load("configure.properties");
@@ -72,16 +72,23 @@ public class DateStamp implements Serializable, Comparable<DateStamp> {
             return false;
         }
         try {
-            format = new SimpleDateFormat(pattern);
-            format.setLenient(false);
-            format.parse(date);
-        } catch (ParseException e) {
-            LOGGER.error(e);
-            return false;
+            dateFormat = new SimpleDateFormat(pattern);
+            dateFormat.setLenient(true);
+            Date parsedDate=dateFormat.parse(date);
+            dateFormat = new SimpleDateFormat(pattern);
+            String stringDate = "";
+            stringDate = dateFormat.format(parsedDate);
+            if (!stringDate.equals(date)) {
+                LOGGER.error("Not a date");
+                return false;
+            }
         } catch (IllegalArgumentException e) {
             LOGGER.error(e);
             return false;
         } catch (NullPointerException e) {
+            LOGGER.error(e);
+            return false;
+        } catch (ParseException e) {
             LOGGER.error(e);
             return false;
         }
